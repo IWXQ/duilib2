@@ -100,28 +100,6 @@ void CMainWnd::InitWindow() {
     }
 
 
-    //CTreeViewUI *pTreeView = static_cast<CTreeViewUI *>(m_PaintManager.FindControl(_T("treeview")));
-    //if (pTreeView) {
-    //    CTreeNodeUI *pItem = new CTreeNodeUI();
-    //    pItem->SetFixedHeight(30);
-    //    pItem->SetItemText(_T("动态添加"));
-    //    pTreeView->AddAt(pItem, 3);
-    //    COptionUI *pRadio = new COptionUI();
-    //    pRadio->SetText(_T("单选按钮"));
-    //    pItem->Add(pRadio);
-    //    pRadio->SetAttribute(_T("Style"), _T("cb_style"));
-    //    pItem->SetAttribute(_T("itemattr"), _T("valign=&quot;center&quot;"));
-    //    pItem->SetAttribute(_T("Style"), _T("treeview_style"));
-
-    //    CDialogBuilder builder;
-    //    CControlUI *pParentItem = NULL;
-    //    CTreeNodeUI *pTreeItem = (CTreeNodeUI *)builder.Create(_T("treeitem.xml"), NULL, this, &m_PaintManager, pParentItem);
-
-    //    if (pParentItem == NULL)
-    //        pTreeView->Add(pTreeItem);
-    //}
- 
-
     CColorPaletteUI *pColorPalette = (CColorPaletteUI *)m_PaintManager.FindControl(_T("Pallet"));
     if (pColorPalette) {
         pColorPalette->SetSelectColor(0xff0199cb);
@@ -225,10 +203,6 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
             Close();
         }
     } 
-    else if (strName.CompareNoCase(_T("btnUIThreadTest")) == 0) {
-        std::thread t = std::thread(&CMainWnd::ThreadProc, this);
-        t.detach();
-    } 
     else if (msg.pSender == m_pBtnMin) {
         SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
     }
@@ -266,7 +240,7 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
         ::GetCursorPos(&point);
         m_pMenu->Init(NULL, _T("menu.xml"), point, &m_PaintManager);
         // 设置状态
-        CMenuWnd::SetMenuItemInfo(_T("qianting"), true);
+     /*   CMenuWnd::SetMenuItemInfo(_T("qianting"), true);
 
         CMenuUI *rootMenu = m_pMenu->GetMenuUI();
 
@@ -284,7 +258,7 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
             pNew2->SetText(_T("动态一级菜单2"));
             rootMenu->AddAt(pNew2, 2);
         }
-
+*/
         // 动态添加后重新设置菜单的大小
         m_pMenu->ResizeMenu();
     } 
@@ -319,6 +293,9 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
                 i++;
             }
         }
+    }
+    else if (strName.CompareNoCase(TEXT("btnDel")) == 0) {
+        
     }
 	else if (strName.CompareNoCase(TEXT("btnPostTask")) == 0) {
 		std::thread t = std::thread([this]() {
@@ -405,10 +382,6 @@ void CMainWnd::UpdateText(const base::String &str) {
     }
 }
 
-void CMainWnd::ThreadProc() {
-   
-}
-
 void CMainWnd::AddListItem(int iCount) {
     static int iHasAdd = 0;
 
@@ -459,13 +432,16 @@ LPCTSTR CMainWnd::QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) {
     if(sLanguage == _T("en")) {
         if(lstrcmpi(lpstrId, _T("titletext")) == 0) {
             return _T("Duilib Demo v1.1");
-        } else if(lstrcmpi(lpstrId, _T("hometext")) == 0) {
+        } 
+        else if(lstrcmpi(lpstrId, _T("hometext")) == 0) {
             return _T("{a}Home Page{/a}");
         }
-    } else {
+    } 
+    else {
         if(lstrcmpi(lpstrId, _T("titletext")) == 0) {
             return _T("Duilib 使用演示 v1.1");
-        } else if(lstrcmpi(lpstrId, _T("hometext")) == 0) {
+        } 
+        else if(lstrcmpi(lpstrId, _T("hometext")) == 0) {
             return _T("{a}演示官网{/a}");
         }
     }
@@ -496,18 +472,21 @@ LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
         ::PostQuitMessage(0L);
         bHandled = TRUE;
         return 0;
-    } else if(uMsg == WM_TIMER) {
+    } 
+    else if(uMsg == WM_TIMER) {
         bHandled = FALSE;
-    } else if(uMsg == WM_SHOWWINDOW) {
+    } 
+    else if(uMsg == WM_SHOWWINDOW) {
         bHandled = FALSE;
 
         if(m_pBtnMin)
             m_pBtnMin->NeedParentUpdate();
 
         InvalidateRect(m_hWnd, NULL, TRUE);
-    } else if(uMsg == WM_SYSKEYDOWN || uMsg == WM_KEYDOWN) {
-        int a = 0;
-    } else if (uMsg == WM_MENUCLICK) {
+    } 
+    else if(uMsg == WM_SYSKEYDOWN || uMsg == WM_KEYDOWN) {
+    } 
+    else if (uMsg == WM_MENUCLICK) {
         MenuCmd *pMenuCmd = (MenuCmd *)wParam;
 
         if(pMenuCmd != NULL) {
@@ -532,12 +511,6 @@ LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
                 CResourceManager::GetInstance()->ReloadText();
                 InvalidateRect(m_hWnd, NULL, TRUE);
                 m_PaintManager.NeedUpdate();
-            } else if (sMenuName == _T("qianting")) {
-                if (bChecked) {
-                    CMsgWnd::MessageBox(m_hWnd, NULL, _T("你预定修潜艇服务"));
-                } else {
-                    CMsgWnd::MessageBox(m_hWnd, NULL, _T("你取消修潜艇服务"));
-                }
             } else if(sMenuName == _T("exit")) {
                 Close(0);
             } else {
@@ -547,13 +520,15 @@ LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
 
         bHandled = TRUE;
         return 0;
-    } else if(uMsg == UIMSG_TRAYICON) {
+    } 
+    else if(uMsg == UIMSG_TRAYICON) {
         UINT uIconMsg = (UINT)lParam;
 
         if(uIconMsg == WM_LBUTTONUP) {
             BOOL bVisible = IsWindowVisible(m_hWnd);
             ::ShowWindow(m_hWnd, !bVisible ?  SW_SHOW : SW_HIDE);
-        } else if(uIconMsg == WM_RBUTTONUP) {
+        } 
+        else if(uIconMsg == WM_RBUTTONUP) {
             if(m_pMenu != NULL) {
                 delete m_pMenu;
                 m_pMenu = NULL;
@@ -567,7 +542,8 @@ LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
             // 动态添加后重新设置菜单的大小
             m_pMenu->ResizeMenu();
         }
-    } else if (uMsg == WM_DPICHANGED) {
+    }
+    else if (uMsg == WM_DPICHANGED) {
         m_PaintManager.SetDPI(LOWORD(wParam));  // Set the new DPI, retrieved from the wParam
         m_PaintManager.ResetDPIAssets();
         RECT *const prcNewWindow = (RECT *)lParam;

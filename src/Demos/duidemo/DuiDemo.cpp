@@ -21,15 +21,8 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 	
     DuiLib::Initialize(hInstance);
 
-#ifdef _DEBUG
-    CPaintManagerUI::SetResourceType(UILIB_FILE);
-    base::String strResourcePath = CPaintManagerUI::GetInstancePath();
-    strResourcePath += _T("..\\..\\Demos\\skin\\duidemo\\");
-    CPaintManagerUI::SetResourcePath(strResourcePath.GetDataPointer());
-#else
     CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
     CPaintManagerUI::SetResourceZip(IDR_ZIPRES1);
-#endif
     CResourceManager::GetInstance()->LoadResource(_T("res.xml"), NULL);
 
     REGIST_DUICONTROL(CCircleProgressUI);

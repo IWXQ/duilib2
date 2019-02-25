@@ -254,7 +254,6 @@ namespace DuiLib {
                 Close();
             }
         }
-
     }
 
     CControlUI *CMenuWnd::CreateControl( LPCTSTR pstrClassName ) {
@@ -302,6 +301,7 @@ namespace DuiLib {
             ::SetWindowPos(*this, NULL, rcClient.left, rcClient.top, rcClient.right - rcClient.left, \
                            rcClient.bottom - rcClient.top, SWP_FRAMECHANGED);
 
+            m_pm.GetDPIObj()->SetScale(m_pOwner->m_pManager->GetDPIObj()->GetScale());
             m_pm.Init(m_hWnd);
             // The trick is to add the items to the new container. Their owner gets
             // reassigned by this operation - which is why it is important to reassign
@@ -332,10 +332,7 @@ namespace DuiLib {
             m_pm.AttachDialog(m_pLayout);
             m_pm.AddNotifier(this);
 
-            // Jeffery: 注释掉ResizeMenu功能，因为会导致高DPI下Menu窗体Size错误
-            //          移除该功能后，Menu XML中的Window size属性需手动设置正确
-            //
-            //ResizeSubMenu();
+            ResizeSubMenu();
             pList = static_cast<CListUI *>(m_pLayout);
         } else {
             m_pm.Init(m_hWnd);
@@ -347,11 +344,7 @@ namespace DuiLib {
             m_pm.AttachDialog(pRoot);
             m_pm.AddNotifier(this);
 
-            // Jeffery:
-            // (2018/10/24) 注释掉ResizeMenu功能，因为会导致高DPI下Menu窗体Size错误
-            //              移除该功能后，Menu XML中的Window size属性需手动设置正确
-            //
-            //ResizeMenu();
+            ResizeMenu();
             pList = static_cast<CListUI *>(pRoot);
         }
 
@@ -561,6 +554,7 @@ namespace DuiLib {
 
         return 0;
     }
+
     LRESULT CMenuWnd::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
         SIZE szRoundCorner = m_pm.GetRoundCorner();
 
@@ -676,17 +670,6 @@ namespace DuiLib {
             RECT rcLine = { m_rcItem.left + rcLinePadding.left, m_rcItem.top + cxyFixed.cy / 2, m_rcItem.right - rcLinePadding.right, m_rcItem.top + cxyFixed.cy / 2 };
             CRenderEngine::DrawLine(hDC, rcLine, 1, m_dwLineColor);
         } else {
-            //CMenuElementUI::DrawItemBk(hDC, m_rcItem);
-            //DrawItemText(hDC, m_rcItem);
-            //DrawItemIcon(hDC, m_rcItem);
-            //DrawItemExpland(hDC, m_rcItem);
-            //for (int i = 0; i < GetCount(); ++i)
-            //{
-            //  if (GetItemAt(i)->GetInterface(_T("MenuElement")) == NULL) {
-            //      GetItemAt(i)->DoPaint(hDC, rcPaint);
-            //  }
-            //}
-
             CRenderClip clip;
             CRenderClip::GenerateClip(hDC, rcTemp, clip);
             CMenuElementUI::DrawItemBk(hDC, m_rcItem);
@@ -701,9 +684,11 @@ namespace DuiLib {
                 rc.right -= m_rcInset.right;
                 rc.bottom -= m_rcInset.bottom;
 
-                if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
+                if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible()) 
+                    rc.right -= m_pVerticalScrollBar->GetFixedWidth();
 
-                if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
+                if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible()) 
+                    rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 
                 if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) {
                     for( int it = 0; it < m_items.GetSize(); it++ ) {
@@ -781,11 +766,11 @@ namespace DuiLib {
 
     void CMenuElementUI::DrawItemIcon(HDC hDC, const RECT &rcItem) {
         if (!m_strIcon.IsEmpty() && !(m_bCheckItem && !GetChecked())) {
-            SIZE cxyFixed = CMenuElementUI::m_cxyFixed;
+            SIZE cxyFixed = m_cxyFixed;
             cxyFixed.cx = m_pManager->GetDPIObj()->Scale(cxyFixed.cx);
             cxyFixed.cy = m_pManager->GetDPIObj()->Scale(cxyFixed.cy);
 
-            SIZE szIconSize = CMenuElementUI::m_szIconSize;
+            SIZE szIconSize = m_szIconSize;
             szIconSize.cx = m_pManager->GetDPIObj()->Scale(szIconSize.cx);
             szIconSize.cy = m_pManager->GetDPIObj()->Scale(szIconSize.cy);
             TListInfoUI *pInfo = m_pOwner->GetListInfo();
@@ -814,7 +799,7 @@ namespace DuiLib {
                 return;
             }
 
-            SIZE cxyFixed = CMenuElementUI::m_cxyFixed;
+            SIZE cxyFixed = m_cxyFixed;
             cxyFixed.cx = m_pManager->GetDPIObj()->Scale(cxyFixed.cx);
             cxyFixed.cy = m_pManager->GetDPIObj()->Scale(cxyFixed.cy);
             int padding = m_pManager->GetDPIObj()->Scale(ITEM_DEFAULT_EXPLAND_ICON_WIDTH) / 3;
@@ -878,7 +863,7 @@ namespace DuiLib {
 
 
     SIZE CMenuElementUI::EstimateSize(SIZE szAvailable) {
-        SIZE cxyFixed = CMenuElementUI::m_cxyFixed;
+        SIZE cxyFixed = m_cxyFixed;
         cxyFixed.cx = m_pManager->GetDPIObj()->Scale(cxyFixed.cx);
         cxyFixed.cy = m_pManager->GetDPIObj()->Scale(cxyFixed.cy);
         SIZE cXY = {0};
@@ -936,8 +921,8 @@ namespace DuiLib {
         if ( cXY.cx < cxyFixed.cx )
             cXY.cx = cxyFixed.cx;
 
-        CMenuElementUI::m_cxyFixed.cy = MulDiv(cXY.cy, 100, m_pManager->GetDPIObj()->GetScale());
-        CMenuElementUI::m_cxyFixed.cx = MulDiv(cXY.cx, 100, m_pManager->GetDPIObj()->GetScale());
+        m_cxyFixed.cy = MulDiv(cXY.cy, 100, m_pManager->GetDPIObj()->GetScale());
+        m_cxyFixed.cx = MulDiv(cXY.cx, 100, m_pManager->GetDPIObj()->GetScale());
         return cXY;
     }
 
