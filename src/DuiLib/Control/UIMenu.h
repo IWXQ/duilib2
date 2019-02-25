@@ -319,7 +319,7 @@ public:
 
 	// 重新调整子菜单的大小
 	void ResizeSubMenu();
-	void setDPI(int DPI);
+	void SetDPI(int DPI);
 
     void Show(BOOL bShow);
     CPaintManagerUI* GetPaintManager();

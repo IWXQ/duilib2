@@ -72,7 +72,7 @@ public:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		// ICONS Õº±Íº”‘ÿ
-		SetIcon(IDR_MAINFRAME);
+		SetIcon(IDI_ICON1);
 
 		LONG styleValue = ::GetWindowLong(*this, GWL_STYLE);
 		styleValue &= ~WS_CAPTION;

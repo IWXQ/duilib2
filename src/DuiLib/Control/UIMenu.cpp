@@ -518,7 +518,7 @@ namespace DuiLib {
         MoveWindow(m_hWnd, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top + m_pLayout->GetInset().top + m_pLayout->GetInset().bottom, FALSE);
     }
 
-    void CMenuWnd::setDPI(int DPI) {
+    void CMenuWnd::SetDPI(int DPI) {
         m_pm.SetDPI(DPI);
     }
 

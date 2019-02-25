@@ -55,7 +55,7 @@ CMainWnd::~CMainWnd() {
 
 
 void CMainWnd::InitWindow() {
-    SetIcon(IDR_MAINFRAME);
+    SetIcon(IDI_ICON1);
     CResourceManager::GetInstance()->SetTextQueryInterface(this);
     CResourceManager::GetInstance()->LoadLanguage(_T("lan_cn.xml"));
     CSkinManager::GetSkinManager()->AddReceiver(this);
@@ -128,7 +128,7 @@ void CMainWnd::InitWindow() {
     }
 
 
-    m_trayIcon.CreateTrayIcon(m_hWnd, IDR_MAINFRAME, _T("DuiLib Demo"));
+    m_trayIcon.CreateTrayIcon(m_hWnd, IDI_ICON1, _T("DuiLib Demo"));
 }
 
 
