@@ -26,7 +26,7 @@
 		<PreprocessorDefinitions>UILIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_static_mt_debug\DuiLib-Ultimate.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>vc140_x86_static_mt_debug\DuiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -36,7 +36,7 @@
 		<PreprocessorDefinitions>UILIB_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_static_mt_release\DuiLib-Ultimate.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>vc140_x86_static_mt_release\DuiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -46,7 +46,7 @@
 		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_dynamic_md_debug\DuiLib-Ultimate.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>vc140_x86_dynamic_md_debug\DuiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -56,7 +56,7 @@
 		<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
 	<Link>
-		<AdditionalDependencies>vc140_x86_dynamic_md_release\DuiLib-Ultimate.lib;%(AdditionalDependencies)</AdditionalDependencies>
+		<AdditionalDependencies>vc140_x86_dynamic_md_release\DuiLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   
@@ -64,13 +64,13 @@
   <Target Name="duilib_1_0_0_1_afterbuild_cmd1"
           Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Debug')) != -1"
           AfterTargets="duilib_1_0_0_1_AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\DuiLib-Ultimate.dll" DestinationFiles="$(TargetDir)DuiLib-Ultimate.dll" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_debug\DuiLib.dll" DestinationFiles="$(TargetDir)DuiLib.dll" SkipUnchangedFiles="true" />
   </Target>
   
   <Target Name="duilib_1_0_0_1_afterbuild_cmd2"
           Condition="'$(PlatformToolset)' == 'v140' And '$(Platform)' == 'Win32' And '$(Linkage)' == 'DynamicLibrary_MD' And $(Configuration.IndexOf('Release')) != -1"
           AfterTargets="duilib_1_0_0_1_AfterBuild">
-    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\DuiLib-Ultimate.dll" DestinationFiles="$(TargetDir)DuiLib-Ultimate.dll" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)bin\vc140_x86_dynamic_md_release\DuiLib.dll" DestinationFiles="$(TargetDir)DuiLib.dll" SkipUnchangedFiles="true" />
   </Target>
   
 </Project>
