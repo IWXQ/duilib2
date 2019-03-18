@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UIShadow.h"
 #include <math.h>
 #include <crtdbg.h>
@@ -237,24 +237,6 @@ namespace DuiLib {
 
     }
 
-    void GetLastErrorMessage() {
-        LPVOID lpMsgBuf;
-
-        FormatMessage(
-            FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-            NULL, GetLastError(),
-            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-            (LPTSTR)&lpMsgBuf, 0, NULL
-        );
-
-        if (lpMsgBuf) {
-            TraceMsg(TEXT("DuiLib: Error: %s.\r\n"), (LPCTSTR)lpMsgBuf);
-
-            // Free the buffer.
-            LocalFree(lpMsgBuf);
-        }
-    }
-
     void CShadowUI::Update(HWND hParent) {
         if(!m_bIsShowShadow || !(m_Status & SS_VISABLE)) 
             return;
@@ -292,19 +274,19 @@ namespace DuiLib {
         HBITMAP hbitmap = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, (void **)&pvBits, NULL, 0);
 
         if (hbitmap == NULL) {
-            GetLastErrorMessage();
+            ppx::base::TraceMsgA("CreateDIBSection failed, gle=%d\n", GetLastError());
         }
 
         HDC hMemDC = CreateCompatibleDC(NULL);
 
         if (hMemDC == NULL) {
-            GetLastErrorMessage();
+            ppx::base::TraceMsgA("CreateCompatibleDC failed, gle=%d\n", GetLastError());
         }
 
         HBITMAP hOriBmp = (HBITMAP)SelectObject(hMemDC, hbitmap);
 
         if (GetLastError() != 0) {
-            GetLastErrorMessage();
+            ppx::base::TraceMsgA("SelectObject failed, gle=%d\n", GetLastError());
         }
 
         if (m_bIsImageMode) {

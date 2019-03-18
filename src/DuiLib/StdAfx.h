@@ -43,7 +43,6 @@
 
 #include <olectl.h>
 
-#ifndef NOMINMAX
 
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
@@ -53,7 +52,6 @@
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
-#endif  /* NOMINMAX */
 
 #define lengthof(x) (sizeof(x)/sizeof(*x))
 #define MAX max

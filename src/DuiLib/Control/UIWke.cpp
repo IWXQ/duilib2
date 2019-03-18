@@ -139,7 +139,7 @@ namespace DuiLib {
         m_strUrl = strUrl;
 
         if (m_pWebView && m_strUrl.GetLength() > 0) {
-            wkeLoadURL(m_pWebView, base::UnicodeToUtf8(m_strUrl.GetDataPointer()).c_str());
+            wkeLoadURL(m_pWebView, base::UnicodeToUtf8(m_strUrl).GetDataPointer());
         }
     }
 
@@ -190,7 +190,7 @@ namespace DuiLib {
 
         if (jsIsString(retval)) {
             V_VT(pvRet) = VT_BSTR;
-            V_BSTR(pvRet) = SysAllocString(base::Utf8ToUnicode(jsToString(es, retval)).c_str());
+            V_BSTR(pvRet) = SysAllocString(base::Utf8ToUnicode(jsToString(es, retval)).GetDataPointer());
         } else if (jsIsNumber(retval)) {
             V_VT(pvRet) = VT_I4;
             V_I4(pvRet) = jsToInt(es, retval);
@@ -216,7 +216,7 @@ namespace DuiLib {
         for (size_t i = 0; i < vars.size(); i++) {
             switch (vars[i].vt) {
                 case VT_BSTR:
-                    jsArgs[i] = jsString(es, base::UnicodeToUtf8(vars[i].bstrVal).c_str());
+                    jsArgs[i] = jsString(es, base::UnicodeToUtf8(vars[i].bstrVal).GetDataPointer());
                     break;
 
                 case VT_INT:
@@ -360,7 +360,7 @@ namespace DuiLib {
                 wkeSetHandle(m_pWebView, m_hWnd);
 
             if (m_strUrl.GetLength() > 0)
-                wkeLoadURL(m_pWebView, base::UnicodeToUtf8(m_strUrl.GetDataPointer()).c_str());
+                wkeLoadURL(m_pWebView, base::UnicodeToUtf8(m_strUrl.GetDataPointer()).GetDataPointer());
 
             m_pTimer = SetTimer(m_hWnd, WUM_REFRESH_TIMER, 50, NULL);
         }
