@@ -1,7 +1,7 @@
 if(BUILD_SHARED_LIBS)
-	set(LIB_NAME duilib)
+	set(LIB_NAME duilib2)
 else()
-	set(LIB_NAME duilib-static)
+	set(LIB_NAME duilib2-static)
 endif()
 
 
@@ -190,7 +190,7 @@ install(FILES ${RENDER_HEADER_FILES} 		DESTINATION include/Render)
 install(FILES ${UTILS_HEADER_FILES} 		DESTINATION include/Utils)
 
 
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/duilib-config.cmake 
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/duilib2-config.cmake 
 	DESTINATION ${DUILIB_INSTALL_CMAKE_DIR})
 
 export(TARGETS ${LIB_NAME}

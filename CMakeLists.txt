@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.4 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH};")
-project(duilib CXX)
+project(duilib2 CXX)
 
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_TESTS "Build demo project" ON)
@@ -17,11 +17,11 @@ if(WIN32)
 endif()
 
 if(MSVC)
-  set(DUILIB_INSTALL_CMAKE_DIR share/duilib)
+  set(DUILIB_INSTALL_CMAKE_DIR share/duilib2)
 elseif(WIN32 AND NOT CYGWIN)
   set(DUILIB_INSTALL_CMAKE_DIR CMake)
 else()
-  set(DUILIB_INSTALL_CMAKE_DIR lib/cmake/duilib)
+  set(DUILIB_INSTALL_CMAKE_DIR lib/cmake/duilib2)
 endif()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

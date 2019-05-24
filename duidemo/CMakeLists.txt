@@ -62,13 +62,13 @@ endif (MSVC)
 
 if(BUILD_SHARED_LIBS)
 	target_link_libraries(${EXE_NAME} 
-		$<TARGET_LINKER_FILE:duilib>)
+		$<TARGET_LINKER_FILE:duilib2>)
 	# ppxbase
 	find_package(ppxbase REQUIRED)
 	target_link_libraries(${EXE_NAME} ppxbase)
 else()
 	target_link_libraries(${EXE_NAME} 
-		$<TARGET_LINKER_FILE:duilib-static>)
+		$<TARGET_LINKER_FILE:duilib2-static>)
 	
 	# ppxbase
 	find_package(ppxbase REQUIRED)
