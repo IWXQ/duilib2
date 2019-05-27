@@ -185,12 +185,12 @@ install(TARGETS ${LIB_NAME}
 	ARCHIVE DESTINATION lib)
 
 
-install(FILES ${ROOT_HEADER_FILES} 			DESTINATION include/)
-install(FILES ${CONTROL_HEADER_FILES} 		DESTINATION include/Control)
-install(FILES ${CORE_HEADER_FILES} 		    DESTINATION include/Core)
-install(FILES ${LAYOUT_HEADER_FILES} 		DESTINATION include/Layout)
-install(FILES ${RENDER_HEADER_FILES} 		DESTINATION include/Render)
-install(FILES ${UTILS_HEADER_FILES} 		DESTINATION include/Utils)
+install(FILES ${ROOT_HEADER_FILES} 			DESTINATION include/duilib2)
+install(FILES ${CONTROL_HEADER_FILES} 		DESTINATION include/duilib2/Control)
+install(FILES ${CORE_HEADER_FILES} 		    DESTINATION include/duilib2/Core)
+install(FILES ${LAYOUT_HEADER_FILES} 		DESTINATION include/duilib2/Layout)
+install(FILES ${RENDER_HEADER_FILES} 		DESTINATION include/duilib2/Render)
+install(FILES ${UTILS_HEADER_FILES} 		DESTINATION include/duilib2/Utils)
 
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/duilib2-config.cmake 
