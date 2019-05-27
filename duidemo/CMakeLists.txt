@@ -41,21 +41,24 @@ add_executable(
 	duidemo.rc
 )
 
-target_include_directories(${EXE_NAME} PRIVATE "../src")
+target_include_directories(${EXE_NAME} PUBLIC "../src")
 
 
 if (MSVC)
-    set_source_files_properties(StdAfx.cpp
-        PROPERTIES
-        COMPILE_FLAGS "/YcStdAfx.h"
-        )
-    foreach( src_file ${ROOT_SOURCE_FILES})
-        set_source_files_properties(
-            ${src_file}
-            PROPERTIES
-            COMPILE_FLAGS "/YuStdAfx.h"
-            )
-    endforeach()
+    # set_source_files_properties(StdAfx.cpp
+        # PROPERTIES
+        # COMPILE_FLAGS "/YcStdAfx.h"
+        # )
+    # foreach( src_file ${ROOT_SOURCE_FILES})
+        # set_source_files_properties(
+            # ${src_file}
+            # PROPERTIES
+            # COMPILE_FLAGS "/YuStdAfx.h"
+            # )
+    # endforeach()
+	
+	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /source-charset:.936")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:.936")
 endif (MSVC)
 	
 

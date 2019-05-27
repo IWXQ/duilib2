@@ -69,23 +69,26 @@ source_group("Source Files\\Internal" FILES
 
 
 if (MSVC)
-    set_source_files_properties(StdAfx.cpp
-        PROPERTIES
-        COMPILE_FLAGS "/YcStdAfx.h"
-        )
-    foreach( src_file ${ROOT_SOURCE_FILES}
-		${CONTROL_SOURCE_FILES}
-		${CORE_SOURCE_FILES}
-		${LAYOUT_SOURCE_FILES}
-		${RENDER_SOURCE_FILES}
-		${UTILS_SOURCE_FILES}
-		${INTERNAL_SOURCE_FILES} )
-        set_source_files_properties(
-            ${src_file}
-            PROPERTIES
-            COMPILE_FLAGS "/YuStdAfx.h"
-            )
-    endforeach()
+    # set_source_files_properties(StdAfx.cpp
+        # PROPERTIES
+        # COMPILE_FLAGS "/YcStdAfx.h"
+        # )
+    # foreach( src_file ${ROOT_SOURCE_FILES}
+		# ${CONTROL_SOURCE_FILES}
+		# ${CORE_SOURCE_FILES}
+		# ${LAYOUT_SOURCE_FILES}
+		# ${RENDER_SOURCE_FILES}
+		# ${UTILS_SOURCE_FILES}
+		# ${INTERNAL_SOURCE_FILES} )
+        # set_source_files_properties(
+            # ${src_file}
+            # PROPERTIES
+            # COMPILE_FLAGS "/YuStdAfx.h"
+            # )
+    # endforeach()
+	
+	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /source-charset:.936")
+	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:.936")
 endif (MSVC)
 
 
