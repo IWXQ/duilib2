@@ -19,6 +19,20 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) < (b)) ? (a) : (b))
+#endif
+
+
+#define lengthof(x) (sizeof(x)/sizeof(*x))
+#define MAX max
+#define MIN min
+
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>

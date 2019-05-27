@@ -44,18 +44,7 @@
 #include <olectl.h>
 
 
-#ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
-#endif
 
-#ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
-#endif
-
-
-#define lengthof(x) (sizeof(x)/sizeof(*x))
-#define MAX max
-#define MIN min
 #define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
 
 
