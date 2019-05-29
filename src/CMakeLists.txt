@@ -33,7 +33,7 @@ file(GLOB CONTROL_HEADER_FILES 		./Control/*.h ./Control/*.hpp)
 file(GLOB CORE_HEADER_FILES 		    ./Core/*.h ./Core/*.hpp)
 file(GLOB LAYOUT_HEADER_FILES 		./Layout/*.h ./Layout/*.hpp)
 file(GLOB RENDER_HEADER_FILES 		./Render/*.h ./Render/*.hpp)
-file(GLOB UTILS_HEADER_FILES 		./Utils/*.h ./Utils/*.hpp)
+file(GLOB UTILS_HEADER_FILES 		./Utils/*.h ./Utils/*.hpp ./Utils/*.tlh)
 file(GLOB INTERNAL_HEADER_FILES 		./Internal/*.h ./Internal/*.hpp)
 
 source_group("Header Files" FILES 

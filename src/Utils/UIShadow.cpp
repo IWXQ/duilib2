@@ -2,7 +2,7 @@
 #include "UIShadow.h"
 #include <math.h>
 #include <crtdbg.h>
-#include "ppxbase/logging.h"
+
 
 namespace DuiLib {
 
@@ -71,7 +71,7 @@ namespace DuiLib {
         HWND hParentWnd = m_pManager->GetPaintWindow();
         // Add parent window - shadow pair to the map
         if (GetShadowMap().find(hParentWnd) != GetShadowMap().end()) {
-            TraceMsg(TEXT("DuiLib: Warning: Only one shadow for each window.\n"));
+            OutputDebugString(TEXT("DuiLib: Warning: Only one shadow for each window.\n"));
             return;
         }
         GetShadowMap()[hParentWnd] = this;
@@ -85,7 +85,6 @@ namespace DuiLib {
                                 CW_USEDEFAULT, 0, 0, 0, hParentWnd, NULL, CPaintManagerUI::GetInstance(), NULL);
 
         if (m_hWnd == NULL) {
-            TraceMsg(TEXT("DuiLib: Warning: CreateWindowEx return NULL, GLE=%d.\n"), GetLastError());
             return;
         }
 
@@ -115,7 +114,6 @@ namespace DuiLib {
 
     LRESULT CALLBACK CShadowUI::ParentProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (GetShadowMap().find(hwnd) == GetShadowMap().end()) {
-            TraceMsg(TEXT("DuiLib: Warning: Shadow must have been attached.\n"));
             return 0;
         }
 
@@ -274,21 +272,9 @@ namespace DuiLib {
         BYTE *pvBits;          // pointer to DIB section
         HBITMAP hbitmap = CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, (void **)&pvBits, NULL, 0);
 
-        if (hbitmap == NULL) {
-            ppx::base::TraceMsgA("CreateDIBSection failed, gle=%d\n", GetLastError());
-        }
-
         HDC hMemDC = CreateCompatibleDC(NULL);
 
-        if (hMemDC == NULL) {
-            ppx::base::TraceMsgA("CreateCompatibleDC failed, gle=%d\n", GetLastError());
-        }
-
         HBITMAP hOriBmp = (HBITMAP)SelectObject(hMemDC, hbitmap);
-
-        if (GetLastError() != 0) {
-            ppx::base::TraceMsgA("SelectObject failed, gle=%d\n", GetLastError());
-        }
 
         if (m_bIsImageMode) {
             RECT rcPaint = {0, 0, nShadWndWid, nShadWndHei};
@@ -320,10 +306,7 @@ namespace DuiLib {
         SIZE WndSize = {nShadWndWid, nShadWndHei};
         BLENDFUNCTION blendPixelFunction = { AC_SRC_OVER, 0, 255, AC_SRC_ALPHA };
         MoveWindow(m_hWnd, ptDst.x, ptDst.y, nShadWndWid, nShadWndHei, FALSE);
-        BOOL bRet = ::UpdateLayeredWindow(m_hWnd, NULL, &ptDst, &WndSize, hMemDC, &ptSrc, 0, &blendPixelFunction, ULW_ALPHA);
-        if (!bRet) {
-            TraceMsg(TEXT("DuiLib: Warning: UpdateLayeredWindow failed, GLE=%d.\n"), GetLastError());
-        }
+        ::UpdateLayeredWindow(m_hWnd, NULL, &ptDst, &WndSize, hMemDC, &ptSrc, 0, &blendPixelFunction, ULW_ALPHA);
         // Delete used resources
         SelectObject(hMemDC, hOriBmp);
         DeleteObject(hbitmap);

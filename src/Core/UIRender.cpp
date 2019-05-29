@@ -1,5 +1,4 @@
 #include "StdAfx.h"
-#include "ppxbase/logging.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "Internal\stb_image.h"
 
@@ -1229,11 +1228,6 @@ namespace DuiLib {
     }
 
     void CRenderEngine::DrawColor(HDC hDC, const RECT &rc, DWORD color) {
-        if (color <= 0x00FFFFFF) {
-            if(color != 0x00)
-                TraceMsg(TEXT("Warnning: Duilib: forecolor/bkcolor Alpha value is 0, color=0x%X.\n"), color);
-        }
-
         Gdiplus::Graphics graphics( hDC );
         Gdiplus::SolidBrush brush(Gdiplus::Color((LOBYTE((color) >> 24)), GetBValue(color), GetGValue(color), GetRValue(color)));
         Gdiplus::Status status = graphics.FillRectangle(&brush, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);

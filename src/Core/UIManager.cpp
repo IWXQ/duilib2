@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include <zmouse.h>
 #include "Utils/Task.h"
-#include "ppxbase/logging.h"
+
 
 namespace DuiLib {
 
@@ -2332,7 +2332,6 @@ namespace DuiLib {
                         ::DispatchMessage(&msg);
                     }
                     catch (...) {
-                        TraceMsg(_T("EXCEPTION: %s(%d)\r\n"), __FILET__, __LINE__);
 #ifdef _DEBUG
                         throw "CPaintManagerUI::MessageLoop";
 #endif

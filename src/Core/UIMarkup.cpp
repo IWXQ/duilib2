@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ppxbase/logging.h"
+
 #ifndef TRACE
     #define TRACE
 #endif
@@ -746,9 +746,8 @@ namespace DuiLib {
 
     bool CMarkup::_Failed(LPCTSTR pstrError, LPCTSTR pstrLocation) {
         // Register last error
-        TraceMsg(_T("XML Error: %s"), pstrError);
-
-        if( pstrLocation != NULL ) TraceMsg(pstrLocation);
+        if( pstrLocation != NULL ) 
+			OutputDebugString(pstrLocation);
 
         _tcsncpy(m_szErrorMsg, pstrError, (sizeof(m_szErrorMsg) / sizeof(m_szErrorMsg[0])) - 1);
         _tcsncpy(m_szErrorXML, pstrLocation != NULL ? pstrLocation : _T(""), lengthof(m_szErrorXML) - 1);

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "DPI.h"
 #include "VersionHelpers.h"
-#include "ppxbase/logging.h"
+
 
 namespace DuiLib {
     //96 DPI = 100% scaling
@@ -38,7 +38,6 @@ namespace DuiLib {
             }
             else if (dpiAwareness == PROCESS_SYSTEM_DPI_AWARE) {
                 m_nScaleFactor = MulDiv(GetMainMonitorDPI(), 100, 96);
-                TraceMsg(TEXT("DuiLib: Since DPI Awareness is PROCESS_SYSTEM_DPI_AWARE, Set ScaleFactor to %d.\n"), m_nScaleFactor);
             }
         }
     }
@@ -51,7 +50,6 @@ namespace DuiLib {
             LPGetDpiForMonitor GetDpiForMonitor = (LPGetDpiForMonitor)GetProcAddress(hModule, "GetDpiForMonitor");
 
             if (GetDpiForMonitor != NULL && GetDpiForMonitor(hMonitor, MDT_EFFECTIVE_DPI, &dpix, &dpiy) != S_OK) {
-                TraceMsg(TEXT("GetDpiForMonitor failed.\n"));
                 return 96;
             }
         }

@@ -166,7 +166,7 @@ namespace DuiLib {
         std::map<CDuiString, LPVOID> m_Map;
     };
 
-    class CDuiVariant : public VARIANT {
+    class UILIB_API CDuiVariant : public VARIANT {
       public:
         CDuiVariant() {
             VariantInit(this);
@@ -200,12 +200,12 @@ namespace DuiLib {
 
 	// About code_page, see https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
 	//
-	std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
-	std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
-	std::string UnicodeToUtf8(const std::wstring &str);
-	std::wstring Utf8ToUnicode(const std::string &str);
-	std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
-	std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
+	UILIB_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
+	UILIB_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
+	UILIB_API std::string UnicodeToUtf8(const std::wstring &str);
+	UILIB_API std::wstring Utf8ToUnicode(const std::string &str);
+	UILIB_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
+	UILIB_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
 
 }// namespace DuiLib
 

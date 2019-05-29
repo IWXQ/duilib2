@@ -316,6 +316,7 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
 				}
 			}));
 
+
 			CDuiString str;
 			for (int i = 0; i < 1000; i++) {
 				Sleep(10);
@@ -383,14 +384,12 @@ HRESULT STDMETHODCALLTYPE CMainWnd::ShowContextMenu(CWebBrowserUI *pWeb,
 }
 
 void CMainWnd::UpdateText(const CDuiString &str) {
-    if (PostTaskWhenNotInUIThread(ppx::base::Bind(&CMainWnd::UpdateText, ppx::base::Unretained(this), str))) {
-        return;
-    }
-	assert(IsInUIThread());
-	CButtonUI *btnPostTask = static_cast<CButtonUI *>(m_PaintManager.FindControl(TEXT("btnPostTask")));
-    if (btnPostTask) {
-		btnPostTask->SetText(str.GetData());
-    }
+	PostTaskToUIThread(ppx::base::BindLambda([this, str]() {
+		CButtonUI *btnPostTask = static_cast<CButtonUI *>(m_PaintManager.FindControl(TEXT("btnPostTask")));
+		if (btnPostTask) {
+			btnPostTask->SetText(str.GetData());
+		}
+	}));
 }
 
 void CMainWnd::AddListItem(int iCount) {

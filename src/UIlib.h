@@ -30,8 +30,14 @@
 
 
 #define lengthof(x) (sizeof(x)/sizeof(*x))
+
+#ifndef MAX
 #define MAX max
+#endif
+
+#ifndef MIN
 #define MIN min
+#endif
 
 #include <windows.h>
 #include <windowsx.h>
@@ -111,7 +117,6 @@
 #include "Control/UIFadeButton.h"
 #include "Control/UIRing.h"
 #include "Control/UIPlaceHolder.h"
-#include "Control/UIWke.h"
 
 #pragma comment( lib, "comctl32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )

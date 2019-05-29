@@ -7,15 +7,11 @@ namespace DuiLib {
     }
 
     void PostTaskToUIThread(ppx::base::Closure c) {
-        ppx::base::Closure * p = new ppx::base::Closure;
-        *p = c;
-        PostThreadMessage(CPaintManagerUI::GetUIThreadId(), UIMSG_THREADMSG, (WPARAM)p, UIMSG_THREADMSG);
-    }
-
-    bool PostTaskWhenNotInUIThread(ppx::base::Closure c) {
-        if (IsInUIThread())
-            return false;
-        PostTaskToUIThread(c);
-        return true;
+		assert(CPaintManagerUI::GetUIThreadId() > 0);
+		if (CPaintManagerUI::GetUIThreadId() > 0) {
+			ppx::base::Closure * p = new ppx::base::Closure;
+			*p = c;
+			PostThreadMessage(CPaintManagerUI::GetUIThreadId(), UIMSG_THREADMSG, (WPARAM)p, UIMSG_THREADMSG);
+		}
     }
 }

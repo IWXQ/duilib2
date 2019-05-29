@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "ppxbase/logging.h"
+
 namespace DuiLib {
 
     CDialogBuilder::CDialogBuilder() : m_pCallback(NULL), m_pstrtype(NULL) {
@@ -198,7 +198,7 @@ namespace DuiLib {
                         pManager->AddDefaultAttributeList(pControlName, pControlValue, shared);
                     }
                     else {
-                        TraceMsg(TEXT("DuiLib: Warning: \"Default\" miss \"name\" attribute."));
+                        OutputDebugString(TEXT("DuiLib: Warning: \"Default\" miss \"name\" attribute."));
                     }
                 } else if( _tcsicmp(pstrClass, _T("Style")) == 0 ) {
                     nAttributes = node.GetAttributeCount();
@@ -496,7 +496,9 @@ namespace DuiLib {
             }
 
             if( pControl == NULL ) {
-                TraceMsg(_T("DuiLib: Warning: Unknown Control: %s.\n"), pstrClass);
+				CDuiString str;
+				str.Format(_T("DuiLib: Warning: Unknown Control: %s.\n"), pstrClass);
+                OutputDebugString(str.GetData());
                 continue;
             }
 
