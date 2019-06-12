@@ -24,6 +24,12 @@ namespace DuiLib {
 
 		void SetUrl(const CDuiString &url);
 		CDuiString GetUrl();
+
+		void GoBack();
+		void GoForward();
+		void Reload();
+		void ShowDevTools();
+		void CloseDevTools();
 	protected:
 
 	protected:

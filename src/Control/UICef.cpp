@@ -7,7 +7,8 @@
 #include "Internal/Cef/CefHandler.h"
 #include "Internal/Cef/CefUtil.h"
 #include "include/base/cef_build.h"
-
+#include "Utils/Task.h"
+#include "ppxbase/stringencode.h"
 
 namespace DuiLib {
 
@@ -35,6 +36,9 @@ namespace DuiLib {
 		}
 
 		~CCefUIImpl() {
+			m_ClientHandler->DetachDelegate();
+			CloseBrowser();
+
 			if (m_hMemoryDC) {
 				DeleteDC(m_hMemoryDC);
 				m_hMemoryDC = NULL;
@@ -57,15 +61,62 @@ namespace DuiLib {
 			if (GetWindowLongPtr(m_pParent->m_pManager->GetPaintWindow(), GWL_EXSTYLE) & WS_EX_NOACTIVATE) {
 				window_info.ex_style |= WS_EX_NOACTIVATE;
 			}
+			
+			m_ClientHandler = new Internal::ClientHandlerOsr(this);
 
-			CefBrowserHost::CreateBrowser(window_info, new Internal::ClientHandlerOsr(this), 
-				UnicodeToUtf8(m_pParent->GetUrl().GetData()), browser_settings, request_context);
+			m_strInitUrl = m_pParent->GetUrl();
+
+			CefBrowserHost::CreateBrowser(window_info, m_ClientHandler, 
+				UnicodeToUtf8(m_strInitUrl.GetData()), browser_settings, request_context);
+		}
+
+		void CloseBrowser() {
+			if (m_browser) {
+				m_browser->GetHost()->CloseBrowser(false);
+			}
+		}
+
+		void SetUrl(const CDuiString &url) {
+			if (m_browser) {
+				if (m_browser->GetMainFrame()) {
+					m_browser->GetMainFrame()->LoadURL(UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
+				}
+			}
+		}
+
+		void GoBack() {
+			if (m_browser)
+				m_browser->GoBack();
+		}
+
+		void GoForward() {
+			if (m_browser)
+				m_browser->GoForward();
+		}
+
+		void Reload() {
+			if (m_browser)
+				m_browser->Reload();
+		}
+
+		void ShowDevTools() {
+
+		}
+
+		void CloseDevTools() {
 		}
 
 		//////////////////////////////////////////////////////////////////////////
 		// ClientHandlerOsr::OsrDelegate methods.
 		void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE {
 			m_browser = browser;
+			if (m_pParent && m_browser) {
+				if (m_pParent->GetUrl() != m_strInitUrl) {
+					if (m_browser->GetMainFrame()) {
+						m_browser->GetMainFrame()->LoadURL(UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
+					}
+				}
+			}
 		}
 		void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE {
 			m_browser = nullptr;
@@ -235,6 +286,13 @@ namespace DuiLib {
 		}
 
 		void OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) OVERRIDE {
+			PostTaskToUIThread(ppx::base::BindLambda([this, business_name, vars]() {
+				if (m_pParent && m_pParent->m_pManager) {
+					CDuiString strBusiness = Utf8ToTCHAR(business_name).c_str();
+					m_pParent->m_pManager->SendNotify(m_pParent, DUI_MSGTYPE_JAVASCRIPT_NOTIFY, 
+						(WPARAM)&strBusiness, (LPARAM)&vars);
+				}
+			}));
 		}
 
 		bool OnBeforePopup(const std::string &target_url) OVERRIDE {
@@ -477,6 +535,8 @@ namespace DuiLib {
 		int m_iMemoryBitmapHeight;
 		ppx::base::CriticalSection m_csBuf;
 
+		CDuiString m_strInitUrl;
+
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
 		POINT current_mouse_pos_;
@@ -489,6 +549,7 @@ namespace DuiLib {
 		double last_click_time_;
 		bool last_mouse_down_on_view_;
 		
+		CefRefPtr<Internal::ClientHandlerOsr> m_ClientHandler;
 		CefRefPtr<CefBrowser> m_browser;
 	};
 
@@ -575,10 +636,34 @@ namespace DuiLib {
 	}
 
 	void CCefUI::SetUrl(const CDuiString &url) {
-		m_strUrl = url;
+		if (url != m_strUrl) {
+			m_strUrl = url;
+			m_pImpl->SetUrl(url);
+		}
 	}
 
 	DuiLib::CDuiString CCefUI::GetUrl() {
 		return m_strUrl;
 	}
+
+	void CCefUI::GoBack() {
+		m_pImpl->GoBack();
+	}
+
+	void CCefUI::GoForward() {
+		m_pImpl->GoForward();
+	}
+
+	void CCefUI::Reload() {
+		m_pImpl->Reload();
+	}
+
+	void CCefUI::ShowDevTools() {
+		m_pImpl->ShowDevTools();
+	}
+
+	void CCefUI::CloseDevTools() {
+		m_pImpl->CloseDevTools();
+	}
+
 }

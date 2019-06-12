@@ -207,6 +207,9 @@ namespace DuiLib {
 	UILIB_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
 	UILIB_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
 
+	// BSTR is Unicode, String is Utf8
+	UILIB_API std::string BSTRToString(const VARIANT *arg);
+
 }// namespace DuiLib
 
 #endif // __UTILS_H__

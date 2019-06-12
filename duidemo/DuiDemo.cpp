@@ -35,24 +35,18 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     REGIST_DUICONTROL(CWndUI);
 
 
-	//CMainWnd* pMainWnd = new CMainWnd();
- //   if (pMainWnd) {
- //       pMainWnd->Create(NULL, _T("DuiLib Demo"), UI_WNDSTYLE_FRAME, 0L, 0, 0, 800, 572);
- //       pMainWnd->CenterWindow();
- //   }
-
-	CTranparentWnd * pDlg = new CTranparentWnd();
-	pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_FRAME, 0, 0, 0, 600, 400);
-	pDlg->CenterWindow();
-	pDlg->ShowWindow();
+	CMainWnd* pMainWnd = new CMainWnd();
+	if (pMainWnd) {
+		pMainWnd->Create(NULL, _T("DuiLib Demo"), UI_WNDSTYLE_FRAME, 0L, 0, 0, 800, 572);
+		pMainWnd->CenterWindow();
+	}
 
     CPaintManagerUI::MessageLoop();
 
-    //if (pMainWnd) {
-    //    delete pMainWnd;
-    //    pMainWnd = NULL;
-    //}
-
+	if (pMainWnd) {
+		delete pMainWnd;
+		pMainWnd = NULL;
+	}
 
     DuiLib::UnInitialize();
 

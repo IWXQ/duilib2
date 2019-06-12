@@ -12,6 +12,7 @@
 #include <zmouse.h>
 
 #include "UIlib.h"
+#include "ppx_base.h"
 
 using namespace DuiLib;
 

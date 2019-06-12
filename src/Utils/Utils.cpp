@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "Utils.h"
+#include "ppxbase/stringencode.h"
 
 namespace DuiLib {
 
@@ -833,5 +834,15 @@ namespace DuiLib {
 		return UnicodeToAnsi(Utf8ToUnicode(str), code_page);
 	}
 
+
+	std::string BSTRToString(const VARIANT *arg) {
+		std::string ret;
+
+		if (arg && arg->vt == VARENUM::VT_BSTR && arg->bstrVal != NULL) {
+			ret = ppx::base::UnicodeToUtf8(arg->bstrVal);
+		}
+
+		return ret;
+	}
 
 } // namespace DuiLib

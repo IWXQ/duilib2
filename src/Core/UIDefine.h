@@ -119,6 +119,7 @@ namespace DuiLib
 #define DUI_MSGTYPE_LISTHEADERCLICK			(_T("listheaderclick"))
 #define DUI_MSGTYPE_LISTHEADITEMCHECKED		(_T("listheaditemchecked"))
 #define DUI_MSGTYPE_LISTPAGECHANGED			(_T("listpagechanged"))
+#define DUI_MSGTYPE_JAVASCRIPT_NOTIFY       (_T("javascriptnotify"))
 
 	//////////////////////////////////////////////////////////////////////////
 

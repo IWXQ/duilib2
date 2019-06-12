@@ -4,6 +4,7 @@
 #include "SkinFrame.h"
 #include <thread>
 #include "TranparentWnd.h"
+#include "CefTestWnd.h"
 
 DUI_BEGIN_MESSAGE_MAP(CMainPage, CNotifyPump)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
@@ -335,9 +336,15 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
 		});
 		t.detach();
 	}
-	else if (strName.CompareNoCase(TEXT("btnPopupTransparent")) == 0) {
+	else if (strName.CompareNoCase(TEXT("btnPopupTransparentCEF")) == 0) {
 		CTranparentWnd * pDlg = new CTranparentWnd();
 		pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 600, 400);
+		pDlg->CenterWindow();
+		pDlg->ShowWindow();
+	}
+	else if (strName.CompareNoCase(TEXT("btnPopupCEF")) == 0) {
+		CefTestWnd * pDlg = new CefTestWnd();
+		pDlg->Create(NULL, TEXT("CEF TEST"), UI_WNDSTYLE_FRAME, 0, 0, 0, 600, 400);
 		pDlg->CenterWindow();
 		pDlg->ShowWindow();
 	}
