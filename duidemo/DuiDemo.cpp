@@ -42,7 +42,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
  //   }
 
 	CTranparentWnd * pDlg = new CTranparentWnd();
-	pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 600, 400);
+	pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_FRAME, 0, 0, 0, 600, 400);
 	pDlg->CenterWindow();
 	pDlg->ShowWindow();
 
