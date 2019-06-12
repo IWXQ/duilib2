@@ -37,11 +37,13 @@
 #define _WIN32_WINNT _WIN32_WINNT_WINXP//0x0501
 #endif
 
-#include "UIlib.h"
+#include "Internal/Cef/CefGloablContext.h"
+#include "UILibInternal.h"
 #include "Internal/stb_image.h"
 #include "Internal/unzip.h"
 
 #include <olectl.h>
+#include <Shlwapi.h>
 
 
 

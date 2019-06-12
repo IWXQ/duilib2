@@ -26,6 +26,7 @@ file(GLOB CORE_SOURCE_FILES 		    ./Core/*.cpp)
 file(GLOB LAYOUT_SOURCE_FILES 		./Layout/*.cpp)
 file(GLOB RENDER_SOURCE_FILES 		./Render/*.cpp)
 file(GLOB UTILS_SOURCE_FILES 		./Utils/*.cpp)
+file(GLOB INTERNAL_CEF_SOURCE_FILES     ./Internal/Cef/*.cpp)
 file(GLOB INTERNAL_SOURCE_FILES 		./Internal/*.cpp)
 
 file(GLOB ROOT_HEADER_FILES 			./UIlib.h ./UIlibExport.h)
@@ -34,6 +35,7 @@ file(GLOB CORE_HEADER_FILES 		    ./Core/*.h ./Core/*.hpp)
 file(GLOB LAYOUT_HEADER_FILES 		./Layout/*.h ./Layout/*.hpp)
 file(GLOB RENDER_HEADER_FILES 		./Render/*.h ./Render/*.hpp)
 file(GLOB UTILS_HEADER_FILES 		./Utils/*.h ./Utils/*.hpp ./Utils/*.tlh)
+file(GLOB INTERNAL_CEF_HEADER_FILES     ./Internal/Cef/*.h)
 file(GLOB INTERNAL_HEADER_FILES 		./Internal/*.h ./Internal/*.hpp)
 
 source_group("Header Files" FILES 
@@ -50,6 +52,8 @@ source_group("Header Files\\Utils" FILES
 	${UTILS_HEADER_FILES})
 source_group("Header Files\\Internal" FILES 
 	${INTERNAL_HEADER_FILES})
+source_group("Header Files\\Internal\\Cef" FILES 
+	${INTERNAL_CEF_HEADER_FILES})
 
 source_group("Source Files" FILES 
 	${ROOT_SOURCE_FILES} ./StdAfx.cpp)
@@ -65,7 +69,8 @@ source_group("Source Files\\Utils" FILES
 	${UTILS_SOURCE_FILES})
 source_group("Source Files\\Internal" FILES 
 	${INTERNAL_SOURCE_FILES})
-
+source_group("Source Files\\Internal\\Cef" FILES 
+	${INTERNAL_CEF_SOURCE_FILES})
 
 
 if (MSVC)
@@ -113,6 +118,8 @@ if(BUILD_SHARED_LIBS)
 		${RENDER_SOURCE_FILES}
 		${UTILS_SOURCE_FILES}
 		${INTERNAL_SOURCE_FILES}
+		${INTERNAL_CEF_HEADER_FILES}
+		${INTERNAL_CEF_SOURCE_FILES}
 	)
 	
 	# set output name prefix/suffix
@@ -120,7 +127,7 @@ if(BUILD_SHARED_LIBS)
 		OUTPUT_NAME ${LIB_NAME}
 		DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
 else()
-	add_definitions(-DUILIB_STATIC)
+	add_definitions(-DUILIB_STATIC -DPPXBASE_STATIC)
 	set(UILIB_STATIC YES)
 	
 	add_library(
@@ -140,6 +147,8 @@ else()
 		${RENDER_SOURCE_FILES}
 		${UTILS_SOURCE_FILES}
 		${INTERNAL_SOURCE_FILES}
+		${INTERNAL_CEF_HEADER_FILES}
+		${INTERNAL_CEF_SOURCE_FILES}
 	)
 	
 	# set output name prefix/suffix
@@ -152,7 +161,7 @@ else()
 endif()
 
 
-target_include_directories(${LIB_NAME} PRIVATE ".")
+target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary/2623/include" ".")
 
 
 
@@ -166,6 +175,9 @@ else()
 		ppxbase-static)
 endif()
 
+target_link_libraries(${LIB_NAME} PRIVATE
+	$<TARGET_LINKER_FILE:libcef_dll_wrapper_2623> 
+	"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary/2623/lib/libcef.lib")
 
 
 # Set output directory

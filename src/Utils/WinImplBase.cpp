@@ -91,6 +91,7 @@ namespace DuiLib {
         vctStaticName.push_back(DUI_CTR_TEXT);
         vctStaticName.push_back(DUI_CTR_LABEL);
         vctStaticName.push_back(DUI_CTR_CONTAINER);
+		vctStaticName.push_back(DUI_CTR_CEF);
         vctStaticName.push_back(DUI_CTR_HORIZONTALLAYOUT);
         vctStaticName.push_back(DUI_CTR_VERTICALLAYOUT);
         vctStaticName.push_back(DUI_CTR_TABLAYOUT);

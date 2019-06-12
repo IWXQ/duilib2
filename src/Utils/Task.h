@@ -4,9 +4,6 @@
 #include "ppxbase/bind.h"
 #include "ppxbase/callback.h"
 
-#include <ppl.h>
-#include <ppltasks.h>
-
 namespace DuiLib {
     UILIB_API bool IsInUIThread();
   

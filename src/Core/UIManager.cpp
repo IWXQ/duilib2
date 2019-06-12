@@ -998,6 +998,15 @@ namespace DuiLib {
                 break;
 
             case WM_SYSCHAR: {
+				if (m_pFocus != NULL) {
+					TEventUI event = { 0 };
+					event.Type = UIEVENT_SYSCHAR;
+					event.chKey = (TCHAR)wParam;
+					event.ptMouse = m_ptLastMousePos;
+					event.wKeyState = MapKeyState();
+					event.dwTimestamp = ::GetTickCount();
+					m_pFocus->Event(event);
+				}
                     // Handle ALT-shortcut key-combinations
                     FINDSHORTCUT fs = { 0 };
                     fs.ch = toupper((int)wParam);
@@ -1014,7 +1023,7 @@ namespace DuiLib {
             case WM_SYSKEYDOWN: {
                     if( m_pFocus != NULL ) {
                         TEventUI event = { 0 };
-                        event.Type = UIEVENT_SYSKEY;
+                        event.Type = UIEVENT_SYSKEYDOWN;
                         event.chKey = (TCHAR)wParam;
                         event.ptMouse = m_ptLastMousePos;
                         event.wKeyState = MapKeyState();
@@ -1023,6 +1032,18 @@ namespace DuiLib {
                     }
                 }
                 break;
+			case WM_SYSKEYUP: {
+				if (m_pFocus != NULL) {
+					TEventUI event = { 0 };
+					event.Type = UIEVENT_SYSKEYUP;
+					event.chKey = (TCHAR)wParam;
+					event.ptMouse = m_ptLastMousePos;
+					event.wKeyState = MapKeyState();
+					event.dwTimestamp = ::GetTickCount();
+					m_pFocus->Event(event);
+				}
+			}
+			break;
         }
 
         return false;

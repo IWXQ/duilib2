@@ -321,6 +321,8 @@ protected:                                                                \
 
 #define  DUI_CTR_COLORPALETTE					 (_T("ColorPalette"))
 #define  DUI_CTR_FADEBUTTON                      (_T("FadeButton"))
+
+#define DUI_CTR_CEF                              (_T("Cef"))
 ///
 //////////////END控件名称宏定义//////////////////////////////////////////////////
 

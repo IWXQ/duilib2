@@ -7,8 +7,8 @@
 #include "SkinFrame.h"
 #include "MainWnd.h"
 #include "PopWnd.h"
-#include "SplashWnd.h"
 #include "resource.h"
+#include "TranparentWnd.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include<stdlib.h>
@@ -17,9 +17,13 @@
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*lpCmdLine*/, int nCmdShow)
 {
+	if (!DuiLib::CefProcessTypeCheck(hInstance)) {
+		return 0;
+	}
+
 	_CrtDumpMemoryLeaks();
 	
-    DuiLib::Initialize(hInstance);
+    DuiLib::Initialize(hInstance, true, false);
 
     CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
     CPaintManagerUI::SetResourceZip(IDR_ZIPRES1);
@@ -31,18 +35,24 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     REGIST_DUICONTROL(CWndUI);
 
 
-	CMainWnd* pMainWnd = new CMainWnd();
-    if (pMainWnd) {
-        pMainWnd->Create(NULL, _T("DuiLib Demo"), UI_WNDSTYLE_FRAME, 0L, 0, 0, 800, 572);
-        pMainWnd->CenterWindow();
-    }
+	//CMainWnd* pMainWnd = new CMainWnd();
+ //   if (pMainWnd) {
+ //       pMainWnd->Create(NULL, _T("DuiLib Demo"), UI_WNDSTYLE_FRAME, 0L, 0, 0, 800, 572);
+ //       pMainWnd->CenterWindow();
+ //   }
+
+	CTranparentWnd * pDlg = new CTranparentWnd();
+	pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 600, 400);
+	pDlg->CenterWindow();
+	pDlg->ShowWindow();
 
     CPaintManagerUI::MessageLoop();
 
-    if (pMainWnd) {
-        delete pMainWnd;
-        pMainWnd = NULL;
-    }
+    //if (pMainWnd) {
+    //    delete pMainWnd;
+    //    pMainWnd = NULL;
+    //}
+
 
     DuiLib::UnInitialize();
 

@@ -48,6 +48,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 add_subdirectory(src)
+add_subdirectory(libcef_wrapper_2623)
 
 if(BUILD_TESTS)
 	add_subdirectory(duidemo)

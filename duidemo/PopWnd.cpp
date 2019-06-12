@@ -45,7 +45,6 @@ void CPopWnd::OnClick( TNotifyUI &msg )
 		return; 
 	}
 	else if( msg.pSender == m_pMinBtn ) { 
-		//CMsgWnd::MessageBox(m_hWnd, NULL, _T("всвс╢╟©з"));
 		SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0); return; }
 	else if( msg.pSender == m_pMaxBtn ) { 
 		SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0); return; }

@@ -3,6 +3,7 @@
 #include "MainWnd.h"
 #include "SkinFrame.h"
 #include <thread>
+#include "TranparentWnd.h"
 
 DUI_BEGIN_MESSAGE_MAP(CMainPage, CNotifyPump)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
@@ -333,6 +334,12 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
 			}));
 		});
 		t.detach();
+	}
+	else if (strName.CompareNoCase(TEXT("btnPopupTransparent")) == 0) {
+		CTranparentWnd * pDlg = new CTranparentWnd();
+		pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 600, 400);
+		pDlg->CenterWindow();
+		pDlg->ShowWindow();
 	}
 }
 

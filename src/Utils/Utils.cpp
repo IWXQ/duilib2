@@ -832,4 +832,6 @@ namespace DuiLib {
 	std::string Utf8ToAnsi(const std::string &str, unsigned int code_page /*= 0*/) {
 		return UnicodeToAnsi(Utf8ToUnicode(str), code_page);
 	}
+
+
 } // namespace DuiLib
