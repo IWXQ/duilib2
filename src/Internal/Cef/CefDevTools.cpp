@@ -35,7 +35,7 @@ namespace DuiLib {
 		}
 
 		LPCTSTR CefDevToolsWnd::GetWindowClassName() const {
-			return TEXT("CefDevToolsWnd");
+			return TEXT("CefDevToolsWnd891$322@");
 		}
 
 		void CefDevToolsWnd::OnFinalMessage(HWND hWnd) {

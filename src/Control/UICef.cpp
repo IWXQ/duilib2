@@ -4,6 +4,7 @@
 #include <cstring>
 #include "ppxbase/stringencode.h"
 #include "ppxbase/criticalsection.h"
+#include "ppxbase/random.h"
 #include "Internal/Cef/RequestContextHandler.h"
 #include "Internal/Cef/CefHandler.h"
 #include "Internal/Cef/CefUtil.h"
@@ -36,11 +37,20 @@ namespace DuiLib {
 			, last_mouse_down_on_view_(false)
 		{
 			m_hMemoryDC = CreateCompatibleDC(NULL);
+			ppx::base::Random random;
+			m_iRandomID = random.Rand(0xFFFFFFFF);
 		}
 
 		~CCefUIImpl() {
 			if (m_pDevToolsWnd) {
-				m_pDevToolsWnd->Close();
+				TCHAR szName[MAX_PATH];
+				StringCchPrintf(szName, MAX_PATH, TEXT("Dev Tools[%lu]"), m_iRandomID);
+				HWND h = FindWindow(TEXT("CefDevToolsWnd891$322@"), szName);
+				if (h) {
+					m_pDevToolsWnd->Close();
+					return;
+				}
+				m_pDevToolsWnd = NULL;
 			}
 			m_ClientHandler->DetachDelegate();
 			CloseBrowser();
@@ -108,8 +118,17 @@ namespace DuiLib {
 		void ShowDevTools() {
 			if (!m_browser)
 				return;
+			TCHAR szName[MAX_PATH];
+			StringCchPrintf(szName, MAX_PATH, TEXT("Dev Tools[%lu]"), m_iRandomID);
+
+			HWND h = FindWindow(TEXT("CefDevToolsWnd891$322@"), szName);
+			if (h) {
+				SetForegroundWindow(h);
+				return;
+			}
+
 			m_pDevToolsWnd = new Internal::CefDevToolsWnd(m_browser, m_pParent->m_pManager->GetDPIObj()->GetScale() / 100);
-			m_pDevToolsWnd->Create(NULL, TEXT("Dev Tools"), WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 0,
+			m_pDevToolsWnd->Create(NULL, szName, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 0,
 				CW_USEDEFAULT,
 				CW_USEDEFAULT,
 				CW_USEDEFAULT,
@@ -120,6 +139,7 @@ namespace DuiLib {
 		void CloseDevTools() {
 			if (m_pDevToolsWnd) {
 				m_pDevToolsWnd->Close();
+				m_pDevToolsWnd = NULL; // delete in DevToolsWnd internal.
 			}
 		}
 
@@ -570,6 +590,7 @@ namespace DuiLib {
 		ppx::base::CriticalSection m_csBuf;
 
 		CDuiString m_strInitUrl;
+		uint32_t m_iRandomID;
 
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
