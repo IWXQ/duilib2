@@ -6,9 +6,8 @@
 #include <ShellAPI.h>
 #include "SkinFrame.h"
 #include "MainWnd.h"
-#include "PopWnd.h"
+#include "PopupWnd.h"
 #include "resource.h"
-#include "TranparentWnd.h"
 
 #define _CRTDBG_MAP_ALLOC
 #include<stdlib.h>
@@ -35,7 +34,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
     REGIST_DUICONTROL(CWndUI);
 
 
-	CMainWnd* pMainWnd = new CMainWnd();
+	MainWnd* pMainWnd = new MainWnd();
 	if (pMainWnd) {
 		pMainWnd->Create(NULL, _T("DuiLib Demo"), UI_WNDSTYLE_FRAME, 0L, 0, 0, 800, 572);
 		pMainWnd->CenterWindow();

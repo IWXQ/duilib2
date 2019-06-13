@@ -11,14 +11,14 @@ public:
     }
 
     LPCTSTR GetWindowClassName() const override {
-        return TEXT("DlgCEFBA9B2BC0");
+        return TEXT("DlgCEFTESTBA9B2BC0");
     }
 
     void Notify(TNotifyUI& msg) override;
     void OnFinalMessage(HWND hWnd) override;
 private:
     void OnWindowInit();
-    void TestCallJS(int browser_id);
+    void Web2CallJS();
 private:
 
 	CCefUI* web1_;
@@ -33,6 +33,7 @@ private:
 	CButtonUI* btn_go_1_;
 	CButtonUI* btn_open_devtools_1_;
 	CButtonUI* btn_close_devtools_1_;
+	CButtonUI* btn_call_js_1_;
 	CEditUI*   edt_url_1_;
 
 	CButtonUI* btn_go_back_2_;
@@ -41,6 +42,7 @@ private:
 	CButtonUI* btn_go_2_;
 	CButtonUI* btn_open_devtools_2_;
 	CButtonUI* btn_close_devtools_2_;
+	CButtonUI* btn_call_js_2_;
 	CEditUI*   edt_url_2_;
 };
 

@@ -1,41 +1,41 @@
 #include "StdAfx.h"
-#include "PopWnd.h"
+#include "PopupWnd.h"
 #include "MsgWnd.h"
 #include <ShellAPI.h>
 //////////////////////////////////////////////////////////////////////////
 ///
 
-DUI_BEGIN_MESSAGE_MAP(CPopWnd, WindowImplBase)
+DUI_BEGIN_MESSAGE_MAP(PopupWnd, WindowImplBase)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMSELECT,OnItemSelect)
 	DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED,OnSelectChanged)
 DUI_END_MESSAGE_MAP()
 
-CPopWnd::CPopWnd(void)
+PopupWnd::PopupWnd(void)
 {
 }
 
-CPopWnd::~CPopWnd(void)
+PopupWnd::~PopupWnd(void)
 {
 }
 
-void CPopWnd::OnFinalMessage( HWND hWnd)
+void PopupWnd::OnFinalMessage( HWND hWnd)
 {
 	__super::OnFinalMessage(hWnd);
 	delete this;
 }
 
-CDuiString CPopWnd::GetSkinFile()
+CDuiString PopupWnd::GetSkinFile()
 {
 	return _T("popup.xml");
 }
 
-LPCTSTR CPopWnd::GetWindowClassName( void ) const
+LPCTSTR PopupWnd::GetWindowClassName( void ) const
 {
 	return _T("PopWnd");
 }
 
-void CPopWnd::OnClick( TNotifyUI &msg )
+void PopupWnd::OnClick( TNotifyUI &msg )
 {
 	CDuiString sName = msg.pSender->GetName();
 	sName.MakeLower();
@@ -58,31 +58,31 @@ void CPopWnd::OnClick( TNotifyUI &msg )
 	}
 }
 
-void CPopWnd::OnSelectChanged( TNotifyUI &msg )
+void PopupWnd::OnSelectChanged( TNotifyUI &msg )
 {
 	CDuiString sName = msg.pSender->GetName();
 	sName.MakeLower();
 
 }
 
-void CPopWnd::OnItemSelect( TNotifyUI &msg )
+void PopupWnd::OnItemSelect( TNotifyUI &msg )
 {
 	CDuiString sName = msg.pSender->GetName();
 	sName.MakeLower();
 }
 
-LRESULT CPopWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+LRESULT PopupWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
  {
 	 bHandled = FALSE;
 	 return 0;
  }
 
-void CPopWnd::Notify( TNotifyUI &msg )
+void PopupWnd::Notify( TNotifyUI &msg )
 {
 	return WindowImplBase::Notify(msg);
 }
 
-LRESULT CPopWnd::OnSysCommand( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
+LRESULT PopupWnd::OnSysCommand( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled )
 {
 	// 有时会在收到WM_NCDESTROY后收到wParam为SC_CLOSE的WM_SYSCOMMAND
 	if( wParam == SC_CLOSE ) {
@@ -109,7 +109,7 @@ LRESULT CPopWnd::OnSysCommand( UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	return lRes;
 }
 
-void CPopWnd::InitWindow()
+void PopupWnd::InitWindow()
 {
 	m_pCloseBtn = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("closebtn")));
 	m_pMaxBtn = static_cast<CButtonUI*>(m_PaintManager.FindControl(_T("maxbtn")));

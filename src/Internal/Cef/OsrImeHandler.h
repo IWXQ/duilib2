@@ -12,8 +12,8 @@
 * file.
 *******************************************************************************/
 
-#ifndef PPX_CEF_OSR_IME_HANDER_H__
-#define PPX_CEF_OSR_IME_HANDER_H__
+#ifndef DUILIB_OSR_IME_HANDER_H__
+#define DUILIB_OSR_IME_HANDER_H__
 #pragma once
 
 #include <windows.h>
@@ -124,4 +124,4 @@ namespace DuiLib {
 	}
 }
 
-#endif  // PPX_CEF_OSR_IME_HANDER_H__
+#endif  // DUILIB_OSR_IME_HANDER_H__

@@ -252,17 +252,17 @@ namespace DuiLib {
 
         if( event.Type == UIEVENT_SCROLLWHEEL ) {
             if( IsEnabled() ) {
-                switch( LOWORD(event.wParam) ) {
-                    case SB_LINEUP:
-                        SetValue(GetValue() + GetChangeStep());
-                        m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-                        return;
-
-                    case SB_LINEDOWN:
-                        SetValue(GetValue() - GetChangeStep());
-                        m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
-                        return;
-                }
+				int zDelta = (int)(short)HIWORD(event.wParam);
+				if (zDelta < 0) {
+					SetValue(GetValue() - GetChangeStep());
+					m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+					return;
+				}
+				else if(zDelta > 0) {
+					SetValue(GetValue() + GetChangeStep());
+					m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+					return;
+				}
             }
         }
 

@@ -12,8 +12,8 @@
 * file.
 *******************************************************************************/
 
-#ifndef PPX_CEF_REQUEST_CONTEXT_HANDLER_H__
-#define PPX_CEF_REQUEST_CONTEXT_HANDLER_H__
+#ifndef DUILIB_REQUEST_CONTEXT_HANDLER_H__
+#define DUILIB_REQUEST_CONTEXT_HANDLER_H__
 #pragma once
 
 #include "include/cef_request_context.h"
@@ -40,4 +40,4 @@ namespace DuiLib {
 	}
 }
 
-#endif // !PPX_CEF_REQUEST_CONTEXT_HANDLER_H__
+#endif // !DUILIB_REQUEST_CONTEXT_HANDLER_H__

@@ -1,3 +1,16 @@
+/*******************************************************************************
+* Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+*
+* THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+* EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+*
+* Expect bugs
+*
+* Please use and enjoy. Please let me know of any bugs/improvements
+* that you have found/implemented and I will fix/incorporate them into this
+* file.
+*******************************************************************************/
 #ifndef __UICEF_H__
 #define __UICEF_H__
 #pragma once
@@ -20,16 +33,17 @@ namespace DuiLib {
 		void DoEvent(TEventUI &event) override;
 
 		void SetBkTransparent(bool b);
-		bool GetBkTransparent();
+		bool GetBkTransparent() const;
 
 		void SetUrl(const CDuiString &url);
-		CDuiString GetUrl();
+		CDuiString GetUrl() const;
 
 		void GoBack();
 		void GoForward();
 		void Reload();
 		void ShowDevTools();
 		void CloseDevTools();
+		bool CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args);
 	protected:
 
 	protected:

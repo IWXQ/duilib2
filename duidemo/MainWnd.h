@@ -1,35 +1,35 @@
 #pragma once
-#include "PopWnd.h"
+#include "PopupWnd.h"
 #include "ShlObj.h"
 #include "MsgWnd.h"
 #include "ControlEx.h"
 #include "SkinManager.h"
 
-class CMainPage : public CNotifyPump {
-  public:
-    CMainPage();
+class MainPageWnd : public CNotifyPump {
+public:
+	MainPageWnd();
 
-  public:
-    void SetPaintMagager(CPaintManagerUI *pPaintMgr);
+public:
+	void SetPaintMagager(CPaintManagerUI *pPaintMgr);
 
-    DUI_DECLARE_MESSAGE_MAP()
-    virtual void OnSelectChanged( TNotifyUI &msg );
-    virtual void OnItemClick( TNotifyUI &msg );
+	DUI_DECLARE_MESSAGE_MAP()
+		virtual void OnSelectChanged(TNotifyUI &msg);
+	virtual void OnItemClick(TNotifyUI &msg);
 
-  private:
-    CPaintManagerUI *m_pPaintManager;
+private:
+	CPaintManagerUI *m_pPaintManager;
 };
 
 //////////////////////////////////////////////////////////////////////////
 ///
 
-class CMainWnd :
+class MainWnd :
     public WindowImplBase,
     public CWebBrowserEventHandler,
     public SkinChangedReceiver {
   public:
-    CMainWnd();
-    ~CMainWnd();
+    MainWnd();
+    ~MainWnd();
 
     void OnClick(TNotifyUI &msg);
   public:
@@ -75,5 +75,5 @@ class CMainWnd :
     CEditUI* m_pEditS;
     CEditUI* m_pEditL;
   public:
-    CMainPage m_MainPage;
+    MainPageWnd m_MainPage;
 };

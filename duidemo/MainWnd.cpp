@@ -3,36 +3,36 @@
 #include "MainWnd.h"
 #include "SkinFrame.h"
 #include <thread>
-#include "TranparentWnd.h"
+#include "TranparentCefWnd.h"
 #include "CefTestWnd.h"
 
-DUI_BEGIN_MESSAGE_MAP(CMainPage, CNotifyPump)
+DUI_BEGIN_MESSAGE_MAP(MainPageWnd, CNotifyPump)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_SELECTCHANGED, OnSelectChanged)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_ITEMCLICK, OnItemClick)
 DUI_END_MESSAGE_MAP()
 
-CMainPage::CMainPage() {
-    m_pPaintManager = NULL;
+MainPageWnd::MainPageWnd() {
+	m_pPaintManager = NULL;
 }
 
-void CMainPage::SetPaintMagager(CPaintManagerUI *pPaintMgr) {
-    m_pPaintManager = pPaintMgr;
+void MainPageWnd::SetPaintMagager(CPaintManagerUI *pPaintMgr) {
+	m_pPaintManager = pPaintMgr;
 }
 
 
-void CMainPage::OnSelectChanged( TNotifyUI &msg ) {
-
-}
-
-void CMainPage::OnItemClick( TNotifyUI &msg ) {
+void MainPageWnd::OnSelectChanged(TNotifyUI &msg) {
 
 }
 
-DUI_BEGIN_MESSAGE_MAP(CMainWnd, WindowImplBase)
+void MainPageWnd::OnItemClick(TNotifyUI &msg) {
+
+}
+
+DUI_BEGIN_MESSAGE_MAP(MainWnd, WindowImplBase)
 DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick)
 DUI_END_MESSAGE_MAP()
 
-CMainWnd::CMainWnd() : 
+MainWnd::MainWnd() : 
     m_pList(NULL),
     m_pEditH(NULL),
     m_pEditS(NULL),
@@ -44,7 +44,7 @@ CMainWnd::CMainWnd() :
     AddVirtualWnd(_T("mainpage"), &m_MainPage);
 }
 
-CMainWnd::~CMainWnd() {
+MainWnd::~MainWnd() {
     CMenuWnd::DestroyMenu();
 
     if(m_pMenu != NULL) {
@@ -56,7 +56,7 @@ CMainWnd::~CMainWnd() {
 }
 
 
-void CMainWnd::InitWindow() {
+void MainWnd::InitWindow() {
     SetIcon(IDI_ICON1);
     CResourceManager::GetInstance()->SetTextQueryInterface(this);
     CResourceManager::GetInstance()->LoadLanguage(_T("lan_cn.xml"));
@@ -119,7 +119,7 @@ void CMainWnd::InitWindow() {
 }
 
 
-void CMainWnd::Notify(TNotifyUI &msg) {
+void MainWnd::Notify(TNotifyUI &msg) {
     CDuiString strName = msg.pSender->GetName();
 
     if (msg.sType == _T("windowinit")) {
@@ -206,7 +206,7 @@ void CMainWnd::Notify(TNotifyUI &msg) {
     return WindowImplBase::Notify(msg);
 }
 
-void CMainWnd::OnClick(TNotifyUI &msg) {
+void MainWnd::OnClick(TNotifyUI &msg) {
     CDuiString strName = msg.pSender->GetName();
 
     if (strName.CompareNoCase(_T("btnClose")) == 0) {
@@ -337,7 +337,7 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
 		t.detach();
 	}
 	else if (strName.CompareNoCase(TEXT("btnPopupTransparentCEF")) == 0) {
-		CTranparentWnd * pDlg = new CTranparentWnd();
+		CTranparentCEFWnd * pDlg = new CTranparentCEFWnd();
 		pDlg->Create(NULL, TEXT("Transparent"), UI_WNDSTYLE_DIALOG, 0, 0, 0, 600, 400);
 		pDlg->CenterWindow();
 		pDlg->ShowWindow();
@@ -350,7 +350,7 @@ void CMainWnd::OnClick(TNotifyUI &msg) {
 	}
 }
 
-CControlUI *CMainWnd::CreateControl(LPCTSTR pstrClass) {
+CControlUI *MainWnd::CreateControl(LPCTSTR pstrClass) {
     if(lstrcmpi(pstrClass, _T("CircleProgress" )) == 0) {
         return new CCircleProgressUI();
     }
@@ -358,7 +358,7 @@ CControlUI *CMainWnd::CreateControl(LPCTSTR pstrClass) {
     return NULL;
 }
 
-BOOL CMainWnd::Receive(SkinChangedParam param) {
+BOOL MainWnd::Receive(SkinChangedParam param) {
     CControlUI *pRoot = m_PaintManager.FindControl(_T("root"));
 
     if( pRoot != NULL ) {
@@ -375,11 +375,11 @@ BOOL CMainWnd::Receive(SkinChangedParam param) {
     return TRUE;
 }
 
-HRESULT STDMETHODCALLTYPE CMainWnd::UpdateUI( void) {
+HRESULT STDMETHODCALLTYPE MainWnd::UpdateUI( void) {
     return S_OK;
 }
 
-HRESULT STDMETHODCALLTYPE CMainWnd::GetHostInfo(CWebBrowserUI *pWeb,
+HRESULT STDMETHODCALLTYPE MainWnd::GetHostInfo(CWebBrowserUI *pWeb,
         /* [out][in] */ DOCHOSTUIINFO __RPC_FAR *pInfo) {
     if (pInfo != NULL) {
         pInfo->dwFlags |= DOCHOSTUIFLAG_NO3DBORDER | DOCHOSTUIFLAG_NO3DOUTERBORDER | DOCHOSTUIFLAG_SCROLL_NO;
@@ -387,7 +387,7 @@ HRESULT STDMETHODCALLTYPE CMainWnd::GetHostInfo(CWebBrowserUI *pWeb,
 
     return S_OK;
 }
-HRESULT STDMETHODCALLTYPE CMainWnd::ShowContextMenu(CWebBrowserUI *pWeb,
+HRESULT STDMETHODCALLTYPE MainWnd::ShowContextMenu(CWebBrowserUI *pWeb,
         /* [in] */ DWORD dwID,
         /* [in] */ POINT __RPC_FAR *ppt,
         /* [in] */ IUnknown __RPC_FAR *pcmdtReserved,
@@ -397,7 +397,7 @@ HRESULT STDMETHODCALLTYPE CMainWnd::ShowContextMenu(CWebBrowserUI *pWeb,
     //返回S_OK 则可屏蔽系统右键菜单
 }
 
-void CMainWnd::UpdateText(const CDuiString &str) {
+void MainWnd::UpdateText(const CDuiString &str) {
 	PostTaskToUIThread(ppx::base::BindLambda([this, str]() {
 		CButtonUI *btnPostTask = static_cast<CButtonUI *>(m_PaintManager.FindControl(TEXT("btnPostTask")));
 		if (btnPostTask) {
@@ -406,7 +406,7 @@ void CMainWnd::UpdateText(const CDuiString &str) {
 	}));
 }
 
-void CMainWnd::AddListItem(int iCount) {
+void MainWnd::AddListItem(int iCount) {
     static int iHasAdd = 0;
 
     for (int i = 0; i < iCount; i++) {
@@ -440,23 +440,23 @@ void CMainWnd::AddListItem(int iCount) {
     }
 }
 
-CDuiString CMainWnd::GetSkinFile() {
+CDuiString MainWnd::GetSkinFile() {
     return _T("XML_MAIN");
 }
 
-LPCTSTR CMainWnd::GetWindowClassName() const {
+LPCTSTR MainWnd::GetWindowClassName() const {
     return _T("MainWnd");
 }
 
-UINT CMainWnd::GetClassStyle() const {
+UINT MainWnd::GetClassStyle() const {
     return CS_DBLCLKS;
 }
 
-void CMainWnd::OnFinalMessage(HWND hWnd) {
+void MainWnd::OnFinalMessage(HWND hWnd) {
     __super::OnFinalMessage(hWnd);
 }
 
-LPCTSTR CMainWnd::QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) {
+LPCTSTR MainWnd::QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) {
     CDuiString sLanguage = CResourceManager::GetInstance()->GetLanguage();
 
     if(sLanguage == _T("en")) {
@@ -480,7 +480,7 @@ LPCTSTR CMainWnd::QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) {
 }
 
 
-LRESULT CMainWnd::ResponseDefaultKeyEvent(WPARAM wParam) {
+LRESULT MainWnd::ResponseDefaultKeyEvent(WPARAM wParam) {
     if (wParam == VK_ESCAPE) {
         return TRUE;
     }
@@ -490,14 +490,14 @@ LRESULT CMainWnd::ResponseDefaultKeyEvent(WPARAM wParam) {
     return FALSE;
 }
 
-LRESULT CMainWnd::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL &bHandled) {
+LRESULT MainWnd::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL &bHandled) {
     m_trayIcon.DeleteTrayIcon();
     bHandled = FALSE;
     PostQuitMessage(0);
     return 0;
 }
 
-LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
+LRESULT MainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
     if(uMsg == WM_DESTROY) {
         ::PostQuitMessage(0L);
         bHandled = TRUE;
@@ -587,7 +587,7 @@ LRESULT CMainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, B
     return 0;
 }
 
-LRESULT CMainWnd::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
+LRESULT MainWnd::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
     bHandled = FALSE;
     return 0;
 }

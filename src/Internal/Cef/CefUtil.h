@@ -12,8 +12,8 @@
 * file.
 *******************************************************************************/
 
-#ifndef PPX_CEF_CEF_UTIL_H__
-#define PPX_CEF_CEF_UTIL_H__
+#ifndef DUILIB_CEF_UTIL_H__
+#define DUILIB_CEF_UTIL_H__
 #pragma once
 
 #include <windows.h>
@@ -76,4 +76,4 @@ namespace DuiLib {
 	}
 } 
 
-#endif  // PPX_CEF_CEF_UTIL_H__
+#endif  // DUILIB_CEF_UTIL_H__

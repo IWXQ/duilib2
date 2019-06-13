@@ -2,13 +2,15 @@
 #include "UICef.h"
 #include <fstream>
 #include <cstring>
+#include "ppxbase/stringencode.h"
 #include "ppxbase/criticalsection.h"
 #include "Internal/Cef/RequestContextHandler.h"
 #include "Internal/Cef/CefHandler.h"
 #include "Internal/Cef/CefUtil.h"
 #include "include/base/cef_build.h"
+#include "Internal/Cef/CefDevTools.h"
 #include "Utils/Task.h"
-#include "ppxbase/stringencode.h"
+
 
 namespace DuiLib {
 
@@ -19,9 +21,10 @@ namespace DuiLib {
 			, m_pBuffer(NULL)
 			, m_hBitmap(NULL)
 			, m_hMemoryDC(NULL)
+			, m_pDevToolsWnd(NULL)
 			, m_iMemoryBitmapWidth(0)
 			, m_iMemoryBitmapHeight(0)
-			,last_mouse_pos_()
+			, last_mouse_pos_()
 			, current_mouse_pos_()
 			, mouse_rotation_(false)
 			, mouse_tracking_(false)
@@ -36,6 +39,9 @@ namespace DuiLib {
 		}
 
 		~CCefUIImpl() {
+			if (m_pDevToolsWnd) {
+				m_pDevToolsWnd->Close();
+			}
 			m_ClientHandler->DetachDelegate();
 			CloseBrowser();
 
@@ -100,10 +106,34 @@ namespace DuiLib {
 		}
 
 		void ShowDevTools() {
-
+			if (!m_browser)
+				return;
+			m_pDevToolsWnd = new Internal::CefDevToolsWnd(m_browser, m_pParent->m_pManager->GetDPIObj()->GetScale() / 100);
+			m_pDevToolsWnd->Create(NULL, TEXT("Dev Tools"), WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 0,
+				CW_USEDEFAULT,
+				CW_USEDEFAULT,
+				CW_USEDEFAULT,
+				CW_USEDEFAULT);
+			m_pDevToolsWnd->ShowWindow();
 		}
 
 		void CloseDevTools() {
+			if (m_pDevToolsWnd) {
+				m_pDevToolsWnd->Close();
+			}
+		}
+
+		bool CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args) {
+			bool ret = false;
+			if (m_browser) {
+				CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create(Internal::BROWSER_2_RENDER_CPP_CALL_JS_MSG);
+				CefRefPtr<CefListValue> arg_list = message->GetArgumentList();
+				arg_list->SetString(0, TCHARToUtf8(strFuncName.GetData()));
+				Internal::VARINATList2CefListValue(args, arg_list, 1);
+
+				ret = m_browser->SendProcessMessage(PID_RENDERER, message);
+			}
+			return true;
 		}
 
 		//////////////////////////////////////////////////////////////////////////
@@ -121,6 +151,7 @@ namespace DuiLib {
 		void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE {
 			m_browser = nullptr;
 		}
+
 		bool GetRootScreenRect(CefRefPtr<CefBrowser> browser, CefRect& rect) OVERRIDE {
 			CEF_REQUIRE_UI_THREAD();
 			return false;
@@ -380,6 +411,7 @@ namespace DuiLib {
 			case UIEVENT_BUTTONUP:
 			case UIEVENT_RBUTTONUP:
 			case UIEVENT_MBUTTONUP:
+			{
 				if (GetCapture() == hwnd)
 					ReleaseCapture();
 				if (mouse_rotation_) {
@@ -409,7 +441,7 @@ namespace DuiLib {
 					}
 				}
 				break;
-
+			}
 			case UIEVENT_MOUSEMOVE:
 			{
 				int x = GET_X_LPARAM(lParam) - pos.left;
@@ -474,12 +506,14 @@ namespace DuiLib {
 
 			case UIEVENT_SCROLLWHEEL:
 				if (browser_host) {
-					POINT screen_point = { GET_X_LPARAM(lParam) - pos.left, GET_Y_LPARAM(lParam) - pos.top };
-					//HWND scrolled_wnd = ::WindowFromPoint(screen_point);
-					//if (scrolled_wnd != hwnd)
-					//	break;
+					POINT screen_point = { GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+					HWND scrolled_wnd = ::WindowFromPoint(screen_point);
+					if (scrolled_wnd != hwnd)
+						break;
 
 					ScreenToClient(hwnd, &screen_point);
+					screen_point.x -= pos.left;
+					screen_point.y -= pos.top;
 					int delta = GET_WHEEL_DELTA_WPARAM(wParam);
 
 					CefMouseEvent mouse_event;
@@ -551,6 +585,7 @@ namespace DuiLib {
 		
 		CefRefPtr<Internal::ClientHandlerOsr> m_ClientHandler;
 		CefRefPtr<CefBrowser> m_browser;
+		Internal::CefDevToolsWnd* m_pDevToolsWnd;
 	};
 
 	IMPLEMENT_DUICONTROL(CCefUI)
@@ -631,7 +666,7 @@ namespace DuiLib {
 		m_bBkTransparent = b;
 	}
 
-	bool CCefUI::GetBkTransparent() {
+	bool CCefUI::GetBkTransparent() const {
 		return m_bBkTransparent;
 	}
 
@@ -642,7 +677,7 @@ namespace DuiLib {
 		}
 	}
 
-	DuiLib::CDuiString CCefUI::GetUrl() {
+	DuiLib::CDuiString CCefUI::GetUrl() const {
 		return m_strUrl;
 	}
 
@@ -666,4 +701,7 @@ namespace DuiLib {
 		m_pImpl->CloseDevTools();
 	}
 
+	bool CCefUI::CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args) {
+		return m_pImpl->CallJavascriptFunction(strFuncName, args);
+	}
 }

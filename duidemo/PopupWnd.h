@@ -3,11 +3,11 @@
 //////////////////////////////////////////////////////////////////////////
 ///
 
-class CPopWnd : public WindowImplBase
+class PopupWnd : public WindowImplBase
 {
 public:
-	CPopWnd(void);
-	~CPopWnd(void);
+	PopupWnd(void);
+	~PopupWnd(void);
 
 public:
 	virtual void OnFinalMessage( HWND );

@@ -2012,11 +2012,10 @@ namespace DuiLib {
 
                     if( pControl->GetManager() != this ) break;
 
-                    int zDelta = (int) (short) HIWORD(wParam);
                     TEventUI event = { 0 };
                     event.Type = UIEVENT_SCROLLWHEEL;
                     event.pSender = pControl;
-                    event.wParam = MAKELPARAM(zDelta < 0 ? SB_LINEDOWN : SB_LINEUP, 0);
+					event.wParam = wParam;
                     event.lParam = lParam;
                     event.ptMouse = pt;
                     event.wKeyState = MapKeyState();

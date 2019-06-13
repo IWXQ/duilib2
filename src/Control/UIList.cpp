@@ -432,19 +432,22 @@ namespace DuiLib {
                 break;
 
             case UIEVENT_SCROLLWHEEL: {
-                    switch( LOWORD(event.wParam) ) {
-                        case SB_LINEUP:
-                            if( m_bItemScrollSelect && !IsMultiSelect() ) SelectItem(FindSelectable(m_iCurSel - 1, false), true);
-                            else LineUp();
+					int zDelta = (int)(short)HIWORD(event.wParam);
+					if (zDelta < 0) {
+						if (m_bItemScrollSelect && !IsMultiSelect()) 
+							SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+						else
+							LineDown();
 
-                            return;
-
-                        case SB_LINEDOWN:
-                            if( m_bItemScrollSelect && !IsMultiSelect() ) SelectItem(FindSelectable(m_iCurSel + 1, true), true);
-                            else LineDown();
-
-                            return;
-                    }
+						return;
+					} 
+					else if(zDelta > 0) {
+						if (m_bItemScrollSelect && !IsMultiSelect())
+							SelectItem(FindSelectable(m_iCurSel - 1, false), true);
+						else 
+							LineUp();
+						return;
+					}
                 }
                 break;
         }

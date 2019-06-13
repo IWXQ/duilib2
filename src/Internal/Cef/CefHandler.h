@@ -11,8 +11,8 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-#ifndef PPX_CEF_CEF_HANDLER_H_
-#define PPX_CEF_CEF_HANDLER_H_
+#ifndef DUILIB_CEF_HANDLER_H_
+#define DUILIB_CEF_HANDLER_H_
 #pragma once
 #include "include/cef_client.h"
 #include "include/wrapper/cef_helpers.h"
@@ -126,7 +126,7 @@ namespace DuiLib {
 				virtual ~OsrDelegate() {}
 			};
 
-			ClientHandlerOsr(OsrDelegate *delegate);
+			ClientHandlerOsr(OsrDelegate* delegate);
 			virtual ~ClientHandlerOsr();
 
 			void DetachDelegate();
@@ -218,7 +218,7 @@ namespace DuiLib {
 			void OnCursorChange(CefRefPtr<CefBrowser> browser, CefCursorHandle cursor, CursorType type, const CefCursorInfo& custom_cursor_info) OVERRIDE;
 
 		private:
-			OsrDelegate *delegate_;
+			OsrDelegate* delegate_;
 
 			IMPLEMENT_REFCOUNTING(ClientHandlerOsr);
 			DISALLOW_COPY_AND_ASSIGN(ClientHandlerOsr);
@@ -226,4 +226,4 @@ namespace DuiLib {
 	}
 }
 
-#endif // !PPX_CEF_CEF_HANDLER_H_
+#endif // !DUILIB_CEF_HANDLER_H_

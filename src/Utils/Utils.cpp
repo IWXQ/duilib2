@@ -845,4 +845,15 @@ namespace DuiLib {
 		return ret;
 	}
 
+	bool IsDevtoolResourceExist() {
+		wchar_t szFolderPath[MAX_PATH + 2] = { 0 };
+		GetModuleFileNameW(NULL, szFolderPath, MAX_PATH);
+		PathRemoveFileSpecW(szFolderPath);
+		PathAddBackslashW(szFolderPath);
+		PathCombineW(szFolderPath, szFolderPath, L"devtools_resources.pak");
+		if (_waccess(szFolderPath, 0) == 0)
+			return true;
+		return false;
+	}
+
 } // namespace DuiLib

@@ -210,6 +210,7 @@ namespace DuiLib {
 	// BSTR is Unicode, String is Utf8
 	UILIB_API std::string BSTRToString(const VARIANT *arg);
 
+	UILIB_API bool IsDevtoolResourceExist();
 }// namespace DuiLib
 
 #endif // __UTILS_H__

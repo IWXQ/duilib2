@@ -3,11 +3,11 @@
 //////////////////////////////////////////////////////////////////////////
 ///
 
-class CTranparentWnd : public WindowImplBase
+class CTranparentCEFWnd : public WindowImplBase
 {
 public:
-	CTranparentWnd(void);
-	~CTranparentWnd(void);
+	CTranparentCEFWnd(void);
+	~CTranparentCEFWnd(void);
 
 public:
 	virtual void OnFinalMessage( HWND );

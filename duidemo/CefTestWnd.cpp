@@ -18,6 +18,8 @@ CefTestWnd::CefTestWnd() :
 	, btn_close_devtools_2_(nullptr)
 	, btn_min_(nullptr)
 	, btn_close_(nullptr)
+	, btn_call_js_1_(nullptr)
+	, btn_call_js_2_(nullptr)
 {
 
 }
@@ -74,6 +76,12 @@ void CefTestWnd::Notify(TNotifyUI& msg) {
 		else if (msg.pSender == btn_close_devtools_2_) {
 			web2_->CloseDevTools();
 		}
+		else if (msg.pSender == btn_call_js_1_) {
+
+		}
+		else if (msg.pSender == btn_call_js_2_) {
+			Web2CallJS();
+		}
 		if (msg.pSender == btn_close_) {
 			Close();
 		}
@@ -82,11 +90,13 @@ void CefTestWnd::Notify(TNotifyUI& msg) {
 		}
     }
 	else if (msg.sType == DUI_MSGTYPE_JAVASCRIPT_NOTIFY) {
+		CDuiString strWebName = msg.pSender->GetName();
 		CDuiString strBusiness = *((CDuiString*)msg.wParam);
 		std::vector<VARIANT> vars = *((std::vector<VARIANT>*)msg.lParam);
 
 		std::stringstream ss;
-		ss << "business_name: " << ppx::base::UnicodeToAnsi(strBusiness.GetData()) << std::endl;
+		ss << "web: " << TCHARToAnsi(strWebName.GetData()) << std::endl;
+		ss << "business name: " << ppx::base::UnicodeToAnsi(strBusiness.GetData()) << std::endl;
 		for (auto it : vars) {
 			if (it.vt == VT_BSTR && it.bstrVal)
 				ss << ppx::base::Utf8ToAnsi(BSTRToString(&it)) << std::endl;
@@ -104,6 +114,7 @@ void CefTestWnd::OnWindowInit() {
 	btn_go_1_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnGo1")));
 	btn_open_devtools_1_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnOpenDevTools1")));
 	btn_close_devtools_1_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnCloseDevTools1")));
+	btn_call_js_1_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnCallJS1")));
 	edt_url_1_ = static_cast<CEditUI*>(m_PaintManager.FindControl(TEXT("edtUrl1")));
 	web1_ = static_cast<CCefUI*>(m_PaintManager.FindControl(TEXT("web1")));
 
@@ -113,6 +124,7 @@ void CefTestWnd::OnWindowInit() {
 	btn_go_2_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnGo2")));
 	btn_open_devtools_2_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnOpenDevTools2")));
 	btn_close_devtools_2_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnCloseDevTools2")));
+	btn_call_js_2_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnCallJS2")));
 	edt_url_2_ = static_cast<CEditUI*>(m_PaintManager.FindControl(TEXT("edtUrl2")));
 	web2_ = static_cast<CCefUI*>(m_PaintManager.FindControl(TEXT("web2")));
 
@@ -130,7 +142,7 @@ void CefTestWnd::OnFinalMessage(HWND hWnd) {
 	delete this;
 }
 
-void CefTestWnd::TestCallJS(int browser_id) {
+void CefTestWnd::Web2CallJS() {
     std::vector<VARIANT> args;
     VARIANT arg0;
     VariantInit(&arg0);
@@ -145,7 +157,7 @@ void CefTestWnd::TestCallJS(int browser_id) {
 
     args.push_back(arg1);
 
-    //bool ret = web2_.CallJavascriptFunction("cpp2js_test", args);
+    bool ret = web2_->CallJavascriptFunction(TEXT("cpp2js_test"), args);
 
     if (arg1.bstrVal) {
         SysFreeString(arg1.bstrVal);

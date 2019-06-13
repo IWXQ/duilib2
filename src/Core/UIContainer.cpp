@@ -302,15 +302,15 @@ namespace DuiLib {
                         return;
                 }
             } else if( event.Type == UIEVENT_SCROLLWHEEL ) {
-                switch( LOWORD(event.wParam) ) {
-                    case SB_LINEUP:
-                        LineUp();
-                        return;
-
-                    case SB_LINEDOWN:
-                        LineDown();
-                        return;
-                }
+				int zDelta = (int)(short)HIWORD(event.wParam);
+				if (zDelta < 0) {
+					LineDown();
+					return;
+				}
+				else if (zDelta > 0) {
+					LineUp();
+					return;
+				}
             }
         }
 
@@ -342,15 +342,15 @@ namespace DuiLib {
                         return;
                 }
             } else if( event.Type == UIEVENT_SCROLLWHEEL ) {
-                switch( LOWORD(event.wParam) ) {
-                    case SB_LINEUP:
-                        LineLeft();
-                        return;
-
-                    case SB_LINEDOWN:
-                        LineRight();
-                        return;
-                }
+				int zDelta = (int)(short)HIWORD(event.wParam);
+				if (zDelta > 0) {
+					LineLeft();
+					return;
+				}
+				else if (zDelta < 0) {
+					LineRight();
+					return;
+				}
             }
         }
 

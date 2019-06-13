@@ -19,7 +19,7 @@
 namespace DuiLib {
 	namespace Internal {
 
-		ClientHandlerOsr::ClientHandlerOsr(OsrDelegate *delegate) :
+		ClientHandlerOsr::ClientHandlerOsr(OsrDelegate* delegate) :
 			delegate_(delegate) {
 
 		}
