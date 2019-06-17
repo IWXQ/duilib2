@@ -120,16 +120,19 @@
 #include "Control/UIFadeButton.h"
 #include "Control/UIRing.h"
 #include "Control/UIPlaceHolder.h"
+#ifdef UILIB_WITH_CEF
 #include "Control/UICef.h"
-
+#endif
 #pragma comment( lib, "comctl32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )
 #pragma comment( lib, "Imm32.lib" )
 
 namespace DuiLib {
-	UILIB_API bool Initialize(HINSTANCE hInstance, bool bWithCef, bool bEnableCefCache);
+	UILIB_API bool Initialize(HINSTANCE hInstance, bool bInitCef, bool bEnableCefCache, bool bUsingCefProxy);
 	UILIB_API void UnInitialize();
+#ifdef UILIB_WITH_CEF
 	UILIB_API bool CefProcessTypeCheck(HINSTANCE instance);
+#endif
 }
 
 #endif // !UILIB_INTERNAL_H__

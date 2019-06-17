@@ -36,8 +36,9 @@
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT _WIN32_WINNT_WINXP//0x0501
 #endif
-
+#ifdef UILIB_WITH_CEF
 #include "Internal/Cef/CefGloablContext.h"
+#endif
 #include "UILibInternal.h"
 #include "Internal/stb_image.h"
 #include "Internal/unzip.h"

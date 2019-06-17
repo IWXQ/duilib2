@@ -11,15 +11,16 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
+#ifdef UILIB_WITH_CEF
 #include "StdAfx.h"
 #include "CefDevTools.h"
 #include "CefUtil.h"
 
 namespace DuiLib {
 	namespace Internal {
-		CefDevToolsWnd::CefDevToolsWnd(CefRefPtr<CefBrowser> targetBrowser, int iScaleFactor) :
+		CefDevToolsWnd::CefDevToolsWnd(CefRefPtr<CefBrowser> targetBrowser, float fScaleFactor) :
 			m_pTargetBrowser(targetBrowser)
-			, m_iScaleFactor(iScaleFactor) {
+			, m_fScaleFactor(fScaleFactor) {
 			m_hMemoryDC = CreateCompatibleDC(NULL);
 		}
 
@@ -160,11 +161,11 @@ namespace DuiLib {
 
 			rect.x = 0;
 			rect.y = 0;
-			rect.width = DeviceToLogical(width, m_iScaleFactor);
+			rect.width = DeviceToLogical(width, m_fScaleFactor);
 			if (rect.width == 0)
 				rect.width = 1;
 
-			rect.height = DeviceToLogical(height, m_iScaleFactor);
+			rect.height = DeviceToLogical(height, m_fScaleFactor);
 			if (rect.height == 0)
 				rect.height = 1;
 			return true;
@@ -174,8 +175,8 @@ namespace DuiLib {
 			CEF_REQUIRE_UI_THREAD();
 
 			// Convert the point from view coordinates to actual screen coordinates.
-			POINT screen_pt = { Internal::LogicalToDevice(viewX, m_iScaleFactor),
-				Internal::LogicalToDevice(viewY, m_iScaleFactor) };
+			POINT screen_pt = { Internal::LogicalToDevice(viewX, m_fScaleFactor),
+				Internal::LogicalToDevice(viewY, m_fScaleFactor) };
 			ClientToScreen(m_hWnd, &screen_pt);
 			screenX = screen_pt.x;
 			screenY = screen_pt.y;
@@ -188,7 +189,7 @@ namespace DuiLib {
 			CefRect view_rect;
 			GetViewRect(browser, view_rect);
 
-			screen_info.device_scale_factor = m_iScaleFactor;
+			screen_info.device_scale_factor = m_fScaleFactor;
 			screen_info.rect = view_rect;
 			screen_info.available_rect = view_rect;
 			return true;
@@ -357,7 +358,7 @@ namespace DuiLib {
 						mouse_event.y = y;
 						//last_mouse_down_on_view_ = !IsOverPopupWidget(x, y);
 						//ApplyPopupOffset(mouse_event.x, mouse_event.y);
-						Internal::DeviceToLogical(mouse_event, m_iScaleFactor);
+						Internal::DeviceToLogical(mouse_event, m_fScaleFactor);
 						mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
 						browser_host->SendMouseClickEvent(mouse_event, btnType, false,
 							last_click_count_);
@@ -390,7 +391,7 @@ namespace DuiLib {
 						//	break;
 						//}
 						//ApplyPopupOffset(mouse_event.x, mouse_event.y);
-						Internal::DeviceToLogical(mouse_event, m_iScaleFactor);
+						Internal::DeviceToLogical(mouse_event, m_fScaleFactor);
 						mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
 						browser_host->SendMouseClickEvent(mouse_event, btnType, true,
 							last_click_count_);
@@ -425,7 +426,7 @@ namespace DuiLib {
 						mouse_event.x = x;
 						mouse_event.y = y;
 						//ApplyPopupOffset(mouse_event.x, mouse_event.y);
-						Internal::DeviceToLogical(mouse_event, m_iScaleFactor);
+						Internal::DeviceToLogical(mouse_event, m_fScaleFactor);
 						mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
 						browser_host->SendMouseMoveEvent(mouse_event, false);
 					}
@@ -454,7 +455,7 @@ namespace DuiLib {
 					CefMouseEvent mouse_event;
 					mouse_event.x = p.x;
 					mouse_event.y = p.y;
-					Internal::DeviceToLogical(mouse_event, m_iScaleFactor);
+					Internal::DeviceToLogical(mouse_event, m_fScaleFactor);
 					mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
 					browser_host->SendMouseMoveEvent(mouse_event, true);
 				}
@@ -474,7 +475,7 @@ namespace DuiLib {
 					mouse_event.x = screen_point.x;
 					mouse_event.y = screen_point.y;
 					//ApplyPopupOffset(mouse_event.x, mouse_event.y);
-					Internal::DeviceToLogical(mouse_event, m_iScaleFactor);
+					Internal::DeviceToLogical(mouse_event, m_fScaleFactor);
 					mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
 					browser_host->SendMouseWheelEvent(mouse_event,
 						Internal::IsKeyDown(VK_SHIFT) ? delta : 0,
@@ -517,3 +518,4 @@ namespace DuiLib {
 
 	}
 }
+#endif

@@ -1,3 +1,17 @@
+###############################################################################
+# Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+#
+# THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+# EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+#
+# Expect bugs
+#
+# Please use and enjoy. Please let me know of any bugs/improvements
+# that you have found/implemented and I will fix/incorporate them into this
+# file.
+###############################################################################
+
 set(LIB_NAME libcef_dll_wrapper_2623)
 
 
@@ -43,7 +57,8 @@ set_target_properties(${LIB_NAME} PROPERTIES
 	DEBUG_OUTPUT_NAME ${LIB_NAME}${DEBUG_LIBNAME_SUFFIX})
 	
 
-target_include_directories(${LIB_NAME} PRIVATE "../cef_binary/2623/include" ".")
+target_include_directories(${LIB_NAME} PRIVATE 
+	"../cef_binary-${CEF_BINARY_VER}/2623/include" ".")
 
 
 # Set output directory

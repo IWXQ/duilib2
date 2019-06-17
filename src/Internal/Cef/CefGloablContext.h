@@ -11,10 +11,10 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-#ifndef DUILIB2_GLOBAL_CONTEXT_H_
-#define DUILIB2_GLOBAL_CONTEXT_H_
+#ifndef DUILIB_GLOBAL_CONTEXT_H_
+#define DUILIB_GLOBAL_CONTEXT_H_
 #pragma once
-
+#ifdef UILIB_WITH_CEF
 #include "ppxbase/singleton.h"
 #include "include/base/cef_scoped_ptr.h"
 #include "include/base/cef_thread_checker.h"
@@ -30,9 +30,13 @@ public:
 
 	void SetCefCache(bool b);
 	bool GetCefCache() const;
+
+	void SetUsingProxyServer(bool b);
+	bool GetUsingProxyServer() const;
 private:
 	bool m_bWithCef;
 	bool m_bCefCache;
+	bool m_bUsingProxyServer;
 	CefRefPtr<CefApp> m_pCefApp;
 private:
 	CefGlobalContext();
@@ -41,6 +45,6 @@ private:
 	SINGLETON_CLASS_DECLARE(CefGlobalContext);
 };
 
+#endif
 
-
-#endif // !DUILIB2_GLOBAL_CONTEXT_H_
+#endif // !DUILIB_GLOBAL_CONTEXT_H_

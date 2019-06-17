@@ -15,7 +15,7 @@
 #ifndef DUILIB_REQUEST_CONTEXT_HANDLER_H__
 #define DUILIB_REQUEST_CONTEXT_HANDLER_H__
 #pragma once
-
+#ifdef UILIB_WITH_CEF
 #include "include/cef_request_context.h"
 #include "include/cef_request_context_handler.h"
 
@@ -39,5 +39,5 @@ namespace DuiLib {
 		};
 	}
 }
-
+#endif
 #endif // !DUILIB_REQUEST_CONTEXT_HANDLER_H__

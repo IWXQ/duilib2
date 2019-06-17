@@ -47,9 +47,10 @@
 //
 
 #include "StdAfx.h"
+#ifdef UILIB_WITH_CEF
 #include "include/cef_app.h"
 #include "Internal/Cef/CefApp.h"
-
+#endif
 
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
     switch( dwReason ) {
@@ -65,6 +66,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
 }
 
 namespace DuiLib {
+#ifdef UILIB_WITH_CEF
 	namespace {
 		enum ProcessType {
 			BrowserProcess,
@@ -87,14 +89,16 @@ namespace DuiLib {
 			return OtherProcess;
 		}
 	}
+#endif
 
-
-    bool Initialize(HINSTANCE hInstance, bool bWithCef, bool bEnableCefCache /* = false*/) {
+    bool Initialize(HINSTANCE hInstance, bool bInitCef, bool bEnableCefCache, bool bUsingCefProxy) {
         ::CoInitialize(NULL);
         CPaintManagerUI::SetInstance(hInstance);
-		CefGlobalContext::Instance()->SetWithCef(bWithCef);
+#ifdef UILIB_WITH_CEF
+		CefGlobalContext::Instance()->SetWithCef(bInitCef);
+		CefGlobalContext::Instance()->SetUsingProxyServer(bUsingCefProxy);
 
-		if (!bWithCef)
+		if (!bInitCef)
 			return true;
 
 		CefGlobalContext::Instance()->SetCefCache(bEnableCefCache);
@@ -130,17 +134,24 @@ namespace DuiLib {
 		if (!CefInitialize(main_args, settings, CefGlobalContext::Instance()->GetCefApp(), nullptr)) {
 			return false;
 		}
+#else
+		if (bInitCef)
+			return false;
+#endif
 		return true;
     }
 
     void UnInitialize() {
+#ifdef UILIB_WITH_CEF
 		if (CefGlobalContext::Instance()->GetWithCef()) {
 			CefShutdown();
 		}
+#endif
         CPaintManagerUI::Term();
         ::CoUninitialize();
     }
 
+#ifdef UILIB_WITH_CEF
 	bool CefProcessTypeCheck(HINSTANCE instance) {
 		CefEnableHighDPISupport();
 		CefMainArgs main_args(instance);
@@ -164,5 +175,5 @@ namespace DuiLib {
 
 		return true;
 	}
-
+#endif
 }

@@ -11,7 +11,7 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-
+#ifdef UILIB_WITH_CEF
 #include "RequestContextHandler.h"
 
 namespace DuiLib {
@@ -31,3 +31,4 @@ namespace DuiLib {
 
 	}
 }
+#endif

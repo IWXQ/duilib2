@@ -11,7 +11,7 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-
+#ifdef UILIB_WITH_CEF
 #include <msctf.h>
 #include <windowsx.h>
 #include "include/base/cef_build.h"
@@ -396,3 +396,4 @@ namespace DuiLib {
 #endif
 	}
 }
+#endif

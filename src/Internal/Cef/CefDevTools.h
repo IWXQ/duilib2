@@ -14,6 +14,7 @@
 #ifndef DUILIB_CEF_DEVTOOLS_H_
 #define DUILIB_CEF_DEVTOOLS_H_
 #pragma once
+#ifdef UILIB_WITH_CEF
 #include "ppxbase/criticalsection.h"
 #include "CefHandler.h"
 
@@ -24,7 +25,7 @@ namespace DuiLib {
 			, public ClientHandlerOsr::OsrDelegate
 			{
 		public:
-			CefDevToolsWnd(CefRefPtr<CefBrowser> targetBrowser, int iScaleFactor);
+			CefDevToolsWnd(CefRefPtr<CefBrowser> targetBrowser, float fScaleFactor);
 			~CefDevToolsWnd();
 			UINT GetClassStyle() const;
 			LPCTSTR GetWindowClassName() const;
@@ -61,7 +62,7 @@ namespace DuiLib {
 			void OnSize();
 		protected:
 			CefRefPtr<CefBrowser> m_pTargetBrowser;
-			int m_iScaleFactor;
+			float m_fScaleFactor;
 
 			HDC m_hMemoryDC;
 			HBITMAP m_hBitmap;
@@ -87,5 +88,5 @@ namespace DuiLib {
 		};
 	}
 }
-
+#endif
 #endif

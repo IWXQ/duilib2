@@ -11,11 +11,13 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
+#ifdef UILIB_WITH_CEF
 #include "CefGloablContext.h"
 
 
 CefGlobalContext::CefGlobalContext() :
 	m_bCefCache(false)
+	, m_bUsingProxyServer(false)
 {
 
 }
@@ -48,3 +50,12 @@ void CefGlobalContext::SetCefCache(bool b) {
 bool CefGlobalContext::GetCefCache() const {
 	return m_bCefCache;
 }
+
+void CefGlobalContext::SetUsingProxyServer(bool b) {
+	m_bUsingProxyServer = b;
+}
+
+bool CefGlobalContext::GetUsingProxyServer() const {
+	return m_bUsingProxyServer;
+}
+#endif

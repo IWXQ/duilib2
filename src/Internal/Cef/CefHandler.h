@@ -14,6 +14,7 @@
 #ifndef DUILIB_CEF_HANDLER_H_
 #define DUILIB_CEF_HANDLER_H_
 #pragma once
+#ifdef UILIB_WITH_CEF
 #include "include/cef_client.h"
 #include "include/wrapper/cef_helpers.h"
 #include "include/wrapper/cef_message_router.h"
@@ -225,5 +226,5 @@ namespace DuiLib {
 		};
 	}
 }
-
+#endif
 #endif // !DUILIB_CEF_HANDLER_H_

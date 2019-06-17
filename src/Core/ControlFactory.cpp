@@ -49,7 +49,9 @@ namespace DuiLib {
         INNER_REGISTER_DUICONTROL(CFadeButtonUI);
         INNER_REGISTER_DUICONTROL(CRingUI);
         INNER_REGISTER_DUICONTROL(CPlaceHolderUI);
+#ifdef UILIB_WITH_CEF
 		INNER_REGISTER_DUICONTROL(CCefUI);
+#endif
     }
 
     CControlFactory::~CControlFactory() {

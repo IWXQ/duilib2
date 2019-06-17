@@ -1,3 +1,17 @@
+###############################################################################
+# Copyright (C) 2018 - 2020, winsoft666, <winsoft666@outlook.com>.
+#
+# THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+# EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+#
+# Expect bugs
+#
+# Please use and enjoy. Please let me know of any bugs/improvements
+# that you have found/implemented and I will fix/incorporate them into this
+# file.
+###############################################################################
+
 if(BUILD_SHARED_LIBS)
 	set(LIB_NAME duilib2)
 else()
@@ -161,8 +175,13 @@ else()
 endif()
 
 
-target_include_directories(${LIB_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary/2623/include" ".")
+target_include_directories(${LIB_NAME} PRIVATE 
+	 ".")
 
+if(UILIB_WITH_CEF)
+	target_include_directories(${LIB_NAME} PRIVATE 
+		"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/include")
+endif()
 
 
 # PPXBASE
@@ -175,10 +194,12 @@ else()
 		ppxbase-static)
 endif()
 
-target_link_libraries(${LIB_NAME} PRIVATE
-	$<TARGET_LINKER_FILE:libcef_dll_wrapper_2623> 
-	"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary/2623/lib/libcef.lib")
 
+if(UILIB_WITH_CEF)
+	target_link_libraries(${LIB_NAME} PRIVATE
+		$<TARGET_LINKER_FILE:libcef_dll_wrapper_2623> 
+		"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/lib/libcef.lib")
+endif()
 
 # Set output directory
 set_target_properties(${LIB_NAME}
@@ -189,6 +210,20 @@ set_target_properties(${LIB_NAME}
 
 target_include_directories(${LIB_NAME} INTERFACE
 	$<INSTALL_INTERFACE:include>)
+
+if(UILIB_WITH_CEF)
+	if("${CMAKE_CONFIG_TYPE}" STREQUAL "")
+		set(CONFIG "$(Configuration)")
+	else()
+		set(CONFIG ${CMAKE_CONFIG_TYPE})
+	endif()
+
+	add_custom_command(
+		TARGET ${LIB_NAME}
+		POST_BUILD
+		COMMAND "powershell" " -noprofile" "-command" "copy-item ${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/*.* ${CMAKE_BINARY_DIR}/bin/${CONFIG} -force -recurse"
+	)
+endif()
 
 install(TARGETS ${LIB_NAME}
 	EXPORT ${LIB_NAME}-target

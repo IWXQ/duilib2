@@ -15,7 +15,7 @@
 #ifndef DUILIB_CEF_UTIL_H__
 #define DUILIB_CEF_UTIL_H__
 #pragma once
-
+#ifdef UILIB_WITH_CEF
 #include <windows.h>
 #include <string>
 #include <vector>
@@ -75,5 +75,5 @@ namespace DuiLib {
 		CefRefPtr<CefValue> CefV8ValueToCefValue(CefRefPtr<CefV8Value> value);
 	}
 } 
-
+#endif
 #endif  // DUILIB_CEF_UTIL_H__

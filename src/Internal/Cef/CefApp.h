@@ -14,6 +14,7 @@
 #ifndef PPX_CEF_CEF_APP_H_
 #define PPX_CEF_CEF_APP_H_
 #pragma once
+#ifdef UILIB_WITH_CEF
 #include "include/cef_app.h"
 #include "include/cef_v8.h"
 
@@ -105,4 +106,5 @@ namespace DuiLib {
 		};
 	}
 }
+#endif
 #endif

@@ -11,7 +11,7 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-
+#ifdef UILIB_WITH_CEF
 #include "CefUtil.h"
 #include "include/base/cef_logging.h"
 
@@ -429,3 +429,4 @@ namespace DuiLib {
 		}
 	}
 } 
+#endif

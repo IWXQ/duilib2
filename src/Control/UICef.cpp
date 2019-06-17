@@ -1,3 +1,4 @@
+#ifdef UILIB_WITH_CEF
 #include "StdAfx.h"
 #include "UICef.h"
 #include <fstream>
@@ -127,7 +128,7 @@ namespace DuiLib {
 				return;
 			}
 
-			m_pDevToolsWnd = new Internal::CefDevToolsWnd(m_browser, m_pParent->m_pManager->GetDPIObj()->GetScale() / 100);
+			m_pDevToolsWnd = new Internal::CefDevToolsWnd(m_browser, m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f);
 			m_pDevToolsWnd->Create(NULL, szName, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, 0,
 				CW_USEDEFAULT,
 				CW_USEDEFAULT,
@@ -188,8 +189,7 @@ namespace DuiLib {
 			int width = pos.right - pos.left;
 			int height = pos.bottom - pos.top;
 
-			int scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100;
-			DCHECK_GT(scale_factor, 0);
+			float scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
 
 			rect.x = pos.left;
 			rect.y = pos.top;
@@ -207,9 +207,8 @@ namespace DuiLib {
 			CEF_REQUIRE_UI_THREAD();
 			DCHECK(m_pParent);
 			DCHECK(m_pParent->m_pManager);
-			DCHECK_GT((int)(m_pParent->m_pManager->GetDPIObj()->GetScale() / 100), 0);
 
-			int scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100;
+			float scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
 
 			// Convert the point from view coordinates to actual screen coordinates.
 			POINT screen_pt = { Internal::LogicalToDevice(viewX, scale_factor),
@@ -224,12 +223,11 @@ namespace DuiLib {
 			CEF_REQUIRE_UI_THREAD();
 			DCHECK(m_pParent);
 			DCHECK(m_pParent->m_pManager);
-			DCHECK_GT((int)(m_pParent->m_pManager->GetDPIObj()->GetScale() / 100), 0);
 
 			CefRect view_rect;
 			GetViewRect(browser, view_rect);
 
-			screen_info.device_scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100;
+			screen_info.device_scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
 			screen_info.rect = view_rect;
 			screen_info.available_rect = view_rect;
 			return true;
@@ -353,7 +351,7 @@ namespace DuiLib {
 		void OnMouseEvent(UINT message, WPARAM wParam, LPARAM lParam) {
 			DCHECK(m_pParent);
 			DCHECK(m_pParent->m_pManager);
-			int scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100;
+			float scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
 			HWND hwnd = m_pParent->m_pManager->GetPaintWindow();
 			RECT pos = m_pParent->GetPos();
 
@@ -726,3 +724,4 @@ namespace DuiLib {
 		return m_pImpl->CallJavascriptFunction(strFuncName, args);
 	}
 }
+#endif

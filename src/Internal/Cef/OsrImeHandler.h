@@ -15,7 +15,7 @@
 #ifndef DUILIB_OSR_IME_HANDER_H__
 #define DUILIB_OSR_IME_HANDER_H__
 #pragma once
-
+#ifdef UILIB_WITH_CEF
 #include <windows.h>
 #include <vector>
 
@@ -123,5 +123,5 @@ namespace DuiLib {
 #endif
 	}
 }
-
+#endif
 #endif  // DUILIB_OSR_IME_HANDER_H__

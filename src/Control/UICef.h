@@ -14,7 +14,7 @@
 #ifndef __UICEF_H__
 #define __UICEF_H__
 #pragma once
-
+#ifdef UILIB_WITH_CEF
 
 namespace DuiLib {
 	class UILIB_API CCefUI : public CContainerUI {
@@ -54,4 +54,5 @@ namespace DuiLib {
 		CCefUIImpl * m_pImpl;
 	};
 }
+#endif
 #endif // __UICEF_H__

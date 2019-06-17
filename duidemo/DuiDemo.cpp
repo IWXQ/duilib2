@@ -22,7 +22,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
 	_CrtDumpMemoryLeaks();
 	
-    DuiLib::Initialize(hInstance, true, false);
+    DuiLib::Initialize(hInstance, true, false, true);
 
     CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
     CPaintManagerUI::SetResourceZip(IDR_ZIPRES1);

@@ -11,19 +11,22 @@
 * that you have found/implemented and I will fix/incorporate them into this
 * file.
 *******************************************************************************/
-
+#ifdef UILIB_WITH_CEF
 #include "CefApp.h"
 #include "CefUtil.h"
+#include "CefGloablContext.h"
 
 namespace DuiLib {
 	namespace Internal {
-
 		ClientAppBrowser::ClientAppBrowser() {
 
 		}
 
 		void ClientAppBrowser::OnBeforeCommandLineProcessing(const CefString& process_type, CefRefPtr<CefCommandLine> command_line) {
-			command_line->AppendSwitch("no-proxy-server");
+			if (!CefGlobalContext::Instance()->GetUsingProxyServer()) {
+				command_line->AppendSwitch("no-proxy-server");
+			}
+
 			command_line->AppendSwitch("disable-extensions");
 			command_line->AppendSwitch("disable-surfaces");
 			command_line->AppendSwitch("disable-gpu-shader-disk-cache");
@@ -200,3 +203,4 @@ namespace DuiLib {
 		}
 	}
 }
+#endif
