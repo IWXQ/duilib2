@@ -184,6 +184,9 @@ if(UILIB_WITH_CEF)
 endif()
 
 
+add_dependencies(${LIB_NAME} libcef_dll_wrapper_2623)
+
+
 # PPXBASE
 find_package(ppxbase REQUIRED)
 if(BUILD_SHARED_LIBS)
@@ -212,18 +215,14 @@ target_include_directories(${LIB_NAME} INTERFACE
 	$<INSTALL_INTERFACE:include>)
 
 if(UILIB_WITH_CEF)
-	if("${CMAKE_CONFIG_TYPE}" STREQUAL "")
-		set(CONFIG "$(Configuration)")
-	else()
-		set(CONFIG ${CMAKE_CONFIG_TYPE})
-	endif()
-
 	add_custom_command(
 		TARGET ${LIB_NAME}
 		POST_BUILD
-		COMMAND "powershell" " -noprofile" "-command" "copy-item ${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/*.* ${CMAKE_BINARY_DIR}/bin/${CONFIG} -force -recurse"
+		COMMAND "powershell" " -noprofile" "-command" "copy-item ${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/*.* ${CMAKE_BINARY_DIR}/bin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release> -force -recurse"
 	)
 endif()
+
+
 
 install(TARGETS ${LIB_NAME}
 	EXPORT ${LIB_NAME}-target
@@ -239,6 +238,9 @@ install(FILES ${LAYOUT_HEADER_FILES} 		DESTINATION include/duilib2/Layout)
 install(FILES ${RENDER_HEADER_FILES} 		DESTINATION include/duilib2/Render)
 install(FILES ${UTILS_HEADER_FILES} 		DESTINATION include/duilib2/Utils)
 
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/" 
+	DESTINATION
+	bin)
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/duilib2-config.cmake 
 	DESTINATION ${DUILIB_INSTALL_CMAKE_DIR})
