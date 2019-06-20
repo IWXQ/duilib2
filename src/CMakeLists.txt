@@ -183,9 +183,9 @@ if(UILIB_WITH_CEF)
 		"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/include")
 endif()
 
-
-add_dependencies(${LIB_NAME} libcef_dll_wrapper_2623)
-
+if(UILIB_WITH_CEF)
+	add_dependencies(${LIB_NAME} libcef_dll_wrapper_2623)
+endif()
 
 # PPXBASE
 find_package(ppxbase REQUIRED)
