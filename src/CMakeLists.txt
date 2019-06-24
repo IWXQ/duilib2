@@ -238,9 +238,11 @@ install(FILES ${LAYOUT_HEADER_FILES} 		DESTINATION include/duilib2/Layout)
 install(FILES ${RENDER_HEADER_FILES} 		DESTINATION include/duilib2/Render)
 install(FILES ${UTILS_HEADER_FILES} 		DESTINATION include/duilib2/Utils)
 
-install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/" 
-	DESTINATION
-	bin)
+# if(UILIB_WITH_CEF)
+	# install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/bin/" 
+		# DESTINATION
+		# bin)
+# endif()
 
 install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../CMake/duilib2-config.cmake 
 	DESTINATION ${DUILIB_INSTALL_CMAKE_DIR})
