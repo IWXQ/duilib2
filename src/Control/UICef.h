@@ -15,11 +15,14 @@
 #define __UICEF_H__
 #pragma once
 #ifdef UILIB_WITH_CEF
+#include <functional>
 
 namespace DuiLib {
 	class UILIB_API CCefUI : public CContainerUI {
 		DECLARE_DUICONTROL(CCefUI)
 	public:
+		typedef std::function<void(const std::string &url, int response_status)> ResourceResponseCallback;
+
 		CCefUI();
 		~CCefUI();
 
@@ -34,6 +37,9 @@ namespace DuiLib {
 
 		void SetBkTransparent(bool b);
 		bool GetBkTransparent() const;
+
+		void SetResourceResponseCallback(ResourceResponseCallback cb);
+		ResourceResponseCallback GetResourceResponseCallback() const;
 
 		void SetUrl(const CDuiString &url);
 		CDuiString GetUrl() const;
@@ -50,6 +56,7 @@ namespace DuiLib {
 		bool m_bBkTransparent;
 		CDuiString m_strUrl;
 		bool m_hCreated;
+		ResourceResponseCallback m_ResourceRspCB;
 		class CCefUIImpl;
 		CCefUIImpl * m_pImpl;
 	};

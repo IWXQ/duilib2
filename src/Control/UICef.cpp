@@ -344,6 +344,12 @@ namespace DuiLib {
 			}));
 		}
 
+		void OnResourceResponse(const std::string url, int rsp_status) OVERRIDE {
+			if (m_pParent && m_pParent->m_ResourceRspCB) {
+				m_pParent->m_ResourceRspCB(url, rsp_status);
+			}
+		}
+
 		bool OnBeforePopup(const std::string &target_url) OVERRIDE {
 			return true;
 		}
@@ -687,6 +693,14 @@ namespace DuiLib {
 
 	bool CCefUI::GetBkTransparent() const {
 		return m_bBkTransparent;
+	}
+
+	void CCefUI::SetResourceResponseCallback(ResourceResponseCallback cb) {
+		m_ResourceRspCB = cb;
+	}
+
+	CCefUI::ResourceResponseCallback CCefUI::GetResourceResponseCallback() const {
+		return m_ResourceRspCB;
 	}
 
 	void CCefUI::SetUrl(const CDuiString &url) {

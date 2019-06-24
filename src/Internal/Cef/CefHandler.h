@@ -123,6 +123,8 @@ namespace DuiLib {
 				virtual void OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) = 0;
 
 				virtual bool OnBeforePopup(const std::string &target_url) = 0;
+
+				virtual void OnResourceResponse(const std::string url, int rsp_status) {}
 			protected:
 				virtual ~OsrDelegate() {}
 			};
@@ -205,6 +207,11 @@ namespace DuiLib {
 			bool OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, bool is_redirect) OVERRIDE;
 #endif
             void OnProtocolExecution(CefRefPtr<CefBrowser> browser, const CefString& url, bool& allow_os_execution) OVERRIDE;
+
+			bool OnResourceResponse(CefRefPtr<CefBrowser> browser,
+				CefRefPtr<CefFrame> frame,
+				CefRefPtr<CefRequest> request,
+				CefRefPtr<CefResponse> response) OVERRIDE;
 
 			// CefRenderHandler methods.
 			bool GetRootScreenRect(CefRefPtr<CefBrowser> browser, CefRect& rect) OVERRIDE;

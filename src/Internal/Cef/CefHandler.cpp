@@ -276,7 +276,14 @@ namespace DuiLib {
             allow_os_execution = true;
         }
 
-        bool ClientHandlerOsr::DoClose(CefRefPtr<CefBrowser> browser) {
+		bool ClientHandlerOsr::OnResourceResponse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, CefRefPtr<CefResponse> response) {
+			if (delegate_) {
+				delegate_->OnResourceResponse(request->GetURL().ToString(), response->GetStatus());
+			}
+			return false;
+		}
+
+		bool ClientHandlerOsr::DoClose(CefRefPtr<CefBrowser> browser) {
 			CEF_REQUIRE_UI_THREAD();
 
 			if (delegate_)
