@@ -69,7 +69,7 @@ class MainWnd :
     CHorizontalLayoutUI *m_pHrlTitle;
     CMenuWnd *m_pMenu;
     CStdStringPtrMap m_MenuInfos;
-    CTrayIcon m_trayIcon;
+    CSystemTrayIcon m_trayIcon;
     CListUI* m_pList;
     CEditUI* m_pEditH;
     CEditUI* m_pEditS;

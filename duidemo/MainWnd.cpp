@@ -114,8 +114,7 @@ void MainWnd::InitWindow() {
         pColorPalette->SetSelectColor(0xff0199cb);
     }
 
-
-    m_trayIcon.CreateTrayIcon(m_hWnd, IDI_ICON1, _T("DuiLib Demo"));
+    BOOL bRet = m_trayIcon.Create(m_hWnd, UIMSG_TRAYICON,  _T("DuiLib Demo"), IDI_ICON1, 0);
 }
 
 
@@ -491,7 +490,6 @@ LRESULT MainWnd::ResponseDefaultKeyEvent(WPARAM wParam) {
 }
 
 LRESULT MainWnd::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL &bHandled) {
-    m_trayIcon.DeleteTrayIcon();
     bHandled = FALSE;
     PostQuitMessage(0);
     return 0;
