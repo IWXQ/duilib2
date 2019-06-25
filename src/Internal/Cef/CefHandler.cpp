@@ -29,13 +29,6 @@ namespace DuiLib {
 		}
 
 		void ClientHandlerOsr::DetachDelegate() {
-			if (!CefCurrentlyOn(TID_UI)) {
-				// Execute this method on the UI thread.
-				CefPostTask(TID_UI, base::Bind(&ClientHandlerOsr::DetachDelegate, this));
-				return;
-			}
-
-			DCHECK(delegate_);
 			delegate_ = NULL;
 		}
 

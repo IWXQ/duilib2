@@ -19,7 +19,7 @@ project(duilib2 CXX)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 option(BUILD_TESTS "Build demo project" ON)
 option(USE_STATIC_CRT "Set to ON to build with static CRT on Windows (/MT)." OFF)
-option(UILIB_WITH_CEF "Include CEF Control." ON)
+option(UILIB_WITH_CEF "Include CEF Control." OFF)
 
 if(WIN32)
 	# Dll default use MD(d), Lib default use MT(d)
