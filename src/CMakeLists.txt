@@ -43,7 +43,7 @@ file(GLOB UTILS_SOURCE_FILES 		./Utils/*.cpp)
 file(GLOB INTERNAL_CEF_SOURCE_FILES     ./Internal/Cef/*.cpp)
 file(GLOB INTERNAL_SOURCE_FILES 		./Internal/*.cpp)
 
-file(GLOB ROOT_HEADER_FILES 			./UIlib.h ./UIlibExport.h)
+file(GLOB ROOT_HEADER_FILES 			./UIlib.h ./UIlibExport.h ./UILibInternal.h)
 file(GLOB CONTROL_HEADER_FILES 		./Control/*.h ./Control/*.hpp)
 file(GLOB CORE_HEADER_FILES 		    ./Core/*.h ./Core/*.hpp)
 file(GLOB LAYOUT_HEADER_FILES 		./Layout/*.h ./Layout/*.hpp)
@@ -215,6 +215,7 @@ target_include_directories(${LIB_NAME} INTERFACE
 	$<INSTALL_INTERFACE:include>)
 
 if(UILIB_WITH_CEF)
+	file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/bin/Debug" "${CMAKE_BINARY_DIR}/bin/Release")
 	add_custom_command(
 		TARGET ${LIB_NAME}
 		POST_BUILD
