@@ -39,6 +39,10 @@ namespace DuiLib {
 			delegate_ = NULL;
 		}
 
+		void ClientHandlerOsr::SetAllowProtocols(std::vector<std::string> vAllowProtocols) {
+			allow_protocols_ = vAllowProtocols;
+		}
+
 		bool ClientHandlerOsr::OnProcessMessageReceived(CefRefPtr<CefBrowser> browser, CefProcessId source_process, CefRefPtr<CefProcessMessage> message) {
 			CEF_REQUIRE_UI_THREAD();
 			std::string msg_name = message->GetName();
@@ -262,9 +266,7 @@ namespace DuiLib {
 #else
 		bool ClientHandlerOsr::OnBeforeBrowse(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, bool is_redirect) {
 			std::string url = request->GetURL().ToString();
-			// TODO
-			std::vector<std::string> allow_protocol;
-			for (auto item : allow_protocol) {
+			for (auto item : allow_protocols_) {
 				if (url.find_first_of(item) == 0)
 					return true;
 			}

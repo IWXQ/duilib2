@@ -58,4 +58,5 @@ void CefGlobalContext::SetUsingProxyServer(bool b) {
 bool CefGlobalContext::GetUsingProxyServer() const {
 	return m_bUsingProxyServer;
 }
+
 #endif

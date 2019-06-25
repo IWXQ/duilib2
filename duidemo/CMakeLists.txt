@@ -75,6 +75,11 @@ if (MSVC)
 	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:.936")
 endif (MSVC)
 	
+if(UILIB_WITH_CEF)
+	target_link_libraries(${EXE_NAME}
+		$<TARGET_LINKER_FILE:libcef_dll_wrapper_2623> 
+		"${CMAKE_CURRENT_SOURCE_DIR}/../cef_binary-${CEF_BINARY_VER}/2623/lib/libcef.lib")
+endif()
 
 if(BUILD_SHARED_LIBS)
 	add_dependencies(${EXE_NAME} duilib2)

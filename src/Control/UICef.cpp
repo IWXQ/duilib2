@@ -80,6 +80,7 @@ namespace DuiLib {
 			}
 			
 			m_ClientHandler = new Internal::ClientHandlerOsr(this);
+			m_ClientHandler->SetAllowProtocols(m_vAllowProtocols);
 
 			m_strInitUrl = m_pParent->GetUrl();
 
@@ -584,6 +585,17 @@ namespace DuiLib {
 			if (m_browser)
 				m_browser->GetHost()->WasResized();
 		}
+
+		void SetAllowProtocols(const std::vector<std::string> vAllowProtocols) {
+			m_vAllowProtocols = vAllowProtocols;
+			if (m_ClientHandler) {
+				m_ClientHandler->SetAllowProtocols(vAllowProtocols);
+			}
+		}
+
+		std::vector<std::string> GetAllowProtocols() const {
+			return m_vAllowProtocols;
+		}
 	public:
 		CCefUI* m_pParent;
 		HDC m_hMemoryDC;
@@ -595,6 +607,8 @@ namespace DuiLib {
 
 		CDuiString m_strInitUrl;
 		uint32_t m_iRandomID;
+
+		std::vector<std::string> m_vAllowProtocols;
 
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
@@ -736,6 +750,14 @@ namespace DuiLib {
 
 	bool CCefUI::CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args) {
 		return m_pImpl->CallJavascriptFunction(strFuncName, args);
+	}
+
+	void CCefUI::SetAllowProtocols(const std::vector<std::string> vAllowProtocols) {
+		m_pImpl->SetAllowProtocols(vAllowProtocols);
+	}
+
+	std::vector<std::string> CCefUI::GetAllowProtocols() const {
+		return m_pImpl->GetAllowProtocols();
 	}
 }
 #endif

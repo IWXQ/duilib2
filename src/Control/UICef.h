@@ -41,6 +41,9 @@ namespace DuiLib {
 		void SetResourceResponseCallback(ResourceResponseCallback cb);
 		ResourceResponseCallback GetResourceResponseCallback() const;
 
+		void SetAllowProtocols(const std::vector<std::string> vAllowProtocols);
+		std::vector<std::string> GetAllowProtocols() const;
+
 		void SetUrl(const CDuiString &url);
 		CDuiString GetUrl() const;
 

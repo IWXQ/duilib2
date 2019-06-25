@@ -134,6 +134,8 @@ namespace DuiLib {
 
 			void DetachDelegate();
 
+			void SetAllowProtocols(std::vector<std::string> vAllowProtocols);
+
 			// CefClient methods.
 			CefRefPtr<CefRenderHandler> GetRenderHandler() OVERRIDE { return this; }
 			//CefRefPtr<CefAccessibilityHandler> GetAccessibilityHandler() OVERRIDE { return this; }
@@ -227,6 +229,8 @@ namespace DuiLib {
 
 		private:
 			OsrDelegate* delegate_;
+
+			std::vector<std::string> allow_protocols_;
 
 			IMPLEMENT_REFCOUNTING(ClientHandlerOsr);
 			DISALLOW_COPY_AND_ASSIGN(ClientHandlerOsr);
