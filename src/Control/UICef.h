@@ -35,9 +35,6 @@ namespace DuiLib {
 		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl) override;
 		void DoEvent(TEventUI &event) override;
 
-		void SetBkTransparent(bool b);
-		bool GetBkTransparent() const;
-
 		void SetResourceResponseCallback(ResourceResponseCallback cb);
 		ResourceResponseCallback GetResourceResponseCallback() const;
 
@@ -47,8 +44,9 @@ namespace DuiLib {
 		void SetUrl(const CDuiString &url);
 		CDuiString GetUrl() const;
 
-		void SetFPS(int fps);
+		bool GetBkTransparent() const;
 		int GetFPS() const;
+		DWORD GetCefBkColor() const;
 
 		void GoBack();
 		void GoForward();
@@ -59,7 +57,6 @@ namespace DuiLib {
 	protected:
 
 	protected:
-		bool m_bBkTransparent;
 		CDuiString m_strUrl;
 		bool m_hCreated;
 		ResourceResponseCallback m_ResourceRspCB;

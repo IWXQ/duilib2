@@ -37,6 +37,8 @@ namespace DuiLib {
 			, last_click_time_(0)
 			, last_mouse_down_on_view_(false)
 			, m_iFPS(60)
+			, m_bBkTransparent(false)
+			, m_dwCefBkColor(0xffffffff)
 		{
 			m_hMemoryDC = CreateCompatibleDC(NULL);
 			ppx::base::Random random;
@@ -69,13 +71,17 @@ namespace DuiLib {
 			CefBrowserSettings browser_settings;
 			browser_settings.windowless_frame_rate = m_iFPS;
 
+			if (!m_bBkTransparent) {
+				browser_settings.background_color = CefColorSetARGB(255, GetBValue(m_dwCefBkColor), GetGValue(m_dwCefBkColor), GetRValue(m_dwCefBkColor));
+			}
+
 			CefRequestContextSettings context_settings;
 			CefRefPtr<CefRequestContext> request_context = CefRequestContext::CreateContext(
 				CefRequestContext::GetGlobalContext(),
 				new Internal::RequestContextHandler);
 
 			CefWindowInfo window_info;
-			window_info.SetAsWindowless(m_pParent->m_pManager->GetPaintWindow(), m_pParent->GetBkTransparent());
+			window_info.SetAsWindowless(m_pParent->m_pManager->GetPaintWindow(), m_bBkTransparent);
 			if (GetWindowLongPtr(m_pParent->m_pManager->GetPaintWindow(), GWL_EXSTYLE) & WS_EX_NOACTIVATE) {
 				window_info.ex_style |= WS_EX_NOACTIVATE;
 			}
@@ -605,6 +611,22 @@ namespace DuiLib {
 		int GetFPS() const {
 			return m_iFPS;
 		}
+
+		void SetCefBkColor(DWORD dwBackColor) {
+			m_dwCefBkColor = dwBackColor;
+		}
+
+		DWORD GetCefBkColor() const {
+			return m_dwCefBkColor;
+		}
+
+		void SetBkTransparent(bool b) {
+			m_bBkTransparent = b;
+		}
+
+		bool GetBkTransparent() const {
+			return m_bBkTransparent;
+		}
 	public:
 		CCefUI* m_pParent;
 		HDC m_hMemoryDC;
@@ -619,6 +641,8 @@ namespace DuiLib {
 
 		std::vector<std::string> m_vAllowProtocols;
 		int m_iFPS;
+		bool m_bBkTransparent;
+		DWORD m_dwCefBkColor;
 
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
@@ -641,7 +665,6 @@ namespace DuiLib {
 
 	CCefUI::CCefUI() :
 		m_pImpl(new CCefUIImpl(this))
-		, m_bBkTransparent(false)
 		, m_hCreated(false)
 	{
 		
@@ -669,9 +692,18 @@ namespace DuiLib {
 		if (_tcsicmp(pstrName, _T("url")) == 0)
 			SetUrl(pstrValue);
 		else if (_tcsicmp(pstrName, _T("transparent")) == 0)
-			SetBkTransparent(_tcsicmp(pstrValue, _T("true")) == 0);
+			m_pImpl->SetBkTransparent(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if (_tcsicmp(pstrName, _T("fps")) == 0)
-			SetFPS(_ttoi(pstrValue));
+			m_pImpl->SetFPS(_ttoi(pstrValue));
+		else if (_tcsicmp(pstrName, _T("cefbkcolor")) == 0) {
+			while (*pstrValue > _T('\0') && *pstrValue <= _T(' ')) pstrValue = ::CharNext(pstrValue);
+
+			if (*pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+
+			LPTSTR pstr = NULL;
+			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+			m_pImpl->SetCefBkColor(clrColor);
+		}
 		else
 			CControlUI::SetAttribute(pstrName, pstrValue);
 	}
@@ -691,9 +723,9 @@ namespace DuiLib {
 	}
 
 	bool CCefUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl) {
+		bool bRet = CContainerUI::DoPaint(hDC, rcPaint, pStopControl);
 		m_pImpl->DoPaint(hDC);
-
-		return CContainerUI::DoPaint(hDC, rcPaint, pStopControl);
+		return bRet;
 	}
 
 	void CCefUI::DoEvent(TEventUI &event) {
@@ -713,12 +745,8 @@ namespace DuiLib {
 		}
 	}
 
-	void CCefUI::SetBkTransparent(bool b) {
-		m_bBkTransparent = b;
-	}
-
 	bool CCefUI::GetBkTransparent() const {
-		return m_bBkTransparent;
+		return m_pImpl->GetBkTransparent();
 	}
 
 	void CCefUI::SetResourceResponseCallback(ResourceResponseCallback cb) {
@@ -740,12 +768,12 @@ namespace DuiLib {
 		return m_strUrl;
 	}
 
-	void CCefUI::SetFPS(int fps) {
-		m_pImpl->SetFPS(fps);
-	}
-
 	int CCefUI::GetFPS() const {
 		return m_pImpl->GetFPS();
+	}
+
+	DWORD CCefUI::GetCefBkColor() const {
+		return m_pImpl->GetCefBkColor();
 	}
 
 	void CCefUI::GoBack() {
