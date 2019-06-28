@@ -47,6 +47,9 @@ namespace DuiLib {
 		void SetUrl(const CDuiString &url);
 		CDuiString GetUrl() const;
 
+		void SetFPS(int fps);
+		int GetFPS() const;
+
 		void GoBack();
 		void GoForward();
 		void Reload();

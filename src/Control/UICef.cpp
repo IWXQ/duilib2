@@ -36,6 +36,7 @@ namespace DuiLib {
 			, last_click_count_(0)
 			, last_click_time_(0)
 			, last_mouse_down_on_view_(false)
+			, m_iFPS(60)
 		{
 			m_hMemoryDC = CreateCompatibleDC(NULL);
 			ppx::base::Random random;
@@ -66,7 +67,7 @@ namespace DuiLib {
 		void CreateBrowser() {
 			DCHECK(!m_browser);
 			CefBrowserSettings browser_settings;
-			browser_settings.windowless_frame_rate = 30;
+			browser_settings.windowless_frame_rate = m_iFPS;
 
 			CefRequestContextSettings context_settings;
 			CefRefPtr<CefRequestContext> request_context = CefRequestContext::CreateContext(
@@ -596,6 +597,14 @@ namespace DuiLib {
 		std::vector<std::string> GetAllowProtocols() const {
 			return m_vAllowProtocols;
 		}
+
+		void SetFPS(int fps) {
+			m_iFPS = fps;
+		}
+
+		int GetFPS() const {
+			return m_iFPS;
+		}
 	public:
 		CCefUI* m_pParent;
 		HDC m_hMemoryDC;
@@ -609,6 +618,7 @@ namespace DuiLib {
 		uint32_t m_iRandomID;
 
 		std::vector<std::string> m_vAllowProtocols;
+		int m_iFPS;
 
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
@@ -660,6 +670,8 @@ namespace DuiLib {
 			SetUrl(pstrValue);
 		else if (_tcsicmp(pstrName, _T("transparent")) == 0)
 			SetBkTransparent(_tcsicmp(pstrValue, _T("true")) == 0);
+		else if (_tcsicmp(pstrName, _T("fps")) == 0)
+			SetFPS(_ttoi(pstrValue));
 		else
 			CControlUI::SetAttribute(pstrName, pstrValue);
 	}
@@ -726,6 +738,14 @@ namespace DuiLib {
 
 	DuiLib::CDuiString CCefUI::GetUrl() const {
 		return m_strUrl;
+	}
+
+	void CCefUI::SetFPS(int fps) {
+		m_pImpl->SetFPS(fps);
+	}
+
+	int CCefUI::GetFPS() const {
+		return m_pImpl->GetFPS();
 	}
 
 	void CCefUI::GoBack() {
