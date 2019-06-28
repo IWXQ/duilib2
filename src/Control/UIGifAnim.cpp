@@ -1,8 +1,16 @@
 #include "StdAfx.h"
 #include "UIGifAnim.h"
+#include "ppxbase/timer.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////
 namespace DuiLib {
+	class CGifAnimUI::Impl {
+	public:
+		Impl() {
+		}
+
+		ppx::base::Timer m_Timer;
+	};
     IMPLEMENT_DUICONTROL(CGifAnimUI)
 
     CGifAnimUI::CGifAnimUI(void) {
@@ -13,13 +21,29 @@ namespace DuiLib {
         m_bIsAutoPlay       =   true;
         m_bIsAutoSize       =   false;
         m_bIsPlaying        =   false;
+		m_pImpl = new Impl();
+		if (m_pImpl) {
+			m_pImpl->m_Timer.SetTimedEvent([this]() {
+				this->Invalidate();
+				m_nFramePosition = (++m_nFramePosition) % m_nFrameCount;
+
+				long lPause = ((long *)m_pPropertyItem->value)[m_nFramePosition] * 10;
+				if (lPause == 0)
+					lPause = 100;
+				m_pImpl->m_Timer.Stop(false);
+				m_pImpl->m_Timer.Start(lPause, FALSE, TRUE);
+			});
+		}
     }
 
-
     CGifAnimUI::~CGifAnimUI(void) {
+		StopGif();
         DeleteGif();
-        m_pManager->KillTimer( this, EVENT_TIEM_ID );
 
+		if (m_pImpl) {
+			delete m_pImpl;
+			m_pImpl = NULL;
+		}
     }
 
     LPCTSTR CGifAnimUI::GetClass() const {
@@ -45,11 +69,6 @@ namespace DuiLib {
 
         DrawFrame( hDC );
         return true;
-    }
-
-    void CGifAnimUI::DoEvent( TEventUI &event ) {
-        if( event.Type == UIEVENT_TIMER )
-            OnTimer( (UINT_PTR)event.wParam );
     }
 
     void CGifAnimUI::SetVisible(bool bVisible /* = true */) {
@@ -83,7 +102,6 @@ namespace DuiLib {
         DeleteGif();
 
         Invalidate();
-
     }
 
     LPCTSTR CGifAnimUI::GetGifImage() {
@@ -116,7 +134,9 @@ namespace DuiLib {
         if ( lPause == 0 )
 			lPause = 100;
 
-        m_pManager->SetTimer( this, EVENT_TIEM_ID, lPause );
+		if (m_pImpl) {
+			m_pImpl->m_Timer.Start(lPause, FALSE, TRUE);
+		}
 
         m_bIsPlaying = true;
     }
@@ -126,7 +146,6 @@ namespace DuiLib {
             return;
         }
 
-        m_pManager->KillTimer(this, EVENT_TIEM_ID);
         this->Invalidate();
         m_bIsPlaying = false;
     }
@@ -135,8 +154,10 @@ namespace DuiLib {
         if (!m_bIsPlaying) {
             return;
         }
+		if (m_pImpl) {
+			m_pImpl->m_Timer.Stop(true);
+		}
 
-        m_pManager->KillTimer(this, EVENT_TIEM_ID);
         m_nFramePosition = 0;
         this->Invalidate();
         m_bIsPlaying = false;
@@ -171,7 +192,6 @@ namespace DuiLib {
         if (m_bIsAutoPlay) {
             PlayGif();
         }
-
     }
 
     void CGifAnimUI::DeleteGif() {
@@ -189,25 +209,9 @@ namespace DuiLib {
         m_nFramePosition    =   0;
     }
 
-    void CGifAnimUI::OnTimer( UINT_PTR idEvent ) {
-        if ( idEvent != EVENT_TIEM_ID )
-            return;
-
-        m_pManager->KillTimer( this, EVENT_TIEM_ID );
-        this->Invalidate();
-
-        m_nFramePosition = (++m_nFramePosition) % m_nFrameCount;
-
-        long lPause = ((long *) m_pPropertyItem->value)[m_nFramePosition] * 10;
-
-        if ( lPause == 0 ) 
-			lPause = 100;
-
-        m_pManager->SetTimer( this, EVENT_TIEM_ID, lPause );
-    }
-
     void CGifAnimUI::DrawFrame( HDC hDC ) {
-        if ( NULL == hDC || NULL == m_pGifImage ) return;
+        if ( NULL == hDC || NULL == m_pGifImage ) 
+			return;
 
         GUID pageGuid = Gdiplus::FrameDimensionTime;
         Gdiplus::Graphics graphics( hDC );

@@ -135,13 +135,13 @@ void CefTestWnd::OnWindowInit() {
 	web1_->SetUrl(TEXT("https://pinyin.sogou.com/"));
 	web2_->SetUrl((ppx::base::GetCurrentProcessDirectoryW() + L"..\\..\\..\\test-resource\\test.html").c_str());
 
-	web1_->SetResourceResponseCallback([](const std::string &url, int status) {
-		ppx::base::TraceMsgA("web1: %s [%d]\n", url.c_str(), status);
-	});
+	//web1_->SetResourceResponseCallback([](const std::string &url, int status) {
+	//	ppx::base::TraceMsgA("web1: %s [%d]\n", url.c_str(), status);
+	//});
 
-	web2_->SetResourceResponseCallback([](const std::string &url, int status) {
-		ppx::base::TraceMsgA("web2: %s [%d]\n", url.c_str(), status);
-	});
+	//web2_->SetResourceResponseCallback([](const std::string &url, int status) {
+	//	ppx::base::TraceMsgA("web2: %s [%d]\n", url.c_str(), status);
+	//});
 }
 
 
