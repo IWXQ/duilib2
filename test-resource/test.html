@@ -6,7 +6,10 @@
 		<script type="text/javascript">
 			function JSNotifyCpp()  
             {  
-                window.XubeiApp.JSNotifyCppFunc("业务名", 10, "中文");
+				var num = 1;
+				while(num++ < 1000) {
+					window.XubeiApp.JSNotifyCppFunc("business" + num, num, "chinese" + num);
+				}
             }
 
 			

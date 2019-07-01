@@ -89,22 +89,6 @@ void CefTestWnd::Notify(TNotifyUI& msg) {
 			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 		}
     }
-	else if (msg.sType == DUI_MSGTYPE_JAVASCRIPT_NOTIFY) {
-		CDuiString strWebName = msg.pSender->GetName();
-		CDuiString strBusiness = *((CDuiString*)msg.wParam);
-		std::vector<VARIANT> vars = *((std::vector<VARIANT>*)msg.lParam);
-
-		std::stringstream ss;
-		ss << "web: " << TCHARToAnsi(strWebName.GetData()) << std::endl;
-		ss << "business name: " << ppx::base::UnicodeToAnsi(strBusiness.GetData()) << std::endl;
-		for (auto it : vars) {
-			if (it.vt == VT_BSTR && it.bstrVal)
-				ss << ppx::base::Utf8ToAnsi(BSTRToString(&it)) << std::endl;
-			else
-				ss << it.intVal << std::endl;
-		}
-		MessageBoxA(NULL, ss.str().c_str(), "JS Notify", MB_OK | MB_ICONINFORMATION);
-	}
 }
 
 void CefTestWnd::OnWindowInit() {
@@ -142,6 +126,18 @@ void CefTestWnd::OnWindowInit() {
 	//web2_->SetResourceResponseCallback([](const std::string &url, int status) {
 	//	ppx::base::TraceMsgA("web2: %s [%d]\n", url.c_str(), status);
 	//});
+
+	web2_->SetJSCallback([this](const std::string &businessName, const std::vector<CLiteVariant>& vars) {
+		std::stringstream ss;
+		ss << "business name: " << businessName << std::endl;
+		for (auto it : vars) {
+			if (it.IsString())
+				ss << ppx::base::Utf8ToAnsi(it.GetString()) << std::endl;
+			else
+				ss << it.GetInt() << std::endl;
+		}
+		PPX_LOG(LS_INFO) << ss.str();
+	});
 }
 
 
@@ -151,23 +147,15 @@ void CefTestWnd::OnFinalMessage(HWND hWnd) {
 }
 
 void CefTestWnd::Web2CallJS() {
-    std::vector<VARIANT> args;
-    VARIANT arg0;
-    VariantInit(&arg0);
-    arg0.vt = VT_I4;
-    arg0.intVal = 10;
+    std::vector<CLiteVariant> args;
+    CLiteVariant arg0;
+	arg0.SetInt(10);
     args.push_back(arg0);
 
-    VARIANT arg1;
-    VariantInit(&arg1);
-    arg1.vt = VT_BSTR;
-    arg1.bstrVal = SysAllocString(L"测试TEST");
-
+	CLiteVariant arg1;
+	arg1.SetString(u8"测试TEST");
     args.push_back(arg1);
 
-    bool ret = web2_->CallJavascriptFunction(TEXT("cpp2js_test"), args);
+    bool ret = web2_->CallJavascriptFunction(u8"cpp2js_test", args);
 
-    if (arg1.bstrVal) {
-        SysFreeString(arg1.bstrVal);
-    }
 }

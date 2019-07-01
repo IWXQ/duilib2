@@ -197,19 +197,6 @@ namespace DuiLib {
         }
     };
 
-
-	// About code_page, see https://docs.microsoft.com/zh-cn/windows/desktop/Intl/code-page-identifiers
-	//
-	UILIB_API std::string UnicodeToAnsi(const std::wstring &str, unsigned int code_page = 0);
-	UILIB_API std::wstring AnsiToUnicode(const std::string &str, unsigned int code_page = 0);
-	UILIB_API std::string UnicodeToUtf8(const std::wstring &str);
-	UILIB_API std::wstring Utf8ToUnicode(const std::string &str);
-	UILIB_API std::string AnsiToUtf8(const std::string &str, unsigned int code_page = 0);
-	UILIB_API std::string Utf8ToAnsi(const std::string &str, unsigned int code_page = 0);
-
-	// BSTR is Unicode, String is Utf8
-	UILIB_API std::string BSTRToString(const VARIANT *arg);
-
 	UILIB_API bool IsDevtoolResourceExist();
 }// namespace DuiLib
 

@@ -54,7 +54,7 @@ namespace DuiLib {
 			void OnAutoResize(const CefSize& new_size) OVERRIDE;
 			void OnSetLoadingState(bool isLoading, bool canGoBack, bool canGoForward) OVERRIDE;
 			void OnSetDraggableRegions(const std::vector<CefDraggableRegion>& regions) OVERRIDE;
-			void OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) OVERRIDE;
+			void OnJSNotify(const CefRefPtr<CefListValue> &value_list) OVERRIDE;
 			bool OnBeforePopup(const std::string &target_url) OVERRIDE;
 			void OnMouseEvent(UINT message, WPARAM wParam, LPARAM lParam);
 			void OnKeyEvent(UINT message, WPARAM wParam, LPARAM lParam);

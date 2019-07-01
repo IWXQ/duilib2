@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include <zmouse.h>
 #include "Utils/Task.h"
-
+#include "ppxbase/stringencode.h"
 
 namespace DuiLib {
 
@@ -228,7 +228,7 @@ namespace DuiLib {
                         }
                         else {
 #ifdef UNICODE
-                            std::string pwd = UnicodeToAnsi(sFilePwd.GetData());
+                            std::string pwd = ppx::base::UnicodeToAnsi(sFilePwd.GetData());
                             hz = OpenZip(sFile, pwd.c_str());
 #else
                             hz = OpenZip(sFile, sFilePwd);
@@ -596,7 +596,7 @@ namespace DuiLib {
             std::string pwd;
 
             if(password)
-                pwd = UnicodeToAnsi(password);
+                pwd = ppx::base::UnicodeToAnsi(password);
 
             m_hResourceZip = (HANDLE)OpenZip(pVoid, len, pwd.c_str());
 #else
@@ -624,7 +624,7 @@ namespace DuiLib {
             std::string pwd;
 
             if(password)
-                pwd = UnicodeToAnsi((wchar_t *)password);
+                pwd = ppx::base::UnicodeToAnsi((wchar_t *)password);
 
             m_hResourceZip = (HANDLE)OpenZip(sFile, pwd.c_str());
 #else
@@ -3210,7 +3210,7 @@ namespace DuiLib {
                 else {
                     CDuiString sFilePwd = CPaintManagerUI::GetResourceZipPwd();
 #ifdef UNICODE
-                    std::string pwd = UnicodeToAnsi(sFilePwd.GetData());
+                    std::string pwd = ppx::base::UnicodeToAnsi(sFilePwd.GetData());
                     hz = OpenZip(sFile, pwd.c_str());
 #else
                     hz = OpenZip(sFile, sFilePwd);

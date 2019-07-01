@@ -120,7 +120,7 @@ namespace DuiLib {
 
 				virtual void UpdateAccessibilityTree(CefRefPtr<CefValue> value) = 0;
 
-				virtual void OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) = 0;
+				virtual void OnJSNotify(const CefRefPtr<CefListValue> &value_list) = 0;
 
 				virtual bool OnBeforePopup(const std::string &target_url) = 0;
 

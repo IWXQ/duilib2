@@ -92,7 +92,7 @@ namespace DuiLib {
 			m_strInitUrl = m_pParent->GetUrl();
 
 			CefBrowserHost::CreateBrowser(window_info, m_ClientHandler, 
-				UnicodeToUtf8(m_strInitUrl.GetData()), browser_settings, request_context);
+				ppx::base::UnicodeToUtf8(m_strInitUrl.GetData()), browser_settings, request_context);
 		}
 
 		void CloseBrowser() {
@@ -104,7 +104,7 @@ namespace DuiLib {
 		void SetUrl(const CDuiString &url) {
 			if (m_browser) {
 				if (m_browser->GetMainFrame()) {
-					m_browser->GetMainFrame()->LoadURL(UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
+					m_browser->GetMainFrame()->LoadURL(ppx::base::UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
 				}
 			}
 		}
@@ -152,14 +152,28 @@ namespace DuiLib {
 			}
 		}
 
-		bool CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args) {
+		bool CallJavascriptFunction(const std::string &strFuncName, const std::vector<CLiteVariant> &args) {
 			bool ret = false;
 			if (m_browser) {
 				CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create(Internal::BROWSER_2_RENDER_CPP_CALL_JS_MSG);
 				CefRefPtr<CefListValue> arg_list = message->GetArgumentList();
-				arg_list->SetString(0, TCHARToUtf8(strFuncName.GetData()));
-				Internal::VARINATList2CefListValue(args, arg_list, 1);
+				arg_list->SetString(0, strFuncName);
 
+				int cefListIndex = 1;
+				for (auto item : args) {
+					CLiteVariant::DataType dt = item.GetType();
+					if (dt == CLiteVariant::DataType::DT_INT) {
+						arg_list->SetInt(cefListIndex, item.GetInt());
+					}
+					else if (dt == CLiteVariant::DataType::DT_DOUBLE) {
+						arg_list->SetDouble(cefListIndex, item.GetDouble());
+					}
+					else if (dt == CLiteVariant::DataType::DT_STRING) {
+						arg_list->SetString(cefListIndex, item.GetString());
+					}
+
+					cefListIndex++;
+				}
 				ret = m_browser->SendProcessMessage(PID_RENDERER, message);
 			}
 			return true;
@@ -172,7 +186,7 @@ namespace DuiLib {
 			if (m_pParent && m_browser) {
 				if (m_pParent->GetUrl() != m_strInitUrl) {
 					if (m_browser->GetMainFrame()) {
-						m_browser->GetMainFrame()->LoadURL(UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
+						m_browser->GetMainFrame()->LoadURL(ppx::base::UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
 					}
 				}
 			}
@@ -342,14 +356,49 @@ namespace DuiLib {
 		void OnSetDraggableRegions(const std::vector<CefDraggableRegion>& regions) OVERRIDE {
 		}
 
-		void OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) OVERRIDE {
-			PostTaskToUIThread(ppx::base::BindLambda([this, business_name, vars]() {
-				if (m_pParent && m_pParent->m_pManager) {
-					CDuiString strBusiness = Utf8ToTCHAR(business_name).c_str();
-					m_pParent->m_pManager->SendNotify(m_pParent, DUI_MSGTYPE_JAVASCRIPT_NOTIFY, 
-						(WPARAM)&strBusiness, (LPARAM)&vars);
+		void OnJSNotify(const CefRefPtr<CefListValue> &value_list) OVERRIDE {
+			if (value_list->GetSize() <= 2)
+				return;
+
+			std::string strBusinessName = value_list->GetString(1);
+			std::vector<CLiteVariant> liteVars;
+			for (size_t i = 2; i < value_list->GetSize(); i++) {
+				CLiteVariant liteTmp;
+				CefValueType type = value_list->GetType(i);
+				switch (type) {
+				case VTYPE_BOOL:
+				{
+					liteTmp.SetType(CLiteVariant::DataType::DT_INT);
+					liteTmp.SetInt(value_list->GetBool(i) ? 1 : 0);
 				}
-			}));
+				break;
+				case VTYPE_DOUBLE:
+				{
+					liteTmp.SetType(CLiteVariant::DataType::DT_INT);
+					liteTmp.SetDouble(value_list->GetDouble(i));
+				}
+				break;
+				case VTYPE_INT:
+				{
+					liteTmp.SetType(CLiteVariant::DataType::DT_INT);
+					liteTmp.SetInt(value_list->GetInt(i));
+				}
+				break;
+				case VTYPE_STRING:
+				{
+					liteTmp.SetType(CLiteVariant::DataType::DT_STRING);
+					liteTmp.SetString(value_list->GetString(i).ToString());
+				}
+				break;
+				default:
+					break;
+				}
+				liteVars.push_back(liteTmp);
+			}
+
+			if (m_pParent && m_pParent->m_JSCB) {
+				m_pParent->m_JSCB(strBusinessName, liteVars);
+			}
 		}
 
 		void OnResourceResponse(const std::string url, int rsp_status) OVERRIDE {
@@ -757,6 +806,14 @@ namespace DuiLib {
 		return m_ResourceRspCB;
 	}
 
+	void CCefUI::SetJSCallback(JSCallback cb) {
+		m_JSCB = cb;
+	}
+
+	CCefUI::JSCallback CCefUI::GetJSCallback() const {
+		return m_JSCB;
+	}
+
 	void CCefUI::SetUrl(const CDuiString &url) {
 		if (url != m_strUrl) {
 			m_strUrl = url;
@@ -796,7 +853,7 @@ namespace DuiLib {
 		m_pImpl->CloseDevTools();
 	}
 
-	bool CCefUI::CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args) {
+	bool CCefUI::CallJavascriptFunction(const std::string &strFuncName, const std::vector<CLiteVariant> &args) {
 		return m_pImpl->CallJavascriptFunction(strFuncName, args);
 	}
 
@@ -807,5 +864,82 @@ namespace DuiLib {
 	std::vector<std::string> CCefUI::GetAllowProtocols() const {
 		return m_pImpl->GetAllowProtocols();
 	}
+
+	CLiteVariant::CLiteVariant() : 
+		m_DT(DataType::DT_UNKNOWN)
+		, m_iData(0)
+		, m_fData(0.f)
+	{
+
+	}
+
+	CLiteVariant::CLiteVariant(const CLiteVariant& other) {
+		this->m_DT = other.GetType();
+		this->m_iData = other.GetInt();
+		this->m_fData = other.GetDouble();
+		this->m_strData = other.GetString();
+	}
+
+	CLiteVariant::~CLiteVariant() {
+		this->m_strData.clear();
+		this->m_iData = 0;
+		this->m_fData = 0.f;
+	}
+
+	void CLiteVariant::SetType(DataType dt) {
+		m_DT = dt;
+	}
+
+	void CLiteVariant::SetInt(int i) {
+		m_iData = i;
+		m_DT = DataType::DT_INT;
+	}
+
+	void CLiteVariant::SetDouble(double f) {
+		m_fData = f;
+		m_DT = DataType::DT_DOUBLE;
+	}
+
+	void CLiteVariant::SetString(const std::string &s) {
+		m_strData = s;
+		m_DT = DataType::DT_STRING;
+	}
+
+	bool CLiteVariant::IsInt() const {
+		return m_DT == DataType::DT_INT;
+	}
+
+	bool CLiteVariant::IsDouble() const {
+		return m_DT == DataType::DT_DOUBLE;
+	}
+
+	bool CLiteVariant::IsString() const {
+		return m_DT == DataType::DT_STRING;
+	}
+
+	CLiteVariant::DataType CLiteVariant::GetType() const {
+		return m_DT;
+	}
+
+	int CLiteVariant::GetInt() const {
+		return m_iData;
+	}
+
+	double CLiteVariant::GetDouble() const {
+		return m_fData;
+	}
+
+	std::string CLiteVariant::GetString() const {
+		return m_strData;
+	}
+
+	const CLiteVariant& CLiteVariant::operator=(const CLiteVariant& other) {
+		this->m_DT = other.GetType();
+		this->m_iData = other.GetInt();
+		this->m_fData = other.GetDouble();
+		this->m_strData = other.GetString();
+		return *this;
+	}
+
 }
 #endif

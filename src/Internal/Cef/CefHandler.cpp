@@ -54,25 +54,8 @@ namespace DuiLib {
 
 				std::string func_name = value_list->GetString(0);
 				if (func_name == JSNotifyCppFunctionName) {
-					DCHECK(value_list->GetSize() >= 2);
-					if (value_list->GetSize() >= 2) {
-						std::string business_name = value_list->GetString(1);
-
-						VARIANT var_ret;
-						std::vector<VARIANT> var_list;
-						VariantInit(&var_ret);
-						CefListValue2VARINATList(value_list, var_list, 2);
-
-						if (delegate_)
-							delegate_->OnJSNotify(business_name, var_list);
-
-						// SysFreeString
-						for (size_t i = 0; i < var_list.size(); i++) {
-							if (var_list[i].vt == VT_BSTR) {
-								SysFreeString(var_list[i].bstrVal);
-							}
-						}
-					}
+					if (delegate_)
+						delegate_->OnJSNotify(value_list);
 				}
 			}
 

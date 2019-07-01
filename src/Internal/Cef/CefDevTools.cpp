@@ -286,7 +286,7 @@ namespace DuiLib {
 		void CefDevToolsWnd::OnSetDraggableRegions(const std::vector<CefDraggableRegion>& regions) {
 		}
 
-		void CefDevToolsWnd::OnJSNotify(const std::string &business_name, const std::vector<VARIANT> &vars) {
+		void CefDevToolsWnd::OnJSNotify(const CefRefPtr<CefListValue> &value_list) {
 
 		}
 

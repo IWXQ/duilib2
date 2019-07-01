@@ -61,6 +61,7 @@ class MainWnd :
     void UpdateText(const CDuiString &str);
     void ThreadProc();
     void AddListItem(int iCount);
+	void TaskTest();
   private:
     CButtonUI *m_pBtnMax;
     CButtonUI *m_pBtnRestore;
@@ -74,6 +75,8 @@ class MainWnd :
     CEditUI* m_pEditH;
     CEditUI* m_pEditS;
     CEditUI* m_pEditL;
+
+	HANDLE m_hTaskStartEvent;
   public:
     MainPageWnd m_MainPage;
 };

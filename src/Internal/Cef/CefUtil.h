@@ -63,14 +63,6 @@ namespace DuiLib {
 		int DeviceToLogical(int value, float device_scale_factor);
 		void DeviceToLogical(CefMouseEvent& value, float device_scale_factor);
 
-
-		void VARINAT2V8Value(VARIANT * pvRet, CefRefPtr<CefV8Value>& retval);
-		void V8Value2VARINAT(CefRefPtr<CefV8Value>& retval, VARIANT * pvRet);
-		void VARINATList2V8ValueList(std::vector<VARIANT>& vListArg, CefV8ValueList& arguments);
-		void V8ValueList2VARINATList(CefV8ValueList arguments, std::vector<VARIANT>& vListArg);
-		void VARINATList2CefListValue(const std::vector<VARIANT>& vListArg, CefRefPtr<CefListValue>& arguments, size_t cef_list_init_index = 0);
-		void CefListValue2VARINATList(CefRefPtr<CefListValue>& arguments, std::vector<VARIANT>& vListArg, size_t cef_list_begin_index = 0);
-
 		CefRefPtr<CefV8Value> CefValueToCefV8Value(CefRefPtr<CefValue> value);
 		CefRefPtr<CefValue> CefV8ValueToCefValue(CefRefPtr<CefV8Value> value);
 	}

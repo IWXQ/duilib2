@@ -33,6 +33,7 @@ DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK, OnClick)
 DUI_END_MESSAGE_MAP()
 
 MainWnd::MainWnd() : 
+	m_hTaskStartEvent(NULL),
     m_pList(NULL),
     m_pEditH(NULL),
     m_pEditS(NULL),
@@ -437,6 +438,23 @@ void MainWnd::AddListItem(int iCount) {
         if (m_pList)
             m_pList->Add(pListItem);
     }
+}
+
+VOID MainWnd::TaskTest() {
+	m_hTaskStartEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+	for (int i = 0; i < 5; i++) {
+		std::thread h([i, this]() {
+			WaitForSingleObject(m_hTaskStartEvent, INFINITE);
+			for (int j = i*1000; j < (i+1)* 1000; j++) {
+				std::string s = "string×Ö·û´®" + std::to_string(j);
+				PostTaskToUIThread(ppx::base::BindLambda([j, s]() {
+					PPX_ASSERT(s == "string×Ö·û´®" + std::to_string(j));
+					ppx::base::TraceMsgA("%d: %s\n", j, s.c_str());
+				}));
+			}
+		});
+		h.detach();
+	}
 }
 
 CDuiString MainWnd::GetSkinFile() {

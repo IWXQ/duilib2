@@ -18,10 +18,45 @@
 #include <functional>
 
 namespace DuiLib {
+	class UILIB_API CLiteVariant {
+	public:
+		enum class DataType {
+			DT_UNKNOWN = 0,
+			DT_INT,
+			DT_DOUBLE,
+			DT_STRING
+		};
+		CLiteVariant();
+		CLiteVariant(const CLiteVariant& other);
+		~CLiteVariant();
+
+		void SetType(DataType dt);
+		void SetInt(int i);
+		void SetDouble(double f);
+		void SetString(const std::string &s);
+
+		bool IsInt() const;
+		bool IsDouble() const;
+		bool IsString() const;
+
+		DataType GetType() const;
+		int GetInt() const;
+		double GetDouble() const;
+		std::string GetString() const;
+
+		const CLiteVariant& operator=(const CLiteVariant& other);
+	private:
+		DataType m_DT;
+		int m_iData;
+		double m_fData;
+		std::string m_strData;
+	};
+
 	class UILIB_API CCefUI : public CContainerUI {
 		DECLARE_DUICONTROL(CCefUI)
 	public:
 		typedef std::function<void(const std::string &url, int response_status)> ResourceResponseCallback;
+		typedef std::function<void(const std::string &businessName, const std::vector<CLiteVariant>& vars)> JSCallback;
 
 		CCefUI();
 		~CCefUI();
@@ -38,6 +73,9 @@ namespace DuiLib {
 		void SetResourceResponseCallback(ResourceResponseCallback cb);
 		ResourceResponseCallback GetResourceResponseCallback() const;
 
+		void SetJSCallback(JSCallback cb);
+		JSCallback GetJSCallback() const;
+
 		void SetAllowProtocols(const std::vector<std::string> vAllowProtocols);
 		std::vector<std::string> GetAllowProtocols() const;
 
@@ -53,13 +91,14 @@ namespace DuiLib {
 		void Reload();
 		void ShowDevTools();
 		void CloseDevTools();
-		bool CallJavascriptFunction(const CDuiString &strFuncName, const std::vector<VARIANT> &args);
+		bool CallJavascriptFunction(const std::string &strFuncName, const std::vector<CLiteVariant> &args);
 	protected:
 
 	protected:
 		CDuiString m_strUrl;
 		bool m_hCreated;
 		ResourceResponseCallback m_ResourceRspCB;
+		JSCallback m_JSCB;
 		class CCefUIImpl;
 		CCefUIImpl * m_pImpl;
 	};
