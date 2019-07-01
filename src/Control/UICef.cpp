@@ -357,7 +357,7 @@ namespace DuiLib {
 		}
 
 		void OnJSNotify(const CefRefPtr<CefListValue> &value_list) OVERRIDE {
-			if (value_list->GetSize() <= 2)
+			if (value_list->GetSize() < 2)
 				return;
 
 			std::string strBusinessName = value_list->GetString(1);
