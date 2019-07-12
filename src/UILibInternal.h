@@ -93,12 +93,12 @@
 #include "Control/UILabel.h"
 #include "Control/UIText.h"
 #include "Control/UIEdit.h"
-#include "Control/UIGifAnim.h"
 
 #include "Control/UIAnimation.h"
 #include "Layout/UIAnimationTabLayout.h"
 #include "Control/UIButton.h"
 #include "Control/UIOption.h"
+#include "Control/UIGifAnim.h"
 
 #include "Control/UIProgress.h"
 #include "Control/UISlider.h"

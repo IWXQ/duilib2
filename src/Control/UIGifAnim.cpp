@@ -89,7 +89,7 @@ namespace DuiLib {
         } else if( _tcsicmp(pstrName, _T("autosize")) == 0 ) {
             SetAutoSize(_tcsicmp(pstrValue, _T("true")) == 0);
         } else
-            CControlUI::SetAttribute(pstrName, pstrValue);
+			CButtonUI::SetAttribute(pstrName, pstrValue);
     }
 
     void CGifAnimUI::SetGifImage(LPCTSTR pStrImage) {

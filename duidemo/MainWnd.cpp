@@ -348,6 +348,9 @@ void MainWnd::OnClick(TNotifyUI &msg) {
 		pDlg->CenterWindow();
 		pDlg->ShowWindow();
 	}
+	else if (strName.CompareNoCase(TEXT("gif")) == 0) {
+		MessageBox(NULL, TEXT("GIF"), TEXT("GIF"), MB_OK);
+	}
 }
 
 CControlUI *MainWnd::CreateControl(LPCTSTR pstrClass) {
