@@ -215,6 +215,12 @@ namespace DuiLib {
 				CefRefPtr<CefRequest> request,
 				CefRefPtr<CefResponse> response) OVERRIDE;
 
+			CefRequestHandler::ReturnValue OnBeforeResourceLoad(
+				CefRefPtr<CefBrowser> browser,
+				CefRefPtr<CefFrame> frame,
+				CefRefPtr<CefRequest> request,
+				CefRefPtr<CefRequestCallback> callback) OVERRIDE;
+
 			// CefRenderHandler methods.
 			bool GetRootScreenRect(CefRefPtr<CefBrowser> browser, CefRect& rect) OVERRIDE;
 

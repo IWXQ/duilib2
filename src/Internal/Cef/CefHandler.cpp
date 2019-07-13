@@ -261,6 +261,33 @@ namespace DuiLib {
 			return false;
 		}
 
+		CefRequestHandler::ReturnValue ClientHandlerOsr::OnBeforeResourceLoad(CefRefPtr<CefBrowser> browser, 
+			CefRefPtr<CefFrame> frame, CefRefPtr<CefRequest> request, CefRefPtr<CefRequestCallback> callback) {
+#if 0
+			CefRequest::HeaderMap header_map;
+			request->GetHeaderMap(header_map);
+			
+			bool found = false;
+			for (auto& it : header_map) {
+				if (_wcsicmp(it.first.ToWString().c_str(), L"cache-control") == 0) {
+					it.second = L"no-cache";
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				header_map.emplace(L"cache-control", L"no-cache");
+			}
+
+			header_map.emplace(L"Pragma", L"no-cache");
+
+			request->SetHeaderMap(header_map);
+#endif
+
+			return RV_CONTINUE;
+		}
+
 		bool ClientHandlerOsr::DoClose(CefRefPtr<CefBrowser> browser) {
 			CEF_REQUIRE_UI_THREAD();
 
