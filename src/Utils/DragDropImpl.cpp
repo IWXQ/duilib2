@@ -435,7 +435,6 @@ namespace DuiLib {
     }
 
     ULONG STDMETHODCALLTYPE CIDropTarget::Release( void) {
-        ATLTRACE("CIDropTarget::Release\n");
         long nTemp;
         nTemp = --m_cRefCount;
         ATLASSERT(nTemp >= 0);
@@ -447,7 +446,6 @@ namespace DuiLib {
     }
 
     bool CIDropTarget::QueryDrop(DWORD grfKeyState, LPDWORD pdwEffect) {
-        ATLTRACE("CIDropTarget::QueryDrop\n");
         DWORD dwOKEffects = *pdwEffect;
 
         if(!m_bAllowDrop) {
@@ -489,7 +487,6 @@ namespace DuiLib {
         /* [in] */ DWORD grfKeyState,
         /* [in] */ POINTL pt,
         /* [out][in] */ DWORD __RPC_FAR *pdwEffect) {
-        ATLTRACE("CIDropTarget::DragEnter\n");
 
         if(pDataObj == NULL)
             return E_INVALIDARG;
@@ -522,7 +519,6 @@ namespace DuiLib {
         /* [in] */ DWORD grfKeyState,
         /* [in] */ POINTL pt,
         /* [out][in] */ DWORD __RPC_FAR *pdwEffect) {
-        ATLTRACE("CIDropTarget::DragOver\n");
 
         if(m_pDropTargetHelper)
             m_pDropTargetHelper->DragOver((LPPOINT)&pt, *pdwEffect);
@@ -532,8 +528,6 @@ namespace DuiLib {
     }
 
     HRESULT STDMETHODCALLTYPE CIDropTarget::DragLeave( void) {
-        ATLTRACE("CIDropTarget::DragLeave\n");
-
         if(m_pDropTargetHelper)
             m_pDropTargetHelper->DragLeave();
 
@@ -546,8 +540,6 @@ namespace DuiLib {
         /* [unique][in] */ IDataObject __RPC_FAR *pDataObj,
         /* [in] */ DWORD grfKeyState, /* [in] */ POINTL pt,
         /* [out][in] */ DWORD __RPC_FAR *pdwEffect) {
-        ATLTRACE("CIDropTarget::Drop\n");
-
         if (pDataObj == NULL)
             return E_INVALIDARG;
 

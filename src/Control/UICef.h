@@ -18,40 +18,6 @@
 #include <functional>
 
 namespace DuiLib {
-	class UILIB_API CLiteVariant {
-	public:
-		enum class DataType {
-			DT_UNKNOWN = 0,
-			DT_INT,
-			DT_DOUBLE,
-			DT_STRING
-		};
-		CLiteVariant();
-		CLiteVariant(const CLiteVariant& other);
-		~CLiteVariant();
-
-		void SetType(DataType dt);
-		void SetInt(int i);
-		void SetDouble(double f);
-		void SetString(const std::string &s);
-
-		bool IsInt() const;
-		bool IsDouble() const;
-		bool IsString() const;
-
-		DataType GetType() const;
-		int GetInt() const;
-		double GetDouble() const;
-		std::string GetString() const;
-
-		const CLiteVariant& operator=(const CLiteVariant& other);
-	private:
-		DataType m_DT;
-		int m_iData;
-		double m_fData;
-		std::string m_strData;
-	};
-
 	class UILIB_API CCefUI : public CContainerUI {
 		DECLARE_DUICONTROL(CCefUI)
 	public:

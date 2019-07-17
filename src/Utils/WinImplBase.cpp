@@ -322,16 +322,12 @@ namespace DuiLib {
             case WM_CREATE:
                 lRes = OnCreate(uMsg, wParam, lParam, bHandled);
                 break;
-
             case WM_CLOSE:
                 lRes = OnClose(uMsg, wParam, lParam, bHandled);
                 break;
-
             case WM_DESTROY:
                 lRes = OnDestroy(uMsg, wParam, lParam, bHandled);
                 break;
-#if defined(WIN32) && !defined(UNDER_CE)
-
             case WM_NCACTIVATE:
                 lRes = OnNcActivate(uMsg, wParam, lParam, bHandled);
                 break;
@@ -355,7 +351,6 @@ namespace DuiLib {
             case WM_MOUSEWHEEL:
                 lRes = OnMouseWheel(uMsg, wParam, lParam, bHandled);
                 break;
-#endif
 
             case WM_SIZE:
                 lRes = OnSize(uMsg, wParam, lParam, bHandled);
@@ -407,7 +402,8 @@ namespace DuiLib {
 
         lRes = HandleCustomMessage(uMsg, wParam, lParam, bHandled);
 
-        if (bHandled) return lRes;
+        if (bHandled)
+			return lRes;
 
         if (m_PaintManager.MessageHandler(uMsg, wParam, lParam, lRes))
             return lRes;

@@ -1050,7 +1050,8 @@ namespace DuiLib {
     }
 
     bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &lRes) {
-        if( m_hWndPaint == NULL ) return false;
+        if( m_hWndPaint == NULL )
+			return false;
 
         // Cycle through listeners
         for( int i = 0; i < m_aMessageFilters.GetSize(); i++ ) {
