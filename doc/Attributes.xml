@@ -359,6 +359,10 @@
     <Attribute name="modulename" default="" type="STRING" comment="activex从指定位置加载,如(flash/flash.ocx)"/>
     <Attribute name="delaycreate" default="true" type="BOOL" comment="是否需要延迟创建activex,如(false)"/>
   </ActiveX>
+  <Flash>
+	<Attribute name="path" default="" type="STRING" comment="flash文件路径或资源ID"/>
+	<Attribute name="restype" default="" type="STRING" comment="如果restype不为空，则从资源DLL中加载改类型的资源"/>
+  </Flash>
   <WebBrowser parent="ActiveX">
     <Attribute name="homepage" default="" type="STRING" comment="默认首页"/>
     <Attribute name="autonavi" default="false" type="BOOL" comment="是否打开默认首页"/>

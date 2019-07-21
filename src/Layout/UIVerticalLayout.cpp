@@ -19,8 +19,10 @@ namespace DuiLib {
     }
 
     UINT CVerticalLayoutUI::GetControlFlags() const {
-        if( IsEnabled() && m_iSepHeight != 0 ) return UIFLAG_SETCURSOR;
-        else return 0;
+        if( IsEnabled() && m_iSepHeight != 0 ) 
+			return UIFLAG_SETCURSOR;
+        else 
+			return 0;
     }
 
     void CVerticalLayoutUI::SetPos(RECT rc, bool bNeedInvalidate) {

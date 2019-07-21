@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "UIFlash.h"
 #include <atlcomcli.h>
+#include "ppxbase/stringencode.h"
 
 #define DISPID_FLASHEVENT_FLASHCALL  ( 0x00C5 )
 #define DISPID_FLASHEVENT_FSCOMMAND  ( 0x0096 )
@@ -8,37 +9,75 @@
 
 namespace DuiLib {
     IMPLEMENT_DUICONTROL(CFlashUI)
+#define FLASH_ACTIVEX_CLSID TEXT("{D27CDB6E-AE6D-11CF-96B8-444553540000}")
 
     CFlashUI::CFlashUI(void)
         : m_dwRef(0)
         , m_dwCookie(0)
-        , m_pFlash(NULL)
-        , m_pFlashEventHandler(NULL) {
-        CDuiString strFlashCLSID = _T("{D27CDB6E-AE6D-11CF-96B8-444553540000}");
+        , m_pFlash(NULL) {
         OLECHAR szCLSID[100] = { 0 };
-#ifndef _UNICODE
-        ::MultiByteToWideChar(::GetACP(), 0, strFlashCLSID, -1, szCLSID, lengthof(szCLSID) - 1);
-#else
-        _tcsncpy(szCLSID, strFlashCLSID, lengthof(szCLSID) - 1);
-#endif
+        _tcsncpy(szCLSID, FLASH_ACTIVEX_CLSID, lengthof(szCLSID) - 1);
         ::CLSIDFromString(szCLSID, &m_clsid);
     }
 
     CFlashUI::~CFlashUI(void) {
-        if (m_pFlashEventHandler) {
-            m_pFlashEventHandler->Release();
-            m_pFlashEventHandler = NULL;
-        }
-
         ReleaseControl();
     }
 
-    LPCTSTR CFlashUI::GetClass() const {
+	bool CFlashUI::IsFlashActiveXInstalled()
+	{
+		CLSID clsid = IID_NULL;
+		OLECHAR szCLSID[100] = { 0 };
+		_tcsncpy(szCLSID, FLASH_ACTIVEX_CLSID, lengthof(szCLSID) - 1);
+		::CLSIDFromString(szCLSID, &clsid);
+
+		IOleControl *pOleControl = NULL;
+		HRESULT hr = ::CoCreateInstance(clsid, NULL, CLSCTX_ALL, IID_IOleControl, (LPVOID *)&pOleControl);
+		if (FAILED(hr))
+			return false;
+		if (!pOleControl)
+			return false;
+		pOleControl->Release();
+		return true;
+	}
+
+	void CFlashUI::SetActionScriptCallback(ActionScriptCallback cb)
+	{
+		m_ActionScriptCB = cb;
+	}
+
+	bool CFlashUI::CallActionScriptFunction(const std::wstring &strRequest, std::wstring &strResponse)
+	{
+		if (!m_pFlash)
+			return false;
+		if (m_pFlash != NULL) {
+			BSTR response;
+			HRESULT hr = m_pFlash->CallFunction((BSTR)strRequest.c_str(), &response);
+			if (SUCCEEDED(hr)) {
+				strResponse = response;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void CFlashUI::SetFlashPath(const CDuiString &strFlashPath)
+	{
+		m_strFlashPath = strFlashPath;
+	}
+
+	void CFlashUI::SetFlashResType(const CDuiString &strResType)
+	{
+		m_strResType = strResType;
+	}
+
+	LPCTSTR CFlashUI::GetClass() const {
         return DUI_CTR_FLASH;
     }
 
     LPVOID CFlashUI::GetInterface( LPCTSTR pstrName ) {
-        if( _tcsicmp(pstrName, DUI_CTR_FLASH) == 0 ) return static_cast<CFlashUI *>(this);
+        if( _tcsicmp(pstrName, DUI_CTR_FLASH) == 0 )
+			return static_cast<CFlashUI *>(this);
 
         return CActiveXUI::GetInterface(pstrName);
     }
@@ -57,36 +96,41 @@ namespace DuiLib {
 
     HRESULT STDMETHODCALLTYPE CFlashUI::Invoke( DISPID dispIdMember, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, UINT *puArgErr ) {
 
-        return S_OK;
-
         switch(dispIdMember) {
             case DISPID_FLASHEVENT_FLASHCALL: {
                     if (pDispParams->cArgs != 1 || pDispParams->rgvarg[0].vt != VT_BSTR)
                         return E_INVALIDARG;
 
-                    return this->FlashCall(pDispParams->rgvarg[0].bstrVal);
+					if (m_ActionScriptCB) {
+						m_ActionScriptCB(pDispParams->rgvarg[0].bstrVal);
+					}
+					return S_OK;
                 }
 
-            case DISPID_FLASHEVENT_FSCOMMAND: {
-                    if( pDispParams && pDispParams->cArgs == 2 ) {
-                        if( pDispParams->rgvarg[0].vt == VT_BSTR &&
-                                pDispParams->rgvarg[1].vt == VT_BSTR ) {
-                            return FSCommand(pDispParams->rgvarg[1].bstrVal, pDispParams->rgvarg[0].bstrVal);
-                        } else {
-                            return DISP_E_TYPEMISMATCH;
-                        }
-                    } else {
-                        return DISP_E_BADPARAMCOUNT;
-                    }
-                }
+			case DISPID_FLASHEVENT_FSCOMMAND: {
+				if (pDispParams && pDispParams->cArgs == 2) {
+					if (pDispParams->rgvarg[0].vt == VT_BSTR &&
+						pDispParams->rgvarg[1].vt == VT_BSTR) {
+						//return FSCommand(pDispParams->rgvarg[1].bstrVal, pDispParams->rgvarg[0].bstrVal);
+					}
+					else {
+						return DISP_E_TYPEMISMATCH;
+					}
+				}
+				else {
+					return DISP_E_BADPARAMCOUNT;
+				}
+			}
 
-            case DISPID_FLASHEVENT_ONPROGRESS: {
-                    return OnProgress(*pDispParams->rgvarg[0].plVal);
-                }
+			case DISPID_FLASHEVENT_ONPROGRESS: {
+				OutputDebugStringA("123");
+				//return OnProgress(*pDispParams->rgvarg[0].plVal);
+			}
 
-            case DISPID_READYSTATECHANGE: {
-                    return this->OnReadyStateChange(pDispParams->rgvarg[0].lVal);
-                }
+			case DISPID_READYSTATECHANGE: {
+				OutputDebugStringA("123");
+				//return this->OnReadyStateChange(pDispParams->rgvarg[0].lVal);
+			}
         }
 
         return S_OK;
@@ -118,40 +162,8 @@ namespace DuiLib {
         return m_dwRef;
     }
 
-    HRESULT CFlashUI::OnReadyStateChange (long newState) {
-        if (m_pFlashEventHandler) {
-            return m_pFlashEventHandler->OnReadyStateChange(newState);
-        }
-
-        return S_OK;
-    }
-
-    HRESULT CFlashUI::OnProgress(long percentDone ) {
-        if (m_pFlashEventHandler) {
-            return m_pFlashEventHandler->OnProgress(percentDone);
-        }
-
-        return S_OK;
-    }
-
-    HRESULT CFlashUI::FSCommand (_bstr_t command, _bstr_t args) {
-        if (m_pFlashEventHandler) {
-            return m_pFlashEventHandler->FSCommand(command, args);
-        }
-
-        return S_OK;
-    }
-
-    HRESULT CFlashUI::FlashCall( _bstr_t request ) {
-        if (m_pFlashEventHandler) {
-            return m_pFlashEventHandler->FlashCall(request);
-        }
-
-        return S_OK;
-    }
 
     void CFlashUI::ReleaseControl() {
-        //GetManager()->RemoveTranslateAccelerator(this);
         RegisterEventHandler(FALSE);
 
         if (m_pFlash) {
@@ -164,27 +176,234 @@ namespace DuiLib {
         if (!CActiveXUI::DoCreateControl())
             return false;
 
-        //GetManager()->AddTranslateAccelerator(this);
         GetControl(__uuidof(IShockwaveFlash), (LPVOID *)&m_pFlash);
         RegisterEventHandler(TRUE);
         return true;
     }
 
-    void CFlashUI::SetFlashEventHandler( CFlashEventHandler *pHandler ) {
-        if (m_pFlashEventHandler != NULL) {
-            m_pFlashEventHandler->Release();
-        }
+	void CFlashUI::OnShowActiveX()
+	{
+		IShockwaveFlash *pFlash = NULL;
+		HRESULT hr = GetControl(__uuidof(IShockwaveFlash), (void **)&pFlash);
+		if (SUCCEEDED(hr) && pFlash) {
+			pFlash->put_WMode(_bstr_t(_T("Transparent")));
+			pFlash->put_Movie(_bstr_t(m_strFlashPath.GetData()));
+			if (!LoadSWF(pFlash, m_strFlashPath.GetData(), m_strResType, NULL)) {
 
-        if (pHandler == NULL) {
-            m_pFlashEventHandler = pHandler;
-            return;
-        }
+			}
+			pFlash->DisableLocalSecurity();
+			pFlash->put_AllowScriptAccess(L"always");
+			pFlash->Release();
+		}
+	}
 
-        m_pFlashEventHandler = pHandler;
-        m_pFlashEventHandler->AddRef();
-    }
+	void CFlashUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
+	{
+		if (_tcscmp(pstrName, _T("path")) == 0) {
+			SetFlashPath(pstrValue);
+		}
+		else if (_tcscmp(pstrName, _T("restype")) == 0) {
+			SetFlashResType(pstrValue);
+		}
+		else {
+			CActiveXUI::SetAttribute(pstrName, pstrValue);
+		}
+	}
 
-    LRESULT CFlashUI::TranslateAccelerator( MSG *pMsg ) {
+#pragma pack(push, 1)
+
+	typedef struct _FLASH_STREAM_HEADER
+	{
+		DWORD m_dwSignature;
+		DWORD m_dwDataSize;
+	} FLASH_STREAM_HEADER, *PFLASH_STREAM_HEADER;
+#pragma pack(pop)
+
+    bool CFlashUI::LoadSWF(IShockwaveFlash* pFlash, STRINGorID swf, CDuiString type, HINSTANCE instance) {
+		LPBYTE pData = NULL;
+		DWORD dwSize = 0;
+
+		do {
+			if (type.GetLength() == 0) {
+				CDuiString sFile = CPaintManagerUI::GetResourcePath();
+
+				if (CPaintManagerUI::GetResourceZip().IsEmpty()) {
+					sFile += swf.m_lpstr;
+					HANDLE hFile = ::CreateFile(sFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
+						FILE_ATTRIBUTE_NORMAL, NULL);
+
+					if (hFile == INVALID_HANDLE_VALUE)
+						break;
+
+					dwSize = ::GetFileSize(hFile, NULL);
+
+					if (dwSize == 0)
+						break;
+
+					DWORD dwRead = 0;
+					pData = new BYTE[dwSize];
+					::ReadFile(hFile, pData, dwSize, &dwRead, NULL);
+					::CloseHandle(hFile);
+
+					if (dwRead != dwSize) {
+						delete[] pData;
+						pData = NULL;
+						break;
+					}
+				}
+				else {
+					sFile += CPaintManagerUI::GetResourceZip();
+					CDuiString sFilePwd = CPaintManagerUI::GetResourceZipPwd();
+					HZIP hz = NULL;
+
+					if (CPaintManagerUI::IsCachedResourceZip()) {
+						hz = (HZIP)CPaintManagerUI::GetResourceZipHandle();
+					}
+					else {
+#ifdef UNICODE
+						std::string pwd = ppx::base::UnicodeToAnsi(sFilePwd.GetData());
+						hz = OpenZip(sFile, pwd.c_str());
+#else
+						hz = OpenZip(sFile, sFilePwd);
+#endif
+					}
+
+					if (hz == NULL)
+						break;
+
+					ZIPENTRY ze;
+					int i = 0;
+					CDuiString key = swf.m_lpstr;
+					key.Replace(_T("\\"), _T("/"));
+
+					if (FindZipItem(hz, key, true, &i, &ze) != 0)
+						break;
+
+					dwSize = ze.unc_size;
+
+					if (dwSize == 0)
+						break;
+
+					pData = new BYTE[dwSize];
+					int res = UnzipItem(hz, i, pData, dwSize);
+
+					if (res != 0x00000000 && res != 0x00000600) {
+						delete[] pData;
+						pData = NULL;
+
+						if (!CPaintManagerUI::IsCachedResourceZip())
+							CloseZip(hz);
+
+						break;
+					}
+
+					if (!CPaintManagerUI::IsCachedResourceZip())
+						CloseZip(hz);
+				}
+			}
+			else {
+				HINSTANCE dllinstance = NULL;
+
+				if (instance) {
+					dllinstance = instance;
+				}
+				else {
+					dllinstance = CPaintManagerUI::GetResourceDll();
+				}
+
+				HRSRC hResource = ::FindResource(dllinstance, swf.m_lpstr, type.GetData());
+
+				if (hResource == NULL)
+					break;
+
+				HGLOBAL hGlobal = ::LoadResource(dllinstance, hResource);
+
+				if (hGlobal == NULL) {
+					FreeResource(hResource);
+					break;
+				}
+
+				dwSize = ::SizeofResource(dllinstance, hResource);
+
+				if (dwSize == 0) break;
+
+				pData = new BYTE[dwSize];
+				::CopyMemory(pData, (LPBYTE)::LockResource(hGlobal), dwSize);
+				::FreeResource(hResource);
+			}
+		} while (0);
+
+		while (!pData) {
+			//读不到图片, 则直接去读取bitmap.m_lpstr指向的路径
+			HANDLE hFile = ::CreateFile(swf.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
+				FILE_ATTRIBUTE_NORMAL, NULL);
+
+			if (hFile == INVALID_HANDLE_VALUE)
+				break;
+
+			dwSize = ::GetFileSize(hFile, NULL);
+
+			if (dwSize == 0)
+				break;
+
+			DWORD dwRead = 0;
+			pData = new BYTE[dwSize];
+			::ReadFile(hFile, pData, dwSize, &dwRead, NULL);
+			::CloseHandle(hFile);
+
+			if (dwRead != dwSize) {
+				delete[] pData;
+				pData = NULL;
+			}
+
+			break;
+		}
+
+		if (!pData) {
+			return false;
+		}
+
+		bool bret = false;
+		do 
+		{
+			ATL::CComPtr<IStream> spStream;
+			HRESULT hResult = ::CreateStreamOnHGlobal(NULL, TRUE, &spStream);
+			if (FAILED(hResult))
+				break;
+
+			FLASH_STREAM_HEADER fsh = { 0x55665566, dwSize };
+			ULARGE_INTEGER uli = { sizeof(fsh) + dwSize };
+			hResult = spStream->SetSize(uli);
+			if (FAILED(hResult))
+				break;
+
+			hResult = spStream->Write(&fsh, sizeof(fsh), NULL);
+			if (FAILED(hResult))
+				break;
+
+			hResult = spStream->Write(reinterpret_cast<void*>(pData), dwSize, NULL);
+			if (FAILED(hResult))
+				break;
+
+			uli.QuadPart = 0;
+			hResult = spStream->Seek(*reinterpret_cast<PLARGE_INTEGER>(&uli), STREAM_SEEK_SET, NULL);
+			if (FAILED(hResult))
+				break;
+
+			ATL::CComPtr<IPersistStreamInit> spPersistStreamInit;
+			hResult = pFlash->QueryInterface(&spPersistStreamInit);
+			if (SUCCEEDED(hResult))
+				hResult = spPersistStreamInit->Load(spStream);
+			bret = SUCCEEDED(hResult);
+		} while (false);
+		
+		delete[] pData;
+		pData = NULL;
+
+		return bret;
+	}
+
+	LRESULT CFlashUI::TranslateAccelerator(MSG *pMsg) {
         if(pMsg->message < WM_KEYFIRST || pMsg->message > WM_KEYLAST)
             return S_FALSE;
 

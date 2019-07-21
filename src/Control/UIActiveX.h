@@ -7,9 +7,6 @@ struct IOleObject;
 
 
 namespace DuiLib {
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-
 	class CActiveXCtrl;
 
 	template< class T >
@@ -21,9 +18,6 @@ namespace DuiLib {
 		T* Detach() { T* t = m_p; m_p = NULL; return t; };
 		T* m_p;
 	};
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
 
 	class UILIB_API CActiveXUI : public CControlUI, public IMessageFilterUI
 	{
@@ -64,7 +58,7 @@ namespace DuiLib {
 	protected:
 		virtual void ReleaseControl();
 		virtual bool DoCreateControl();
-
+		virtual void OnShowActiveX();
 	protected:
 		CLSID m_clsid;
 		CDuiString m_sModuleName;
@@ -75,7 +69,6 @@ namespace DuiLib {
 		CActiveXCtrl* m_pControl;
 		HWND m_hwndHost;
 	};
-
-} // namespace DuiLib
+}
 
 #endif // __UIACTIVEX_H__

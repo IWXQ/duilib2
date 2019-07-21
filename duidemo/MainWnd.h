@@ -59,7 +59,6 @@ class MainWnd :
             IUnknown __RPC_FAR *pcmdtReserved, IDispatch __RPC_FAR *pdispReserved);
   private:
     void UpdateText(const CDuiString &str);
-    void ThreadProc();
     void AddListItem(int iCount);
 	void TaskTest();
   private:
@@ -75,6 +74,8 @@ class MainWnd :
     CEditUI* m_pEditH;
     CEditUI* m_pEditS;
     CEditUI* m_pEditL;
+	CActiveXUI *m_pActiveXFlash;
+	CFlashUI* m_pFlash;
 
 	HANDLE m_hTaskStartEvent;
   public:

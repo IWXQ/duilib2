@@ -38,8 +38,10 @@ MainWnd::MainWnd() :
     m_pEditH(NULL),
     m_pEditS(NULL),
     m_pEditL(NULL),
+	m_pFlash(NULL),
     m_pHrlTitle(NULL) {
     m_pMenu = NULL;
+	m_pActiveXFlash = NULL;
 
     m_MainPage.SetPaintMagager(&m_PaintManager);
     AddVirtualWnd(_T("mainpage"), &m_MainPage);
@@ -72,7 +74,13 @@ void MainWnd::InitWindow() {
     m_pEditH = static_cast<CEditUI*>(m_PaintManager.FindControl(TEXT("editH")));
     m_pEditS = static_cast<CEditUI*>(m_PaintManager.FindControl(TEXT("editS")));
     m_pEditL = static_cast<CEditUI*>(m_PaintManager.FindControl(TEXT("editL")));
+	m_pFlash = static_cast<CFlashUI *>(m_PaintManager.FindControl(TEXT("ani_flash")));
 
+	if (m_pFlash) {
+		m_pFlash->SetActionScriptCallback([](const std::wstring &request) {
+			MessageBoxW(NULL, request.c_str(), L"ActionScriptCallback", MB_OK);
+		});
+	}
 
     if (m_pHrlTitle) {
         DWORD dwBkColor = m_pHrlTitle->GetBkColor();
@@ -148,11 +156,11 @@ void MainWnd::Notify(TNotifyUI &msg) {
 
             if (pFlash != NULL) {
                 pFlash->put_WMode(_bstr_t(_T("Transparent")));
-                pFlash->put_Movie(_bstr_t((CPaintManagerUI::GetInstancePath() + _T("\\skin\\duidemo\\other\\waterdrop.swf")).GetData()));
+                pFlash->put_Movie(_bstr_t((CPaintManagerUI::GetInstancePath() + _T("1.swf")).GetData()));
                 pFlash->DisableLocalSecurity();
                 pFlash->put_AllowScriptAccess(L"always");
-                BSTR response;
-                pFlash->CallFunction(L"<invoke name=\"setButtonText\" returntype=\"xml\"><arguments><string>Click me!</string></arguments></invoke>", &response);
+                //BSTR response;
+                //pFlash->CallFunction(L"<invoke name=\"foo1\" returntype=\"xml\"><arguments><string>Hello</string></arguments></invoke>", &response);
                 pFlash->Release();
             }
         }
@@ -350,6 +358,12 @@ void MainWnd::OnClick(TNotifyUI &msg) {
 	}
 	else if (strName.CompareNoCase(TEXT("gif")) == 0) {
 		MessageBox(NULL, TEXT("GIF"), TEXT("GIF"), MB_OK);
+	}
+	else if (strName.CompareNoCase(TEXT("btnCallFlash")) == 0) {
+		std::wstring strResponse;
+		bool b = m_pFlash->CallActionScriptFunction(
+			L"<invoke name=\"foo1\" returntype=\"xml\"><arguments><string>Hello</string></arguments></invoke>", strResponse);
+
 	}
 }
 

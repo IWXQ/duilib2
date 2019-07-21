@@ -2,13 +2,7 @@
 #define __UIFLASH_H__
 #pragma once
 
-// \Utils\Flash11.tlb 为Flash11接口文件，部分方法在低版本不存在，使用需注意
-// #import "PROGID:ShockwaveFlash.ShockwaveFlash"  \
-//      raw_interfaces_only,       /* Don't add raw_ to method names */ \
-//  	named_guids,           /* Named guids and declspecs */    \
-//  	rename("IDispatchEx","IMyDispatchEx")	/* fix conflicting with IDispatchEx ant dispex.h */  
-// using namespace ShockwaveFlashObjects;
-#include "Utils/FlashEventHandler.h"
+#include <functional>
 #include "Utils/flash11.tlh"
 
 class CActiveXCtrl;
@@ -17,19 +11,27 @@ namespace DuiLib
 {
 	class UILIB_API CFlashUI
 		: public CActiveXUI
-	//	, public IOleInPlaceSiteWindowless // 透明模式绘图，需要实现这个接口
 		, public _IShockwaveFlashEvents
 		, public ITranslateAccelerator
 	{
 		DECLARE_DUICONTROL(CFlashUI)
 	public:
+		typedef std::function<void(const std::wstring &request)> ActionScriptCallback;
 		CFlashUI(void);
-		~CFlashUI(void);
+		virtual ~CFlashUI(void);
 
-		void SetFlashEventHandler(CFlashEventHandler* pHandler);
+		static bool IsFlashActiveXInstalled();
+
+		void SetActionScriptCallback(ActionScriptCallback cb);
+		bool CallActionScriptFunction(const std::wstring &strRequest, std::wstring &strResponse);
+
+		void SetFlashPath(const CDuiString &strFlashPath);
+		void SetFlashResType(const CDuiString &strResType);
+	protected:
 		virtual bool DoCreateControl();
-		IShockwaveFlash* m_pFlash;
-
+		virtual void OnShowActiveX();
+		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+		bool LoadSWF(IShockwaveFlash* pFlash, STRINGorID swf, CDuiString type, HINSTANCE instance);
 	private:
 		virtual LPCTSTR GetClass() const;
 		virtual LPVOID GetInterface( LPCTSTR pstrName );
@@ -43,22 +45,19 @@ namespace DuiLib
 		virtual ULONG STDMETHODCALLTYPE AddRef( void );
 		virtual ULONG STDMETHODCALLTYPE Release( void );
 
-		HRESULT OnReadyStateChange (long newState);
-		HRESULT OnProgress(long percentDone );
-		HRESULT FSCommand (_bstr_t command, _bstr_t args);
-		HRESULT FlashCall (_bstr_t request );
-
 		virtual void ReleaseControl();
 		HRESULT RegisterEventHandler(BOOL inAdvise);
 
-		// ITranslateAccelerator
-		// Duilib消息分发给WebBrowser
 		virtual LRESULT TranslateAccelerator( MSG *pMsg );
 
+		
 	private:
 		LONG m_dwRef;
 		DWORD m_dwCookie;
-		CFlashEventHandler* m_pFlashEventHandler;
+		IShockwaveFlash* m_pFlash;
+		CDuiString m_strFlashPath;
+		CDuiString m_strResType;
+		ActionScriptCallback m_ActionScriptCB;
 	};
 }
 
