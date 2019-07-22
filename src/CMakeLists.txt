@@ -105,9 +105,7 @@ if (MSVC)
             # COMPILE_FLAGS "/YuStdAfx.h"
             # )
     # endforeach()
-	
-	SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /source-charset:.936")
-	SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /source-charset:.936")
+
 endif (MSVC)
 
 
