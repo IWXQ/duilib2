@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIGroupBox.h"
 
 namespace DuiLib {
@@ -100,7 +100,7 @@ namespace DuiLib {
 
             RECT rcText = CalcTextDrawRect(rcItem);
 
-            // Jeffery: ÉÏ±ß¿òÎ»ÓÚÎÄ×ÖÖĞ¼äÎ»ÖÃ
+            // Jeffery: ä¸Šè¾¹æ¡†ä½äºæ–‡å­—ä¸­é—´ä½ç½®
             //
             rcItem.top += ((rcText.bottom - rcText.top) / 2);
 

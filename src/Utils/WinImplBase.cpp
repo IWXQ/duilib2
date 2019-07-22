@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include <algorithm>
 namespace DuiLib {
     //////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ namespace DuiLib {
 
         RECT rcCaption = m_PaintManager.GetCaptionRect();
         
-        // Jeffery: Caption ÊôÐÔÊÊÓ¦DPIËõ·Å
+        // Jeffery: Caption å±žæ€§é€‚åº”DPIç¼©æ”¾
         //
         rcCaption = m_PaintManager.GetDPIObj()->Scale(rcCaption);
 
@@ -271,7 +271,7 @@ namespace DuiLib {
         }
 
         if (pRoot == NULL) {
-            CDuiString sError = _T("Load Resource XML Failed£º");
+            CDuiString sError = _T("Load Resource XML Failedï¼š");
             sError += GetSkinFile();
             MessageBox(NULL, sError, _T("DuiLib"), MB_OK | MB_ICONERROR);
             return 0;

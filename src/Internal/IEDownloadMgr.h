@@ -1,4 +1,4 @@
-#ifndef __IE_DOWNLOAD_MGR_H_
+﻿#ifndef __IE_DOWNLOAD_MGR_H_
 #define __IE_DOWNLOAD_MGR_H_
 #pragma warning( disable: 4049 )  /* more than 64k source lines */
 

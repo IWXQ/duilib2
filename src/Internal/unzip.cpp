@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -4269,8 +4269,8 @@ ZRESULT TUnzip::Get(int index, ZIPENTRY *ze) {
 ZRESULT TUnzip::Find(const TCHAR *tname, bool ic, int *index, ZIPENTRY *ze) {
     char name[MAX_PATH];
 #ifdef UNICODE
-    // Jeffery: ĞŞ¸´Ñ¹Ëõ°üÄÚÎÄ¼ş²»Ö§³ÖÖĞÎÄµÄBUG
-    //          Ñ¹Ëõ°üÄÚÎÄ¼şÃûÊÇÊ¹ÓÃANSI±àÂë´æ´¢µÄ£¬ËùÒÔ´Ë´¦ĞŞ¸ÄÎªANSI±àÂëÀ´Æ¥Åä
+    // Jeffery: ä¿®å¤å‹ç¼©åŒ…å†…æ–‡ä»¶ä¸æ”¯æŒä¸­æ–‡çš„BUG
+    //          å‹ç¼©åŒ…å†…æ–‡ä»¶åæ˜¯ä½¿ç”¨ANSIç¼–ç å­˜å‚¨çš„ï¼Œæ‰€ä»¥æ­¤å¤„ä¿®æ”¹ä¸ºANSIç¼–ç æ¥åŒ¹é…
     //
     WideCharToMultiByte(CP_ACP, 0, tname, -1, name, MAX_PATH, 0, 0);
 #else

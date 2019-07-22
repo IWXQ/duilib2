@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIOption.h"
 
 namespace DuiLib {
@@ -60,7 +60,7 @@ namespace DuiLib {
 
     void COptionUI::Selected(bool bSelected, bool bMsg/* = true*/) {
         if (m_bSelected == bSelected) {
-            // Jeffery: Êó±êµã»÷Option°´Å¥Ê±·¢ËÍ¸ÃÍ¨Öª
+            // Jeffery: é¼ æ ‡ç‚¹å‡»OptionæŒ‰é’®æ—¶å‘é€è¯¥é€šçŸ¥
             //
             if (m_bSelected) {
                 if (bMsg)

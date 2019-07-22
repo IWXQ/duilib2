@@ -1,4 +1,4 @@
-#ifndef __UIBASE_H__
+Ôªø#ifndef __UIBASE_H__
 #define __UIBASE_H__
 
 
@@ -60,7 +60,7 @@ namespace DuiLib {
         void ShowWindow(bool bShow = true, bool bTakeFocus = true);
         UINT ShowModal();
         void Close(UINT nRet = IDOK);
-        void CenterWindow();    // æ”÷–£¨÷ß≥÷¿©’π∆¡ƒª
+        void CenterWindow();    // Â±Ö‰∏≠ÔºåÊîØÊåÅÊâ©Â±ïÂ±èÂπï
         void SetIcon(UINT nRes);
 
         LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0L);

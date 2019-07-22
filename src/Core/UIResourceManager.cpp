@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+О╩©#include "StdAfx.h"
 #include "UIResourceManager.h"
 
 namespace DuiLib {
@@ -55,7 +55,7 @@ namespace DuiLib {
         LPCTSTR pstrValue = NULL;
         LPTSTR pstr = NULL;
 
-        //╪стьм╪ф╛вйт╢
+        //Е┼═Х╫╫Е⌡╬Г┴┤Х╣└Ф╨░
         LPCTSTR pstrId = NULL;
         LPCTSTR pstrPath = NULL;
 
@@ -65,7 +65,7 @@ namespace DuiLib {
 
             if(ChildNode.IsValid()) LoadResource(node);
             else if ((_tcsicmp(pstrClass, _T("Image")) == 0) && node.HasAttributes()) {
-                //╪стьм╪ф╛вйт╢
+                //Е┼═Х╫╫Е⌡╬Г┴┤Х╣└Ф╨░
                 nAttributes = node.GetAttributeCount();
 
                 for( int i = 0; i < nAttributes; i++ ) {
@@ -89,7 +89,7 @@ namespace DuiLib {
 
                 m_mImageHashMap.Insert(pstrId, (LPVOID)new CDuiString(pstrPath));
             } else if( _tcsicmp(pstrClass, _T("Xml")) == 0 && node.HasAttributes()) {
-                //╪стьXMLеДжцнд╪Ч
+                //Е┼═Х╫╫XMLИ┘█Г╫╝Ф√┤Д╩╤
                 nAttributes = node.GetAttributeCount();
 
                 for( int i = 0; i < nAttributes; i++ ) {
@@ -172,7 +172,7 @@ namespace DuiLib {
         LPCTSTR pstrValue = NULL;
         LPTSTR pstr = NULL;
 
-        //╪стьм╪ф╛вйт╢
+        //Е┼═Х╫╫Е⌡╬Г┴┤Х╣└Ф╨░
         LPCTSTR pstrId = NULL;
         LPCTSTR pstrText = NULL;
 
@@ -180,7 +180,7 @@ namespace DuiLib {
             pstrClass = node.GetName();
 
             if ((_tcsicmp(pstrClass, _T("Text")) == 0) && node.HasAttributes()) {
-                //╪стьм╪ф╛вйт╢
+                //Е┼═Х╫╫Е⌡╬Г┴┤Х╣└Ф╨░
                 nAttributes = node.GetAttributeCount();
 
                 for( int i = 0; i < nAttributes; i++ ) {

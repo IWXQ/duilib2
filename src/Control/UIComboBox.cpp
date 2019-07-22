@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 namespace DuiLib {
     class CComboBoxWnd : public CWindowWnd, public INotifyUI {
@@ -173,13 +173,13 @@ namespace DuiLib {
             szDrop = m_pm.GetDPIObj()->Scale(szDrop);
 
             RECT rc = m_pOwner->GetPos();
-            rc.top = rc.bottom;     // ¸¸´°¿Úleft¡¢bottomÎ»ÖÃ×÷Îªµ¯³ö´°¿ÚÆğµã
+            rc.top = rc.bottom;     // çˆ¶çª—å£leftã€bottomä½ç½®ä½œä¸ºå¼¹å‡ºçª—å£èµ·ç‚¹
 
             POINT ptWnd = { rc.left, rc.top };
             ::ClientToScreen(hWndParent, &ptWnd);
 
             if (szDrop.cx > 0)
-                rc.right = rc.left + szDrop.cx; // ¼ÆËãµ¯³ö´°¿Ú¿í¶È
+                rc.right = rc.left + szDrop.cx; // è®¡ç®—å¼¹å‡ºçª—å£å®½åº¦
 
             SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
             int cyFixed = 0;
@@ -697,17 +697,17 @@ namespace DuiLib {
 
     void CComboBoxUI::SetPos(RECT rc, bool bNeedInvalidate) {
         if(!::EqualRect(&rc, &m_rcItem)) {
-            // Òş²ØÏÂÀ­´°¿Ú
+            // éšè—ä¸‹æ‹‰çª—å£
             if (m_pWindow && ::IsWindow(m_pWindow->GetHWND()))
                 m_pWindow->Show(false);
 
-            //// ËùÓĞÔªËØ´óĞ¡ÖÃÎª0
+            //// æ‰€æœ‰å…ƒç´ å¤§å°ç½®ä¸º0
             //RECT rcNull = { 0 };
 
             //for( int i = 0; i < m_items.GetSize(); i++ ) 
             //    static_cast<CControlUI *>(m_items[i])->SetPos(rcNull);
 
-            // µ÷ÕûÎ»ÖÃ
+            // è°ƒæ•´ä½ç½®
             CControlUI::SetPos(rc, bNeedInvalidate);
         }
     }

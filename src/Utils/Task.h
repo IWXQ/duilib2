@@ -1,4 +1,4 @@
-#ifndef __THREAD_UI_TASK_H__
+﻿#ifndef __THREAD_UI_TASK_H__
 #define __THREAD_UI_TASK_H__
 #pragma once
 #include "ppxbase/bind.h"

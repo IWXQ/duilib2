@@ -1,4 +1,4 @@
-#ifndef DUILIB2_SYSTEM_TRAY_ICON_H_
+﻿#ifndef DUILIB2_SYSTEM_TRAY_ICON_H_
 #define DUILIB2_SYSTEM_TRAY_ICON_H_
 #pragma once
 #include <ShellAPI.h>

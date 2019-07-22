@@ -1,10 +1,10 @@
-#ifndef __COLOR_H__
+﻿#ifndef __COLOR_H__
 #define __COLOR_H__
 #pragma once
 
 
-// Jeffery: ΢�������RGB�꣬�Ӹ�λ����λ����ΪB,G,R��DUI_RGB��Ӹ�λ����λ����ΪR,G,B
-//          ����DuiLib����ɫֵ��Ҫʹ��DUI_RGB�����RGB
+// Jeffery: 微软定义的RGB宏，从高位到低位依次为B,G,R，DUI_RGB宏从高位到低位依次为R,G,B
+//          传入DuiLib的颜色值，要使用DUI_RGB宏代替RGB
 //
 #define DUI_RGB(r,g,b)          ((COLORREF)(((BYTE)(b)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(r))<<16)))
 #define DUI_ARGB(a,r,g,b)       ((COLORREF)( (BYTE)(b) | ( ((WORD)(g)) << 8) | ( ((DWORD)(r)) << 16 ) | ( ((DWORD)(a)) << 24 ) ))

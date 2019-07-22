@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "UIRollText.h"
 
 namespace DuiLib {
@@ -56,12 +56,12 @@ namespace DuiLib {
 
     void CRollTextUI::SetPos(RECT rc) {
         CLabelUI::SetPos(rc);
-        m_nText_W_H = 0;            //≤ºæ÷±‰ªØ÷ÿ–¬º∆À„
+        m_nText_W_H = 0;            //Â∏ÉÂ±ÄÂèòÂåñÈáçÊñ∞ËÆ°ÁÆó
     }
 
     void CRollTextUI::SetText( LPCTSTR pstrText ) {
         CLabelUI::SetText(pstrText);
-        m_nText_W_H = 0;            //Œƒ±æ±‰ªØ÷ÿ–¬º∆À„
+        m_nText_W_H = 0;            //ÊñáÊú¨ÂèòÂåñÈáçÊñ∞ËÆ°ÁÆó
     }
 
     void CRollTextUI::DoEvent(TEventUI &event) {
@@ -97,13 +97,13 @@ namespace DuiLib {
         if(m_nText_W_H > 0) {
             int nScrollRange = 0;
 
-            if (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) {  //◊Û√Ê“∆∂Ø
+            if (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) {  //Â∑¶Èù¢ÁßªÂä®
                 nScrollRange = m_nText_W_H + rcClient.GetWidth();
 
                 rcClient.Offset((m_nRollDirection == ROLLTEXT_LEFT ? rcClient.GetWidth() : -rcClient.GetWidth()), 0);
                 rcClient.Offset((m_nRollDirection == ROLLTEXT_LEFT ? -m_nScrollPos : m_nScrollPos), 0);
                 rcClient.right += (m_nText_W_H - rcClient.GetWidth());
-            } else {                                                                        //…œœ¬“∆∂Ø
+            } else {                                                                        //‰∏ä‰∏ãÁßªÂä®
                 nScrollRange = m_nText_W_H + rcClient.GetHeight();
 
                 rcClient.Offset(0, (m_nRollDirection == ROLLTEXT_UP ? rcClient.GetHeight() : -rcClient.GetHeight()));
@@ -123,11 +123,11 @@ namespace DuiLib {
         UINT uTextStyle = DT_WORDBREAK | DT_EDITCONTROL;
 
         if(m_nText_W_H == 0) {
-            uTextStyle |= DT_CALCRECT;              //µ⁄“ª¥Œº∆À„Œƒ±æøÌ∂»ªÚ∏ﬂ∂»
+            uTextStyle |= DT_CALCRECT;              //Á¨¨‰∏ÄÊ¨°ËÆ°ÁÆóÊñáÊú¨ÂÆΩÂ∫¶ÊàñÈ´òÂ∫¶
 
-            if (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) {  //◊Û√Ê“∆∂Ø
+            if (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) {  //Â∑¶Èù¢ÁßªÂä®
                 rc.right += 10000;
-            } else {                                                                        //…œœ¬“∆∂Ø
+            } else {                                                                        //‰∏ä‰∏ãÁßªÂä®
                 rc.bottom += 10000;
             }
         }
@@ -140,7 +140,7 @@ namespace DuiLib {
         }
 
         if(m_nText_W_H == 0) {
-            m_nText_W_H = (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) ? (rc.right - rc.left) : (rc.bottom - rc.top);  //º∆À„Œƒ±æøÌ∂»ªÚ∏ﬂ∂»
+            m_nText_W_H = (m_nRollDirection == ROLLTEXT_LEFT || m_nRollDirection == ROLLTEXT_RIGHT) ? (rc.right - rc.left) : (rc.bottom - rc.top);  //ËÆ°ÁÆóÊñáÊú¨ÂÆΩÂ∫¶ÊàñÈ´òÂ∫¶
         }
     }
 }

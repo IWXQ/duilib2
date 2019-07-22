@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIFlash.h"
 #include <atlcomcli.h>
 #include "ppxbase/stringencode.h"
@@ -345,7 +345,7 @@ namespace DuiLib {
 		} while (0);
 
 		while (!pData) {
-			//¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+			//è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
 			HANDLE hFile = ::CreateFile(swf.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
 				FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -421,7 +421,7 @@ namespace DuiLib {
         if( m_pFlash == NULL )
             return E_NOTIMPL;
 
-        // µ±Ç°Web´°¿Ú²»ÊÇ½¹µã,²»´¦Àí¼ÓËÙ¼ü
+        // å½“å‰Webçª—å£ä¸æ˜¯ç„¦ç‚¹,ä¸å¤„ç†åŠ é€Ÿé”®
         BOOL bIsChild = FALSE;
         HWND hTempWnd = NULL;
         HWND hWndFocus = ::GetFocus();

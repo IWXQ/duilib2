@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UIGifAnim.h"
 #include "ppxbase/timer.h"
 

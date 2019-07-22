@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "resource.h"
 #include "MainWnd.h"
 #include "SkinFrame.h"
@@ -104,7 +104,7 @@ void MainWnd::InitWindow() {
 		}
     }
 
-    // ³õÊ¼»¯WebBrowser¿Ø¼ş
+    // åˆå§‹åŒ–WebBrowseræ§ä»¶
     CWebBrowserUI *pBrowser1 = static_cast<CWebBrowserUI *>(m_PaintManager.FindControl(_T("oneclick_browser1")));
     if (pBrowser1) {
         pBrowser1->SetWebBrowserEventHandler(this);
@@ -258,7 +258,7 @@ void MainWnd::OnClick(TNotifyUI &msg) {
         CDuiPoint point;
         ::GetCursorPos(&point);
         m_pMenu->Init(NULL, _T("menu.xml"), point, &m_PaintManager);
-        // ÉèÖÃ×´Ì¬
+        // è®¾ç½®çŠ¶æ€
      /*   CMenuWnd::SetMenuItemInfo(_T("qianting"), true);
 
         CMenuUI *rootMenu = m_pMenu->GetMenuUI();
@@ -266,7 +266,7 @@ void MainWnd::OnClick(TNotifyUI &msg) {
         if (rootMenu != NULL) {
             CMenuElementUI *pNew = new CMenuElementUI;
             pNew->SetName(_T("Menu_Dynamic"));
-            pNew->SetText(_T("¶¯Ì¬Ò»¼¶²Ëµ¥"));
+            pNew->SetText(_T("åŠ¨æ€ä¸€çº§èœå•"));
             pNew->SetShowExplandIcon(true);
             pNew->SetIcon(_T("WebSit.png"));
             pNew->SetIconSize(16, 16);
@@ -274,11 +274,11 @@ void MainWnd::OnClick(TNotifyUI &msg) {
 
             CMenuElementUI *pNew2 = new CMenuElementUI;
             pNew2->SetName(_T("Menu_Dynamic"));
-            pNew2->SetText(_T("¶¯Ì¬Ò»¼¶²Ëµ¥2"));
+            pNew2->SetText(_T("åŠ¨æ€ä¸€çº§èœå•2"));
             rootMenu->AddAt(pNew2, 2);
         }
 */
-        // ¶¯Ì¬Ìí¼ÓºóÖØĞÂÉèÖÃ²Ëµ¥µÄ´óĞ¡
+        // åŠ¨æ€æ·»åŠ åé‡æ–°è®¾ç½®èœå•çš„å¤§å°
         m_pMenu->ResizeMenu();
     } 
     else if (strName.CompareNoCase(_T("btnDpi")) == 0) {
@@ -410,8 +410,8 @@ HRESULT STDMETHODCALLTYPE MainWnd::ShowContextMenu(CWebBrowserUI *pWeb,
         /* [in] */ IUnknown __RPC_FAR *pcmdtReserved,
         /* [in] */ IDispatch __RPC_FAR *pdispReserved) {
     return E_NOTIMPL;
-    //·µ»Ø E_NOTIMPL Õı³£µ¯³öÏµÍ³ÓÒ¼ü²Ëµ¥
-    //·µ»ØS_OK Ôò¿ÉÆÁ±ÎÏµÍ³ÓÒ¼ü²Ëµ¥
+    //è¿”å› E_NOTIMPL æ­£å¸¸å¼¹å‡ºç³»ç»Ÿå³é”®èœå•
+    //è¿”å›S_OK åˆ™å¯å±è”½ç³»ç»Ÿå³é”®èœå•
 }
 
 void MainWnd::UpdateText(const CDuiString &str) {
@@ -463,9 +463,9 @@ VOID MainWnd::TaskTest() {
 		std::thread h([i, this]() {
 			WaitForSingleObject(m_hTaskStartEvent, INFINITE);
 			for (int j = i*1000; j < (i+1)* 1000; j++) {
-				std::string s = "string×Ö·û´®" + std::to_string(j);
+				std::string s = "stringå­—ç¬¦ä¸²" + std::to_string(j);
 				PostTaskToUIThread(ppx::base::BindLambda([j, s]() {
-					PPX_ASSERT(s == "string×Ö·û´®" + std::to_string(j));
+					PPX_ASSERT(s == "stringå­—ç¬¦ä¸²" + std::to_string(j));
 					ppx::base::TraceMsgA("%d: %s\n", j, s.c_str());
 				}));
 			}
@@ -503,10 +503,10 @@ LPCTSTR MainWnd::QueryControlText(LPCTSTR lpstrId, LPCTSTR lpstrType) {
     } 
     else {
         if(lstrcmpi(lpstrId, _T("titletext")) == 0) {
-            return _T("Duilib Ê¹ÓÃÑİÊ¾ v1.1");
+            return _T("Duilib ä½¿ç”¨æ¼”ç¤º v1.1");
         } 
         else if(lstrcmpi(lpstrId, _T("hometext")) == 0) {
-            return _T("{a}ÑİÊ¾¹ÙÍø{/a}");
+            return _T("{a}æ¼”ç¤ºå®˜ç½‘{/a}");
         }
     }
 
@@ -602,7 +602,7 @@ LRESULT MainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
             ::GetCursorPos(&point);
             point.y -= 100;
             m_pMenu->Init(NULL, _T("menu.xml"), point, &m_PaintManager);
-            // ¶¯Ì¬Ìí¼ÓºóÖØĞÂÉèÖÃ²Ëµ¥µÄ´óĞ¡
+            // åŠ¨æ€æ·»åŠ åé‡æ–°è®¾ç½®èœå•çš„å¤§å°
             m_pMenu->ResizeMenu();
         }
     }

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Utils/Task.h"
 
 namespace DuiLib {

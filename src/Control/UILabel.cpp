@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UILabel.h"
 
 #include <atlconv.h>
@@ -97,7 +97,7 @@ namespace DuiLib {
 
     SIZE CLabelUI::EstimateSize(SIZE szAvailable) {
         if (m_cxyFixed.cx > 0 && m_cxyFixed.cy > 0) {
-            // Jeffery: ÐÞ¸´ÁËDPI²»Îª100Ê±, CLabelUI(º¬ÅÉÉúÓÚËüµÄCButtonUI¿Ø¼þ)µÄsize²»ÕýÈ·µÄÎÊÌâ
+            // Jeffery: ä¿®å¤äº†DPIä¸ä¸º100æ—¶, CLabelUI(å«æ´¾ç”ŸäºŽå®ƒçš„CButtonUIæŽ§ä»¶)çš„sizeä¸æ­£ç¡®çš„é—®é¢˜
             //
             return m_pManager->GetDPIObj()->Scale(m_cxyFixed);
         }

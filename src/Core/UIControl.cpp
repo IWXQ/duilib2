@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 namespace DuiLib {
     IMPLEMENT_DUICONTROL(CControlUI)
@@ -124,7 +124,7 @@ namespace DuiLib {
         if( m_sText == pstrText ) return;
 
         m_sText = pstrText;
-        // ½âÎöxml»»ĞĞ·û
+        // è§£æxmlæ¢è¡Œç¬¦
         m_sText.Replace(_T("{\\n}"), _T("\n"));
         Invalidate();
     }
@@ -851,7 +851,7 @@ namespace DuiLib {
     }
 
     void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue) {
-        // ÊÇ·ñÑùÊ½±í
+        // æ˜¯å¦æ ·å¼è¡¨
         if(m_pManager != NULL) {
             LPCTSTR pStyle = m_pManager->GetStyle(pstrValue);
 
@@ -880,7 +880,7 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("float")) == 0 ) {
             CDuiString nValue = pstrValue;
 
-            // ¶¯Ì¬¼ÆËãÏà¶Ô±ÈÀı
+            // åŠ¨æ€è®¡ç®—ç›¸å¯¹æ¯”ä¾‹
             if(nValue.Find(',') < 0) {
                 SetFloat(_tcsicmp(pstrValue, _T("true")) == 0);
             } else {
@@ -900,7 +900,7 @@ namespace DuiLib {
         } else if( _tcsicmp(pstrName, _T("floatalign")) == 0) {
             UINT uAlign = GetFloatAlign();
 
-            // ½âÎöÎÄ×ÖÊôĞÔ
+            // è§£ææ–‡å­—å±æ€§
             while( *pstrValue != _T('\0') ) {
                 CDuiString sValue;
 
@@ -1152,7 +1152,7 @@ namespace DuiLib {
     }
 
     CControlUI *CControlUI::ApplyAttributeList(LPCTSTR pstrValue) {
-        // ½âÎöÑùÊ½±í
+        // è§£ææ ·å¼è¡¨
         if(m_pManager != NULL) {
             LPCTSTR pStyle = m_pManager->GetStyle(pstrValue);
 
@@ -1164,7 +1164,7 @@ namespace DuiLib {
         CDuiString sXmlData = pstrValue;
         sXmlData.Replace(_T("&quot;"), _T("\""));
         LPCTSTR pstrList = sXmlData;
-        // ½âÎöÑùÊ½ÊôĞÔ
+        // è§£ææ ·å¼å±æ€§
         CDuiString sItem;
         CDuiString sValue;
 
@@ -1228,7 +1228,7 @@ namespace DuiLib {
     }
 
     bool CControlUI::DoPaint(HDC hDC, const RECT &rcPaint, CControlUI *pStopControl) {
-        // »æÖÆÑ­Ğò£º±³¾°ÑÕÉ«->±³¾°Í¼->×´Ì¬Í¼->ÎÄ±¾->±ß¿ò
+        // ç»˜åˆ¶å¾ªåºï¼šèƒŒæ™¯é¢œè‰²->èƒŒæ™¯å›¾->çŠ¶æ€å›¾->æ–‡æœ¬->è¾¹æ¡†
         SIZE cxyBorderRound;
         RECT rcBorderSize;
 

@@ -1,4 +1,4 @@
-#ifndef __UIDELEGATE_H__
+ï»¿#ifndef __UIDELEGATE_H__
 #define __UIDELEGATE_H__
 
 #pragma once
@@ -82,7 +82,7 @@ public:
     void operator+= (FnType pFn);
     void operator-= (const CDelegateBase& d);
     void operator-= (FnType pFn);
-    // Jeffery: ÓĞÖÁÉÙÒ»¸öÎ¯ÍĞ·µ»Øfalse£¬Ôò·µ»Øfalse£»·ñÔò·µ»Øtrue
+    // Jeffery: æœ‰è‡³å°‘ä¸€ä¸ªå§”æ‰˜è¿”å›falseï¼Œåˆ™è¿”å›falseï¼›å¦åˆ™è¿”å›true
     //
     bool operator() (void* param);
 	void Clear();

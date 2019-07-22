@@ -1,4 +1,4 @@
-#ifndef UILIB_INTERNAL_H__
+﻿#ifndef UILIB_INTERNAL_H__
 #define UILIB_INTERNAL_H__
 #pragma once
 

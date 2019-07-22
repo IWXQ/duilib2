@@ -1,4 +1,4 @@
-#ifndef __UILIST_H__
+ï»¿#ifndef __UILIST_H__
 #define __UILIST_H__
 
 namespace DuiLib {
@@ -114,7 +114,7 @@ namespace DuiLib {
         int GetCurSel() const;
         int GetCurSelActivate() const;
         bool SelectItem(int iIndex, bool bTakeFocus = false);
-        bool SelectItemActivate(int iIndex);    // Ë«»÷Ñ¡ÖĞ
+        bool SelectItemActivate(int iIndex);    // åŒå‡»é€‰ä¸­
 
         bool SelectMultiItem(int iIndex, bool bTakeFocus = false);
         void SetMultiSelect(bool bMultiSel);
@@ -141,7 +141,7 @@ namespace DuiLib {
         bool AddAt(CControlUI *pControl, int iIndex);
         bool Remove(CControlUI *pControl);
 
-        // Jeffery: ÈôbResetSelIndexÎªfalseÔòÉ¾³ı³É¹¦ºó½«Ã»ÓĞÑ¡ÖĞÏî£»·ñÔò»á×Ô¶¯¼ÆËãÑ¡ÖĞÏî
+        // Jeffery: è‹¥bResetSelIndexä¸ºfalseåˆ™åˆ é™¤æˆåŠŸåå°†æ²¡æœ‰é€‰ä¸­é¡¹ï¼›å¦åˆ™ä¼šè‡ªåŠ¨è®¡ç®—é€‰ä¸­é¡¹
         //
         bool RemoveAt(int iIndex, bool bResetSelIndex = true);
         void RemoveAll();
@@ -242,7 +242,7 @@ namespace DuiLib {
         int m_iCurSel;
         bool m_bMultiSel;
         CStdPtrArray m_aSelItems;
-        int m_iCurSelActivate;  // Ë«»÷µÄÁĞ
+        int m_iCurSelActivate;  // åŒå‡»çš„åˆ—
         int m_iExpandedItem;
         IListCallbackUI *m_pCallback;
         CListBodyUI *m_pList;
@@ -352,7 +352,7 @@ namespace DuiLib {
         bool m_bDragable;
         UINT m_uButtonState;
         int m_iSepWidth;
-        bool m_bSepWidthAdaptDpiScale; // Jeffery: ·Ö¸ôÍ¼Æ¬µÄ¿í¶ÈÊÇ·ñÊÊÓ¦DPIËõ·Å
+        bool m_bSepWidthAdaptDpiScale; // Jeffery: åˆ†éš”å›¾ç‰‡çš„å®½åº¦æ˜¯å¦é€‚åº”DPIç¼©æ”¾
         DWORD m_dwTextColor;
         int m_iFont;
         UINT m_uTextStyle;
@@ -394,7 +394,7 @@ namespace DuiLib {
         bool IsExpanded() const;
         bool Expand(bool bExpand = true);
 
-        void Invalidate(); // Ö±½ÓCControl::Invalidate»áµ¼ÖÂ¹ö¶¯ÌõË¢ĞÂ£¬ÖØĞ´¼õÉÙË¢ĞÂÇøÓò
+        void Invalidate(); // ç›´æ¥CControl::Invalidateä¼šå¯¼è‡´æ»šåŠ¨æ¡åˆ·æ–°ï¼Œé‡å†™å‡å°‘åˆ·æ–°åŒºåŸŸ
         bool Activate();
 
         void DoEvent(TEventUI &event);
@@ -489,7 +489,7 @@ namespace DuiLib {
         bool IsExpanded() const;
         bool Expand(bool bExpand = true);
 
-        void Invalidate(); // Ö±½ÓCControl::Invalidate»áµ¼ÖÂ¹ö¶¯ÌõË¢ĞÂ£¬ÖØĞ´¼õÉÙË¢ĞÂÇøÓò
+        void Invalidate(); // ç›´æ¥CControl::Invalidateä¼šå¯¼è‡´æ»šåŠ¨æ¡åˆ·æ–°ï¼Œé‡å†™å‡å°‘åˆ·æ–°åŒºåŸŸ
         bool Activate();
 
         void DoEvent(TEventUI &event);

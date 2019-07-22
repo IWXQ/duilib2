@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "Utils/SystemTrayIcon.h"
 #include "ppxbase/process_util.h"
 using namespace std;

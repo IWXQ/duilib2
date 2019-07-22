@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace DuiLib {
 	typedef struct UILIB_API tagTFontInfo {
@@ -48,8 +48,8 @@ namespace DuiLib {
 		bool bTiledX;
 		bool bTiledY;
 		bool bHSL;
-		bool bForceOriginImage; // Jeffery: ÊÇ·ñÒòÎªÃ»ÓĞÕÒµ½¶ÔÓ¦DPIµÄÍ¼Æ¬£¬¶øÇ¿ÖÆÊ¹ÓÃÔ­Í¼
-		bool bAdaptDpiScale;    // Jeffery: ÊÇ·ñÊÊÓ¦DPIËõ·Å
+		bool bForceOriginImage; // Jeffery: æ˜¯å¦å› ä¸ºæ²¡æœ‰æ‰¾åˆ°å¯¹åº”DPIçš„å›¾ç‰‡ï¼Œè€Œå¼ºåˆ¶ä½¿ç”¨åŸå›¾
+		bool bAdaptDpiScale;    // Jeffery: æ˜¯å¦é€‚åº”DPIç¼©æ”¾
 	} TDrawInfo;
 
 	class IRender {

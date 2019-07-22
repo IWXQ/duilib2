@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+ï»¿#include "Stdafx.h"
 #include <io.h>
 #include "Utils/Utils.h"
 #include <strsafe.h>
@@ -51,8 +51,8 @@ namespace DuiLib {
         case WM_SIZE:			lRes = OnSize(uMsg, wParam, lParam, bHandled); break;
         default:				bHandled = FALSE; break;
         }
-        // Jeffery [Note]: WM_PAINTÏûÏ¢Èç¹ûÃ»ÓĞ±»´¦ÀíBeginPaint/EndPaint£¬±ØĞëµôÓÃCWindowWnd::HandleMessageº¯ÊıÖĞµÄ::CallWindowProc(m_OldWndProc, m_hWnd, uMsg, wParam, lParam);À´´¦Àíµô£¬
-        // ·ñÔòÏûÏ¢Ñ­»·»áÒ»Ö±ÊÕµ½WM_PAINTÏûÏ¢£¬´Ó¶øµ¼ÖÂÖ÷Ïß³ÌCPUÕ¼ÓÃ¹ı¸ß£¬¶øÇÒ»áÓ°ÏìÏµÍ³ÆäËûÏûÏ¢µÄ½ÓÊÜ¡£
+        // Jeffery [Note]: WM_PAINTæ¶ˆæ¯å¦‚æœæ²¡æœ‰è¢«å¤„ç†BeginPaint/EndPaintï¼Œå¿…é¡»æ‰ç”¨CWindowWnd::HandleMessageå‡½æ•°ä¸­çš„::CallWindowProc(m_OldWndProc, m_hWnd, uMsg, wParam, lParam);æ¥å¤„ç†æ‰ï¼Œ
+        // å¦åˆ™æ¶ˆæ¯å¾ªç¯ä¼šä¸€ç›´æ”¶åˆ°WM_PAINTæ¶ˆæ¯ï¼Œä»è€Œå¯¼è‡´ä¸»çº¿ç¨‹CPUå ç”¨è¿‡é«˜ï¼Œè€Œä¸”ä¼šå½±å“ç³»ç»Ÿå…¶ä»–æ¶ˆæ¯çš„æ¥å—ã€‚
         //
         if (bHandled) 
             return lRes;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 namespace DuiLib {
 
@@ -504,10 +504,10 @@ namespace DuiLib {
     }
 
     bool CListUI::SelectItem(int iIndex, bool bTakeFocus) {
-        // È¡ÏûËùÓĞÑ¡ÔñÏî
+        // å–æ¶ˆæ‰€æœ‰é€‰æ‹©é¡¹
         UnSelectAllItems();
 
-        // ÅĞ¶ÏÊÇ·ñºÏ·¨ÁĞ±íÏî
+        // åˆ¤æ–­æ˜¯å¦åˆæ³•åˆ—è¡¨é¡¹
         if( iIndex < 0 ) 
             return false;
 
@@ -1597,7 +1597,7 @@ namespace DuiLib {
         ListType uListType = m_pOwner->GetListType();
 
         if(uListType == LT_LIST) {
-            // ¼ÆËãºáÏò³ß´ç
+            // è®¡ç®—æ¨ªå‘å°ºå¯¸
             int nItemCount = m_items.GetSize();
 
             if (nItemCount > 0) {
@@ -1664,7 +1664,7 @@ namespace DuiLib {
             }
         }
         else {
-            // Jeffery: µ±ÓÃ»§Ö¸¶¨ÁË±íÍ·¸ß¶ÈÊ±£¬½«¸ß¶È½øĞĞDPIËõ·Å
+            // Jeffery: å½“ç”¨æˆ·æŒ‡å®šäº†è¡¨å¤´é«˜åº¦æ—¶ï¼Œå°†é«˜åº¦è¿›è¡ŒDPIç¼©æ”¾
             //
             if (m_pManager) {
                 cXY.cy = m_pManager->GetDPIObj()->Scale(cXY.cy);
@@ -2138,8 +2138,8 @@ namespace DuiLib {
                 }
 
                 if( rc.right - rc.left > GetMinWidth() ) {
-                    // Jeffery: ĞŞ¸´ÍÏ¶¯Êó±ê¸Ä±ä±íÍ·¿í¶ÈÊ±£¬±íÍ·¿í¶È³É±¶Êı¼¶Ôö³¤µÄBUG¡£ÒòÎªm_rcItemÃ¿´Î¶¼ÊÇÓÉEstimateSizeĞŞ¸Ä£¬¶øEstimateSizeÖĞ»á¸ù¾İm_cxyFixed½øĞĞDPIËõ·Å¡£
-                    //          Ò²¾ÍÊÇËµ£¬m_rcItemÖĞ´æ·ÅµÄÊÇDPIËõ·ÅÖ®ºóµÄÖµ£¬¶øm_cxyFixed´æ·ÅµÄÊÇÎ´¾­DPIËõ·ÅµÄÖµ¡£
+                    // Jeffery: ä¿®å¤æ‹–åŠ¨é¼ æ ‡æ”¹å˜è¡¨å¤´å®½åº¦æ—¶ï¼Œè¡¨å¤´å®½åº¦æˆå€æ•°çº§å¢é•¿çš„BUGã€‚å› ä¸ºm_rcItemæ¯æ¬¡éƒ½æ˜¯ç”±EstimateSizeä¿®æ”¹ï¼Œè€ŒEstimateSizeä¸­ä¼šæ ¹æ®m_cxyFixedè¿›è¡ŒDPIç¼©æ”¾ã€‚
+                    //          ä¹Ÿå°±æ˜¯è¯´ï¼Œm_rcItemä¸­å­˜æ”¾çš„æ˜¯DPIç¼©æ”¾ä¹‹åçš„å€¼ï¼Œè€Œm_cxyFixedå­˜æ”¾çš„æ˜¯æœªç»DPIç¼©æ”¾çš„å€¼ã€‚
                     //
                     m_cxyFixed.cx = m_pManager->GetDPIObj()->ScaleBack(rc.right - rc.left);
                     ptLastMouse = event.ptMouse;
@@ -2189,7 +2189,7 @@ namespace DuiLib {
 
     SIZE CListHeaderItemUI::EstimateSize(SIZE szAvailable) {
         if (m_cxyFixed.cy == 0) {
-            // Jeffery: µ±Î´Ö¸¶¨¸ß¶ÈÊ±£¬Ê¹ÓÃÄ¬ÈÏ×ÖÌåµÄ¸ß¶È£¬²¢ÇÒ¶Ô¿í¶È½øĞĞDPIËõ·Å
+            // Jeffery: å½“æœªæŒ‡å®šé«˜åº¦æ—¶ï¼Œä½¿ç”¨é»˜è®¤å­—ä½“çš„é«˜åº¦ï¼Œå¹¶ä¸”å¯¹å®½åº¦è¿›è¡ŒDPIç¼©æ”¾
             //
             CDuiSize s;
             s.cy = m_pManager->GetDefaultFontInfo()->tm.tmHeight + 14;
@@ -2591,7 +2591,7 @@ namespace DuiLib {
             return;
         }
 
-        // ÓÒ¼üÑ¡Ôñ
+        // å³é”®é€‰æ‹©
         if(m_pOwner != NULL) {
             if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN ) {
                 if( IsEnabled() ) {
@@ -3144,7 +3144,7 @@ namespace DuiLib {
             return;
         }
 
-        // ÓÒ¼üÑ¡Ôñ
+        // å³é”®é€‰æ‹©
         if(m_pOwner != NULL) {
             if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN ) {
                 if( IsEnabled() ) {

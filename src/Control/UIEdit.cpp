@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "UIEdit.h"
 
 namespace DuiLib {
@@ -667,7 +667,7 @@ namespace DuiLib {
     }
 
     SIZE CEditUI::EstimateSize(SIZE szAvailable) {
-        // Jeffery: ÐÞ¸´ÔÚÃ»ÓÐÖ¸¶¨¸ß¶ÈÊ±£¬¿í¶ÈÎÞ·¨ÊÊÓ¦DPIµÄÎÊÌâ
+        // Jeffery: ä¿®å¤åœ¨æ²¡æœ‰æŒ‡å®šé«˜åº¦æ—¶ï¼Œå®½åº¦æ— æ³•é€‚åº”DPIçš„é—®é¢˜
         //
         if( m_cxyFixed.cy == 0 ) 
             return CDuiSize(m_pManager->GetDPIObj()->Scale(m_cxyFixed.cx), m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 6);

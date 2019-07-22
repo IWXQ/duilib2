@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ppxbase/logging.h"
 
 namespace DuiLib {
@@ -1155,7 +1155,7 @@ namespace DuiLib {
     }
 
     void CActiveXUI::ReleaseControl() {
-        // ÒÆ³ýÏûÏ¢Á´
+        // ç§»é™¤æ¶ˆæ¯é“¾
         if(m_pManager != NULL) m_pManager->RemoveMessageFilter(this);
 
         if( m_pUnk != NULL ) {
@@ -1176,7 +1176,7 @@ namespace DuiLib {
             m_pUnk = NULL;
         }
 
-        // Ïú»ÙCActiveXCtrl
+        // é”€æ¯CActiveXCtrl
         if( m_pControl != NULL ) {
             m_pControl->m_pOwner = NULL;
             m_pControl->Release();
