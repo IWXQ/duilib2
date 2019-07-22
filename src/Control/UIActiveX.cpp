@@ -297,11 +297,14 @@ namespace DuiLib {
             delete m_pWindow;
         }
 
-        if( m_pUnkSite != NULL ) m_pUnkSite->Release();
+        if( m_pUnkSite != NULL ) 
+			m_pUnkSite->Release();
 
-        if( m_pViewObject != NULL ) m_pViewObject->Release();
+        if( m_pViewObject != NULL ) 
+			m_pViewObject->Release();
 
-        if( m_pInPlaceObject != NULL ) m_pInPlaceObject->Release();
+        if( m_pInPlaceObject != NULL ) 
+			m_pInPlaceObject->Release();
     }
 
     STDMETHODIMP CActiveXCtrl::QueryInterface(REFIID riid, LPVOID *ppvObject) {
@@ -407,7 +410,8 @@ namespace DuiLib {
     }
 
     STDMETHODIMP CActiveXCtrl::GetCapture(void) {
-        if( m_pOwner == NULL ) return E_UNEXPECTED;
+        if( m_pOwner == NULL ) 
+			return E_UNEXPECTED;
 
         return m_bCaptured ? S_OK : S_FALSE;
     }
@@ -417,8 +421,10 @@ namespace DuiLib {
 
         m_bCaptured = (fCapture == TRUE);
 
-        if( fCapture ) ::SetCapture(m_pOwner->m_hwndHost);
-        else ::ReleaseCapture();
+        if( fCapture ) 
+			::SetCapture(m_pOwner->m_hwndHost);
+        else 
+			::ReleaseCapture();
 
         return S_OK;
     }
@@ -620,11 +626,14 @@ namespace DuiLib {
     }
 
     STDMETHODIMP CActiveXCtrl::GetWindow(HWND *phwnd) {
-        if( m_pOwner == NULL ) return E_UNEXPECTED;
+        if( m_pOwner == NULL ) 
+			return E_UNEXPECTED;
 
-        if( m_pOwner->m_hwndHost == NULL ) CreateActiveXWnd();
+        if( m_pOwner->m_hwndHost == NULL ) 
+			CreateActiveXWnd();
 
-        if( m_pOwner->m_hwndHost == NULL ) return E_FAIL;
+        if( m_pOwner->m_hwndHost == NULL )
+			return E_FAIL;
 
         *phwnd = m_pOwner->m_hwndHost;
         return S_OK;
@@ -688,11 +697,13 @@ namespace DuiLib {
     }
 
     HRESULT CActiveXCtrl::CreateActiveXWnd() {
-        if( m_pWindow != NULL ) return S_OK;
+        if( m_pWindow != NULL ) 
+			return S_OK;
 
         m_pWindow = new CActiveXWnd;
 
-        if( m_pWindow == NULL ) return E_OUTOFMEMORY;
+        if( m_pWindow == NULL )
+			return E_OUTOFMEMORY;
 
         m_pOwner->m_hwndHost = m_pWindow->Init(this, m_pOwner->GetManager()->GetPaintWindow());
         return S_OK;
@@ -831,9 +842,11 @@ namespace DuiLib {
         DWORD dwMiscStatus = 0;
         pUnk->GetMiscStatus(DVASPECT_CONTENT, &dwMiscStatus);
 
-        if( (dwMiscStatus & OLEMISC_NOUIACTIVATE) != 0 ) return 0;
+        if( (dwMiscStatus & OLEMISC_NOUIACTIVATE) != 0 )
+			return 0;
 
-        if( !m_pOwner->m_bInPlaceActive ) DoVerb(OLEIVERB_INPLACEACTIVATE);
+        if( !m_pOwner->m_bInPlaceActive ) 
+			DoVerb(OLEIVERB_INPLACEACTIVATE);
 
         bHandled = FALSE;
         return 0;
@@ -843,7 +856,8 @@ namespace DuiLib {
         bHandled = FALSE;
         m_pOwner->m_bFocused = true;
 
-        if( !m_pOwner->m_bUIActivated ) DoVerb(OLEIVERB_UIACTIVATE);
+        if( !m_pOwner->m_bUIActivated ) 
+			DoVerb(OLEIVERB_UIACTIVATE);
 
         return 0;
     }
@@ -956,11 +970,14 @@ namespace DuiLib {
     void CActiveXUI::SetPos(RECT rc, bool bNeedInvalidate) {
         CControlUI::SetPos(rc, bNeedInvalidate);
 
-        if( !m_bCreated ) DoCreateControl();
+        if( !m_bCreated ) 
+			DoCreateControl();
 
-        if( m_pUnk == NULL ) return;
+        if( m_pUnk == NULL )
+			return;
 
-        if( m_pControl == NULL ) return;
+        if( m_pControl == NULL )
+			return;
 
         SIZEL hmSize = { 0 };
         SIZEL pxSize = { 0 };
@@ -975,7 +992,8 @@ namespace DuiLib {
         if( m_pControl->m_pInPlaceObject != NULL ) {
             CDuiRect rcItem = m_rcItem;
 
-            if( !m_pControl->m_bWindowless ) rcItem.ResetOffset();
+            if( !m_pControl->m_bWindowless ) 
+				rcItem.ResetOffset();
 
             m_pControl->m_pInPlaceObject->SetObjectRects(&rcItem, &rcItem);
         }
@@ -1004,22 +1022,33 @@ namespace DuiLib {
     }
 
     void CActiveXUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue) {
-        if( _tcscmp(pstrName, _T("clsid")) == 0 ) CreateControl(pstrValue);
-        else if( _tcscmp(pstrName, _T("modulename")) == 0 ) SetModuleName(pstrValue);
-        else if( _tcscmp(pstrName, _T("delaycreate")) == 0 ) SetDelayCreate(_tcscmp(pstrValue, _T("true")) == 0);
-        else CControlUI::SetAttribute(pstrName, pstrValue);
+        if( _tcscmp(pstrName, _T("clsid")) == 0 )
+			CreateControl(pstrValue);
+        else if( _tcscmp(pstrName, _T("modulename")) == 0 )
+			SetModuleName(pstrValue);
+        else if( _tcscmp(pstrName, _T("delaycreate")) == 0 ) 
+			SetDelayCreate(_tcscmp(pstrValue, _T("true")) == 0);
+        else
+			CControlUI::SetAttribute(pstrName, pstrValue);
     }
 
     LRESULT CActiveXUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool &bHandled) {
-        if( m_pControl == NULL ) return 0;
+        if( m_pControl == NULL ) 
+			return 0;
 
         ASSERT(m_pControl->m_bWindowless);
 
-        if( !m_pControl->m_bInPlaceActive ) return 0;
+        if( !m_pControl->m_bInPlaceActive ) 
+			return 0;
 
-        if( m_pControl->m_pInPlaceObject == NULL ) return 0;
+        if( m_pControl->m_pInPlaceObject == NULL ) 
+			return 0;
 
-        if( !IsMouseEnabled() && uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) return 0;
+        if( !IsMouseEnabled() && uMsg >= WM_MOUSEFIRST && uMsg <= WM_MOUSELAST ) 
+			return 0;
+
+		if (!IsVisible())
+			return 0;
 
         bool bWasHandled = true;
 
@@ -1059,7 +1088,8 @@ namespace DuiLib {
         LRESULT lResult = 0;
         HRESULT Hr = m_pControl->m_pInPlaceObject->OnWindowMessage(uMsg, wParam, lParam, &lResult);
 
-        if( Hr == S_OK ) bHandled = bWasHandled;
+        if( Hr == S_OK ) 
+			bHandled = bWasHandled;
 
         return lResult;
     }

@@ -26,7 +26,10 @@ namespace DuiLib
 		bool CallActionScriptFunction(const std::wstring &strRequest, std::wstring &strResponse);
 
 		void SetFlashPath(const CDuiString &strFlashPath);
+		CDuiString GetFlashPath() const;
+
 		void SetFlashResType(const CDuiString &strResType);
+		CDuiString GetFlashResType() const;
 	protected:
 		virtual bool DoCreateControl();
 		virtual void OnShowActiveX();

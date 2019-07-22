@@ -64,11 +64,29 @@ namespace DuiLib {
 	void CFlashUI::SetFlashPath(const CDuiString &strFlashPath)
 	{
 		m_strFlashPath = strFlashPath;
+
+		if (m_pFlash) {
+			LoadSWF(m_pFlash, m_strFlashPath.GetData(), m_strResType, NULL);
+		}
+	}
+
+	CDuiString CFlashUI::GetFlashPath() const
+	{
+		return m_strFlashPath;
 	}
 
 	void CFlashUI::SetFlashResType(const CDuiString &strResType)
 	{
 		m_strResType = strResType;
+
+		if (m_pFlash) {
+			LoadSWF(m_pFlash, m_strFlashPath.GetData(), m_strResType, NULL);
+		}
+	}
+
+	CDuiString CFlashUI::GetFlashResType() const
+	{
+		return m_strResType;
 	}
 
 	LPCTSTR CFlashUI::GetClass() const {
@@ -123,13 +141,9 @@ namespace DuiLib {
 			}
 
 			case DISPID_FLASHEVENT_ONPROGRESS: {
-				OutputDebugStringA("123");
-				//return OnProgress(*pDispParams->rgvarg[0].plVal);
 			}
 
 			case DISPID_READYSTATECHANGE: {
-				OutputDebugStringA("123");
-				//return this->OnReadyStateChange(pDispParams->rgvarg[0].lVal);
 			}
         }
 
@@ -162,7 +176,6 @@ namespace DuiLib {
         return m_dwRef;
     }
 
-
     void CFlashUI::ReleaseControl() {
         RegisterEventHandler(FALSE);
 
@@ -188,9 +201,7 @@ namespace DuiLib {
 		if (SUCCEEDED(hr) && pFlash) {
 			pFlash->put_WMode(_bstr_t(_T("Transparent")));
 			pFlash->put_Movie(_bstr_t(m_strFlashPath.GetData()));
-			if (!LoadSWF(pFlash, m_strFlashPath.GetData(), m_strResType, NULL)) {
-
-			}
+			LoadSWF(pFlash, m_strFlashPath.GetData(), m_strResType, NULL);
 			pFlash->DisableLocalSecurity();
 			pFlash->put_AllowScriptAccess(L"always");
 			pFlash->Release();

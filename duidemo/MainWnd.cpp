@@ -108,7 +108,7 @@ void MainWnd::InitWindow() {
     CWebBrowserUI *pBrowser1 = static_cast<CWebBrowserUI *>(m_PaintManager.FindControl(_T("oneclick_browser1")));
     if (pBrowser1) {
         pBrowser1->SetWebBrowserEventHandler(this);
-        pBrowser1->NavigateUrl(_T("http://blog.csdn.net/china_jeffery"));
+        pBrowser1->NavigateUrl(_T("https://pinyin.sogou.com/"));
     }
 
     CWebBrowserUI *pBrowser2 = static_cast<CWebBrowserUI *>(m_PaintManager.FindControl(_T("oneclick_browser2")));
