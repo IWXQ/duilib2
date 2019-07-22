@@ -1,4 +1,4 @@
-#ifndef __CONTROLEX_H__
+﻿#ifndef __CONTROLEX_H__
 #define __CONTROLEX_H__
 
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define MSGID_YES	1
 #define MSGID_NO	0

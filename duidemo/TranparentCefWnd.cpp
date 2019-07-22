@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "TranparentCefWnd.h"
 
 DUI_BEGIN_MESSAGE_MAP(CTranparentCEFWnd, WindowImplBase)

@@ -1,4 +1,4 @@
-#ifndef __SKIN_MANAGER_H__
+﻿#ifndef __SKIN_MANAGER_H__
 #define __SKIN_MANAGER_H__
 
 #include "UIlib.h"

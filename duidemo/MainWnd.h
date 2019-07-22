@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "PopupWnd.h"
 #include "ShlObj.h"
 #include "MsgWnd.h"

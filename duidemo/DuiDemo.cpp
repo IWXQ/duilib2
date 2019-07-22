@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include <exdisp.h>
 #include <comdef.h>
 #include "ControlEx.h"
