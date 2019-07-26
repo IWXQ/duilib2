@@ -28,14 +28,7 @@
 #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005
 #endif
 #endif // _MSC_VER
-#ifdef __BORLANDC__
-#pragma option -w-8027		   // function not expanded inline
-#endif
 
-// Required for VS 2008 (fails on XP and Win2000 without this fix)
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT _WIN32_WINNT_WINXP//0x0501
-#endif
 #ifdef UILIB_WITH_CEF
 #include "Internal/Cef/CefGloablContext.h"
 #endif

@@ -8,17 +8,9 @@
 #include <vector>
 
 namespace DuiLib {
-
 	typedef std::vector<HICON> ICONVECTOR;
 
-#ifdef NOTIFYICONDATA_V1_SIZE   // If NOTIFYICONDATA_V1_SIZE, then we can use fun stuff
-#define SYSTEMTRAY_USEW2K
-#else
-#define NIIF_NONE 0
-#endif
-
 	class UILIB_API CSystemTrayIcon {
-		// Construction/destruction
 	public:
 		CSystemTrayIcon();
 		CSystemTrayIcon(HINSTANCE hInst, HWND hParent, UINT uCallbackMessage,
@@ -27,10 +19,7 @@ namespace DuiLib {
 			LPCTSTR szBalloonTip = NULL, LPCTSTR szBalloonTitle = NULL,
 			DWORD dwBalloonIcon = NIIF_NONE, UINT uBalloonTimeout = 10);
 		virtual ~CSystemTrayIcon();
-
-		// Operations
 	public:
-		BOOL Enabled() { return m_bEnabled; }
 		BOOL Visible() { return !m_bHidden; }
 
 		// Create the tray icon
@@ -79,6 +68,7 @@ namespace DuiLib {
 
 		BOOL ShowBalloon(LPCTSTR szText, LPCTSTR szTitle = NULL,
 			DWORD dwIcon = NIIF_NONE, UINT uTimeout = 10);
+		void RemoveBalloon();
 
 		// For icon animation
 		BOOL  SetIconList(UINT uFirstIconID, UINT uLastIconID);
@@ -113,8 +103,6 @@ namespace DuiLib {
 	public:
 		static LRESULT PASCAL WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		static CSystemTrayIcon* m_pThis;
-
-		// Implementation
 	protected:
 		void Initialise();
 		void InstallIconPending();
@@ -128,12 +116,9 @@ namespace DuiLib {
 		HINSTANCE       m_hInstance;
 		HWND            m_hWnd;
 		HWND            m_hTargetWnd;       // Window that menu commands are sent
-
-		BOOL            m_bEnabled;         // does O/S support tray icon?
 		BOOL            m_bHidden;          // Has the icon been hidden?
 		BOOL            m_bRemoved;         // Has the icon been removed?
 		BOOL            m_bShowIconPending; // Show the icon once tha taskbar has been created
-		BOOL            m_bWin2K;           // Use new W2K features?
 
 		ICONVECTOR      m_IconList;
 		UINT_PTR        m_uIDTimer;
@@ -153,18 +138,11 @@ namespace DuiLib {
 		static UINT  m_nMaxTooltipLength;
 		static const UINT m_nTaskbarCreatedMsg;
 		static HWND  m_hWndInvisible;
-
-#ifndef _WIN32_WCE
 		static BOOL GetDoWndAnimation();
-#endif
-
-		// message map functions
 	public:
 		LRESULT OnTimer(UINT nIDEvent);
 		LRESULT OnTaskbarCreated(WPARAM wParam, LPARAM lParam);
-#ifndef _WIN32_WCE
 		LRESULT OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
-#endif
 	};
 
 }

@@ -25,10 +25,6 @@ namespace DuiLib {
 	const UINT CSystemTrayIcon::m_nTaskbarCreatedMsg = ::RegisterWindowMessage(_T("TaskbarCreated"));
 	HWND  CSystemTrayIcon::m_hWndInvisible;
 
-	//////////////////////////////////////////////////////////////////////
-	// Construction/Destruction
-	//////////////////////////////////////////////////////////////////////
-
 	CSystemTrayIcon::CSystemTrayIcon() {
 		Initialise();
 	}
@@ -40,10 +36,10 @@ namespace DuiLib {
 		HICON icon,                // Handle to icon
 		UINT uID,                  // Identifier of tray icon
 		BOOL bHidden /*=FALSE*/,   // Hidden on creation?                  
-		LPCTSTR szBalloonTip /*=NULL*/,    // Ballon tip (w2k only)
-		LPCTSTR szBalloonTitle /*=NULL*/,  // Balloon tip title (w2k)
-		DWORD dwBalloonIcon /*=NIIF_NONE*/,// Ballon tip icon (w2k)
-		UINT uBalloonTimeout /*=10*/)      // Balloon timeout (w2k)
+		LPCTSTR szBalloonTip /*=NULL*/,
+		LPCTSTR szBalloonTitle /*=NULL*/, 
+		DWORD dwBalloonIcon /*=NIIF_NONE*/,
+		UINT uBalloonTimeout /*=10*/)
 	{
 		Initialise();
 		Create(hInst, hParent, uCallbackMessage, szToolTip, icon, uID, bHidden,
@@ -57,7 +53,6 @@ namespace DuiLib {
 		m_pThis = this;
 
 		memset(&m_tnd, 0, sizeof(m_tnd));
-		m_bEnabled = FALSE;
 		m_bHidden = TRUE;
 		m_bRemoved = TRUE;
 
@@ -71,21 +66,12 @@ namespace DuiLib {
 
 		m_hTargetWnd = NULL;
 		m_uCreationFlags = 0;
-
-#ifdef SYSTEMTRAY_USEW2K
-		OSVERSIONINFO os = { sizeof(os) };
-		GetVersionEx(&os);
-		m_bWin2K = (VER_PLATFORM_WIN32_NT == os.dwPlatformId && os.dwMajorVersion >= 5);
-#else
-		m_bWin2K = FALSE;
-#endif
 	}
 
 	ATOM CSystemTrayIcon::RegisterClass(HINSTANCE hInstance) {
 		WNDCLASSEX wcex;
 
 		wcex.cbSize = sizeof(WNDCLASSEX);
-
 		wcex.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 		wcex.lpfnWndProc = (WNDPROC)WindowProc;
 		wcex.cbClsExtra = 0;
@@ -107,21 +93,8 @@ namespace DuiLib {
 		LPCTSTR szBalloonTitle /*=NULL*/,
 		DWORD dwBalloonIcon /*=NIIF_NONE*/,
 		UINT uBalloonTimeout /*=10*/) {
-#ifdef _WIN32_WCE
-		m_bEnabled = TRUE;
-#else
-		// this is only for Windows 95 (or higher)
-		m_bEnabled = (GetVersion() & 0xff) >= 4;
-		if (!m_bEnabled) {
-			ASSERT(FALSE);
-			return FALSE;
-		}
-#endif
 
 		m_nMaxTooltipLength = _countof(m_tnd.szTip);
-
-		// Make sure we avoid conflict with other messages
-		//ASSERT(uCallbackMessage >= WM_APP);
 
 		// Tray only supports tooltip text up to m_nMaxTooltipLength) characters
 		ASSERT(_tcslen(szToolTip) <= m_nMaxTooltipLength);
@@ -149,13 +122,9 @@ namespace DuiLib {
 
 		wcsncpy_s(m_tnd.szTip, szToolTip, m_nMaxTooltipLength);
 
-#ifdef SYSTEMTRAY_USEW2K
-		if (m_bWin2K && szBalloonTip) {
-#if _MSC_VER < 0x1000
+		if (szBalloonTip) {
 			// The balloon tooltip text can be up to 255 chars long.
-	//        ASSERT(AfxIsValidString(szBalloonTip)); 
 			ASSERT(lstrlen(szBalloonTip) < 256);
-#endif
 
 			// The balloon title text can be up to 63 chars long.
 			if (szBalloonTitle) {
@@ -179,34 +148,30 @@ namespace DuiLib {
 			m_tnd.uTimeout = uBalloonTimeout * 1000; // convert time to ms
 			m_tnd.dwInfoFlags = dwBalloonIcon;
 		}
-#endif
+
 
 		m_bHidden = bHidden;
 		m_hTargetWnd = m_tnd.hWnd;
 
-#ifdef SYSTEMTRAY_USEW2K    
-		if (m_bWin2K && m_bHidden) {
+		if (m_bHidden) {
 			m_tnd.uFlags = NIF_STATE;
 			m_tnd.dwState = NIS_HIDDEN;
 			m_tnd.dwStateMask = NIS_HIDDEN;
 		}
-#endif
 
 		m_uCreationFlags = m_tnd.uFlags;	// Store in case we need to recreate in OnTaskBarCreate
 
 		BOOL bResult = TRUE;
-		if (!m_bHidden || m_bWin2K) {
+		if (!m_bHidden) {
 			bResult = Shell_NotifyIcon(NIM_ADD, &m_tnd);
 			m_bShowIconPending = m_bHidden = m_bRemoved = !bResult;
 		}
 
-#ifdef SYSTEMTRAY_USEW2K    
-		if (m_bWin2K && szBalloonTip) {
-			// Zero out the balloon text string so that later operations won't redisplay
-			// the balloon.
+		if (szBalloonTip) {
+			// Zero out the balloon text string so that later operations won't redisplay the balloon.
 			m_tnd.szInfo[0] = _T('\0');
 		}
-#endif
+
 		return bResult;
 	}
 
@@ -233,13 +198,8 @@ namespace DuiLib {
 			::DestroyWindow(m_hWnd);
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
-	// CSystemTray icon manipulation
-
 	void CSystemTrayIcon::SetFocus() {
-#ifdef SYSTEMTRAY_USEW2K
 		Shell_NotifyIcon(NIM_SETFOCUS, &m_tnd);
-#endif
 	}
 
 
@@ -247,20 +207,19 @@ namespace DuiLib {
 		if (!m_bRemoved)
 			RemoveIcon();
 
-		if (m_bEnabled) {
-			m_tnd.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
-			if (!Shell_NotifyIcon(NIM_ADD, &m_tnd))
-				m_bShowIconPending = TRUE;
-			else
-				m_bRemoved = m_bHidden = FALSE;
-		}
+		m_tnd.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+		if (!Shell_NotifyIcon(NIM_ADD, &m_tnd))
+			m_bShowIconPending = TRUE;
+		else
+			m_bRemoved = m_bHidden = FALSE;
+
 		return (m_bRemoved == FALSE);
 	}
 
 	BOOL CSystemTrayIcon::RemoveIcon() {
 		m_bShowIconPending = FALSE;
 
-		if (!m_bEnabled || m_bRemoved)
+		if (m_bRemoved)
 			return TRUE;
 
 		m_tnd.uFlags = 0;
@@ -271,20 +230,14 @@ namespace DuiLib {
 	}
 
 	BOOL CSystemTrayIcon::HideIcon() {
-		if (!m_bEnabled || m_bRemoved || m_bHidden)
+		if (m_bRemoved || m_bHidden)
 			return TRUE;
 
-#ifdef SYSTEMTRAY_USEW2K
-		if (m_bWin2K) {
-			m_tnd.uFlags = NIF_STATE;
-			m_tnd.dwState = NIS_HIDDEN;
-			m_tnd.dwStateMask = NIS_HIDDEN;
+		m_tnd.uFlags = NIF_STATE;
+		m_tnd.dwState = NIS_HIDDEN;
+		m_tnd.dwStateMask = NIS_HIDDEN;
 
-			m_bHidden = Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
-		}
-		else
-#endif
-			RemoveIcon();
+		m_bHidden = Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 
 		return (m_bHidden == TRUE);
 	}
@@ -296,24 +249,15 @@ namespace DuiLib {
 		if (!m_bHidden)
 			return TRUE;
 
-#ifdef SYSTEMTRAY_USEW2K
-		if (m_bWin2K) {
-			m_tnd.uFlags = NIF_STATE;
-			m_tnd.dwState = 0;
-			m_tnd.dwStateMask = NIS_HIDDEN;
-			Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
-		}
-		else
-#endif
-			AddIcon();
+		m_tnd.uFlags = NIF_STATE;
+		m_tnd.dwState = 0;
+		m_tnd.dwStateMask = NIS_HIDDEN;
+		Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 
 		return (m_bHidden == FALSE);
 	}
 
 	BOOL CSystemTrayIcon::SetIcon(HICON hIcon) {
-		if (!m_bEnabled)
-			return FALSE;
-
 		m_tnd.uFlags = NIF_ICON;
 		m_tnd.hIcon = hIcon;
 
@@ -362,7 +306,7 @@ namespace DuiLib {
 	}
 
 	HICON CSystemTrayIcon::GetIcon() const {
-		return (m_bEnabled) ? m_tnd.hIcon : NULL;
+		return m_tnd.hIcon;
 	}
 
 	BOOL CSystemTrayIcon::SetIconList(UINT uFirstIconID, UINT uLastIconID) {
@@ -446,9 +390,6 @@ namespace DuiLib {
 	BOOL CSystemTrayIcon::SetTooltipText(LPCTSTR pszTip) {
 		ASSERT(_tcslen(pszTip) < m_nMaxTooltipLength);
 
-		if (!m_bEnabled)
-			return FALSE;
-
 		m_tnd.uFlags = NIF_TIP;
 		_tcsncpy(m_tnd.szTip, pszTip, m_nMaxTooltipLength - 1);
 
@@ -469,9 +410,6 @@ namespace DuiLib {
 	}
 
 	LPTSTR CSystemTrayIcon::GetTooltipText() const {
-		if (!m_bEnabled)
-			return FALSE;
-
 		static TCHAR strBuffer[1024];
 		ASSERT(1024 >= m_nMaxTooltipLength);
 
@@ -480,47 +418,13 @@ namespace DuiLib {
 		return strBuffer;
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	//
-	// Function:    ShowBalloon
-	//
-	// Description:
-	//  Shows a balloon tooltip over the tray icon.
-	//
-	// Input:
-	//  szText: [in] Text for the balloon tooltip.
-	//  szTitle: [in] Title for the balloon.  This text is shown in bold above
-	//           the tooltip text (szText).  Pass "" if you don't want a title.
-	//  dwIcon: [in] Specifies an icon to appear in the balloon.  Legal values are:
-	//                 NIIF_NONE: No icon
-	//                 NIIF_INFO: Information
-	//                 NIIF_WARNING: Exclamation
-	//                 NIIF_ERROR: Critical error (red circle with X)
-	//  uTimeout: [in] Number of seconds for the balloon to remain visible.  Can
-	//            be between 10 and 30 inclusive.
-	//
-	// Returns:
-	//  TRUE if successful, FALSE if not.
-	//
-	//////////////////////////////////////////////////////////////////////////
-	// Added by Michael Dunn, November 1999
-	//////////////////////////////////////////////////////////////////////////
 
 	BOOL CSystemTrayIcon::ShowBalloon(LPCTSTR szText,
 		LPCTSTR szTitle  /*=NULL*/,
 		DWORD   dwIcon   /*=NIIF_NONE*/,
 		UINT    uTimeout /*=10*/) {
-#ifndef SYSTEMTRAY_USEW2K
-		return FALSE;
-#else
-		// Bail out if we're not on Win 2K.
-		if (!m_bWin2K)
-			return FALSE;
-
-		// Verify input parameters.
 
 		// The balloon tooltip text can be up to 255 chars long.
-	//    ASSERT(AfxIsValidString(szText));
 		ASSERT(lstrlen(szText) < 256);
 
 		// The balloon title text can be up to 63 chars long.
@@ -533,7 +437,7 @@ namespace DuiLib {
 			NIIF_WARNING == dwIcon || NIIF_ERROR == dwIcon);
 
 		// The timeout must be between 10 and 30 seconds.
-		ASSERT(uTimeout >= 10 && uTimeout <= 30);
+		//ASSERT(uTimeout >= 10 && uTimeout <= 30);
 
 
 		m_tnd.uFlags = NIF_INFO;
@@ -547,21 +451,24 @@ namespace DuiLib {
 
 		BOOL bSuccess = Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
 
-		// Zero out the balloon text string so that later operations won't redisplay
-		// the balloon.
+		// Zero out the balloon text string so that later operations won't redisplay the balloon.
 		m_tnd.szInfo[0] = _T('\0');
 
 		return bSuccess;
-#endif
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
-	// CSystemTray notification window stuff
+	void CSystemTrayIcon::RemoveBalloon()
+	{
+		m_tnd.uFlags = NIF_INFO;
+		m_tnd.szInfo[0] = 0;
+		m_tnd.szInfoTitle[0] = 0;
+
+		m_tnd.dwInfoFlags = NIIF_NONE;
+
+		Shell_NotifyIcon(NIM_MODIFY, &m_tnd);
+	}
 
 	BOOL CSystemTrayIcon::SetNotificationWnd(HWND hNotifyWnd) {
-		if (!m_bEnabled)
-			return FALSE;
-
 		// Make sure Notification window is valid
 		if (!hNotifyWnd || !::IsWindow(hNotifyWnd)) {
 			ASSERT(FALSE);
@@ -581,28 +488,21 @@ namespace DuiLib {
 		return m_tnd.hWnd;
 	}
 
-	// Hatr added
-
 	// Change or retrive the window to send menu commands to
 	BOOL CSystemTrayIcon::SetTargetWnd(HWND hTargetWnd) {
 		m_hTargetWnd = hTargetWnd;
 		return TRUE;
-	} // CSystemTray::SetTargetWnd()
+	}
 
 	HWND CSystemTrayIcon::GetTargetWnd() const {
 		if (m_hTargetWnd)
 			return m_hTargetWnd;
 		else
 			return m_tnd.hWnd;
-	} // CSystemTray::GetTargetWnd()
+	} 
 
-	/////////////////////////////////////////////////////////////////////////////
-	// CSystemTray notification message stuff
 
 	BOOL CSystemTrayIcon::SetCallbackMessage(UINT uCallbackMessage) {
-		if (!m_bEnabled)
-			return FALSE;
-
 		// Make sure we avoid conflict with other messages
 		ASSERT(uCallbackMessage >= WM_APP);
 
@@ -619,13 +519,8 @@ namespace DuiLib {
 		return m_tnd.uCallbackMessage;
 	}
 
-	/////////////////////////////////////////////////////////////////////////////
-	// CSystemTray menu manipulation
 
 	BOOL CSystemTrayIcon::SetMenuDefaultItem(UINT uItem, BOOL bByPos) {
-#ifdef _WIN32_WCE
-		return FALSE;
-#else
 		if ((m_DefaultMenuItemID == uItem) && (m_DefaultMenuItemByPos == bByPos))
 			return TRUE;
 
@@ -648,28 +543,12 @@ namespace DuiLib {
 		::DestroyMenu(hMenu);
 
 		return TRUE;
-#endif
 	}
 
 	void CSystemTrayIcon::GetMenuDefaultItem(UINT& uItem, BOOL& bByPos) {
 		uItem = m_DefaultMenuItemID;
 		bByPos = m_DefaultMenuItemByPos;
 	}
-
-	/////////////////////////////////////////////////////////////////////////////
-	// CSystemTray message handlers
-
-	/* If we were in MFC this is what we'd use...
-	BEGIN_MESSAGE_MAP(CSystemTray, CWnd)
-		//{{AFX_MSG_MAP(CSystemTray)
-		ON_WM_TIMER()
-		//}}AFX_MSG_MAP
-	#ifndef _WIN32_WCE
-		ON_WM_SETTINGCHANGE()
-	#endif
-		ON_REGISTERED_MESSAGE(WM_TASKBARCREATED, OnTaskbarCreated)
-	END_MESSAGE_MAP()
-	*/
 
 	LRESULT CSystemTrayIcon::OnTimer(UINT nIDEvent) {
 		if (nIDEvent != m_uIDTimer) {
@@ -699,13 +578,12 @@ namespace DuiLib {
 		return 0L;
 	}
 
-#ifndef _WIN32_WCE
+
 	LRESULT CSystemTrayIcon::OnSettingChange(UINT uFlags, LPCTSTR lpszSection) {
 		if (uFlags == SPI_SETWORKAREA)
 			InstallIconPending();
 		return 0L;
 	}
-#endif
 
 	LRESULT CSystemTrayIcon::OnTrayNotification(UINT wParam, LONG lParam) {
 		//Return quickly if its not for this tray icon
@@ -717,12 +595,7 @@ namespace DuiLib {
 			return 0L;
 
 		// Clicking with right button brings up a context menu
-#if defined(_WIN32_WCE) //&& _WIN32_WCE < 211
-		BOOL bAltPressed = ((GetKeyState(VK_MENU) & (1 << (sizeof(SHORT) * 8 - 1))) != 0);
-		if (LOWORD(lParam) == WM_LBUTTONUP && bAltPressed)
-#else
 		if (LOWORD(lParam) == WM_RBUTTONUP)
-#endif
 		{
 			HMENU hMenu = ::LoadMenu(m_hInstance, MAKEINTRESOURCE(m_tnd.uID));
 			if (!hMenu)
@@ -734,22 +607,15 @@ namespace DuiLib {
 				return 0;
 			}
 
-#ifndef _WIN32_WCE
+
 			// Make chosen menu item the default (bold font)
 			::SetMenuDefaultItem(hSubMenu, m_DefaultMenuItemID, m_DefaultMenuItemByPos);
-#endif
 
 			CustomizeMenu(hSubMenu);
 
 			// Display and track the popup menu
 			POINT pos;
-#ifdef _WIN32_WCE
-			DWORD messagepos = ::GetMessagePos();
-			pos.x = GET_X_LPARAM(messagepos);
-			pos.y = GET_Y_LPARAM(messagepos);
-#else
 			GetCursorPos(&pos);
-#endif
 
 			::SetForegroundWindow(m_tnd.hWnd);
 			::TrackPopupMenu(hSubMenu, 0, pos.x, pos.y, 0, hTargetWnd, NULL);
@@ -759,11 +625,7 @@ namespace DuiLib {
 
 			DestroyMenu(hMenu);
 		}
-#if defined(_WIN32_WCE) //&& _WIN32_WCE < 211
-		if (LOWORD(lParam) == WM_LBUTTONDBLCLK && bAltPressed)
-#else
 		else if (LOWORD(lParam) == WM_LBUTTONDBLCLK)
-#endif
 		{
 			// double click received, the default action is to execute default menu item
 			::SetForegroundWindow(m_tnd.hWnd);
@@ -798,13 +660,7 @@ namespace DuiLib {
 		if (pTrayIcon->GetSafeHwnd() != hWnd)
 			return ::DefWindowProc(hWnd, message, wParam, lParam);
 
-		// If maintaining a list of TrayIcon windows, then the following...
-		// pTrayIcon = GetFirstTrayIcon()
-		// while (pTrayIcon != NULL)
-		// {
-		//    if (pTrayIcon->GetSafeHwnd() != hWnd) continue;
 
-			  // Taskbar has been recreated - all TrayIcons must process this.
 		if (message == CSystemTrayIcon::m_nTaskbarCreatedMsg)
 			return pTrayIcon->OnTaskbarCreated(wParam, lParam);
 
@@ -819,9 +675,6 @@ namespace DuiLib {
 		// Is the message from the icon for this TrayIcon?
 		if (message == pTrayIcon->GetCallbackMessage())
 			return pTrayIcon->OnTrayNotification(wParam, lParam);
-
-		//    pTrayIcon = GetNextTrayIcon();
-		// }
 
 		// Message has not been processed, so default.
 		return ::DefWindowProc(hWnd, message, wParam, lParam);
@@ -843,9 +696,6 @@ namespace DuiLib {
 
 		ASSERT(m_bHidden == FALSE);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////
-	// For minimising/maximising from system tray
 
 	BOOL CALLBACK FindTrayWnd(HWND hwnd, LPARAM lParam) {
 		TCHAR szClassName[256];
@@ -875,8 +725,6 @@ namespace DuiLib {
 		return TRUE;
 	}
 
-#ifndef _WIN32_WCE
-
 	// Check to see if the animation has been disabled (Matthew Ellis <m.t.ellis@bigfoot.com>)
 	BOOL CSystemTrayIcon::GetDoWndAnimation() {
 		ANIMATIONINFO ai;
@@ -886,10 +734,8 @@ namespace DuiLib {
 
 		return ai.iMinAnimate ? TRUE : FALSE;
 	}
-#endif
 
 	BOOL CSystemTrayIcon::RemoveTaskbarIcon(HWND hWnd) {
-		// Create static invisible window
 		if (!::IsWindow(m_hWndInvisible)) {
 			m_hWndInvisible = CreateWindowEx(0, _T("Static"), _T(""), WS_POPUP,
 				CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,

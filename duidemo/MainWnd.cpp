@@ -124,6 +124,20 @@ void MainWnd::InitWindow() {
     }
 
     BOOL bRet = m_trayIcon.Create(m_hWnd, UIMSG_TRAYICON,  _T("DuiLib Demo"), IDI_ICON1, 0);
+
+	std::thread s([this]() {
+		m_trayIcon.ShowBalloon(TEXT("TEST1"), TEXT("Duilib Demo"), NIIF_INFO, 10);
+		Sleep(1000);
+		m_trayIcon.RemoveBalloon();
+		m_trayIcon.ShowBalloon(TEXT("TEST2"), TEXT("Duilib Demo"), NIIF_NONE, 10);
+		Sleep(2000);
+		m_trayIcon.RemoveBalloon();
+		m_trayIcon.ShowBalloon(TEXT("TEST3"), TEXT("Duilib Demo"), NIIF_ERROR, 10);
+		Sleep(4000);
+		m_trayIcon.RemoveBalloon();
+		m_trayIcon.ShowBalloon(TEXT("TEST4"), TEXT("Duilib Demo"), NIIF_WARNING, 10);
+	});
+	s.detach();
 }
 
 
