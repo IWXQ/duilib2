@@ -1,5 +1,6 @@
 ﻿#include "StdAfx.h"
 #include <algorithm>
+
 namespace DuiLib {
     //////////////////////////////////////////////////////////////////////////
     //
@@ -60,7 +61,6 @@ namespace DuiLib {
         return 0;
     }
 
-#if defined(WIN32) && !defined(UNDER_CE)
     LRESULT WindowImplBase::OnNcActivate(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL &bHandled) {
         if( ::IsIconic(*this) ) 
             bHandled = FALSE;
@@ -211,11 +211,9 @@ namespace DuiLib {
         bHandled = FALSE;
         return 0;
     }
-#endif
 
     LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL &bHandled) {
         SIZE szRoundCorner = m_PaintManager.GetRoundCorner();
-#if defined(WIN32) && !defined(UNDER_CE)
 
         if( !::IsIconic(*this) ) {
             CDuiRect rcWnd;
@@ -228,7 +226,6 @@ namespace DuiLib {
             ::DeleteObject(hRgn);
         }
 
-#endif
         bHandled = FALSE;
         return 0;
     }

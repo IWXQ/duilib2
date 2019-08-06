@@ -24,9 +24,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 	
     DuiLib::Initialize(hInstance, true, false, true);
 
-    CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
-    CPaintManagerUI::SetResourceZip(IDR_ZIPRES1);
-    CResourceManager::GetInstance()->LoadResource(_T("res.xml"), NULL);
+	CPaintManagerUI::SetResourceType(UILIB_ZIPRESOURCE);
+	CPaintManagerUI::SetResourceZip(IDR_ZIPRES1);
+	CResourceManager::GetInstance()->LoadResource(_T("res.xml"), NULL);
 
     REGIST_DUICONTROL(CCircleProgressUI);
     REGIST_DUICONTROL(CMyComboUI);
