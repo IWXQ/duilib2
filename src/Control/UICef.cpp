@@ -179,6 +179,11 @@ namespace DuiLib {
 			return true;
 		}
 
+		// CefContextMenuHandler methods
+		void OnBeforeContextMenu(CefRefPtr<CefMenuModel> model) OVERRIDE {
+			model->Clear();
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		// ClientHandlerOsr::OsrDelegate methods.
 		void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE {
@@ -191,6 +196,7 @@ namespace DuiLib {
 				}
 			}
 		}
+
 		void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE {
 			m_browser = nullptr;
 		}

@@ -33,6 +33,8 @@ namespace DuiLib {
 
 			LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+			void OnBeforeContextMenu(CefRefPtr<CefMenuModel> model) OVERRIDE;
+
 			void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE;
 			void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE;
 			bool GetRootScreenRect(CefRefPtr<CefBrowser> browser, CefRect& rect) OVERRIDE;

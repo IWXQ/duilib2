@@ -65,7 +65,7 @@ namespace DuiLib {
 				virtual void OnTakeFocus(bool next) {}
 
 				// Called on the UI thread before a context menu is displayed.
-				virtual void OnBeforeContextMenu(CefRefPtr<CefMenuModel> model) {}
+				virtual void OnBeforeContextMenu(CefRefPtr<CefMenuModel> model) = 0;
 
 
 				// These methods match the CefLifeSpanHandler interface.
@@ -181,6 +181,11 @@ namespace DuiLib {
 				CefRefPtr<CefDownloadItem> download_item,
 				CefRefPtr<CefDownloadItemCallback> callback) OVERRIDE;
 
+			// CefContextMenuHandler methods
+			void OnBeforeContextMenu(CefRefPtr<CefBrowser> browser,
+				CefRefPtr<CefFrame> frame,
+				CefRefPtr<CefContextMenuParams> params,
+				CefRefPtr<CefMenuModel> model) OVERRIDE;
 
 			// CefLifeSpanHandler methods
 			bool OnBeforePopup(

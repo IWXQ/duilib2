@@ -134,6 +134,10 @@ namespace DuiLib {
 		}
 
 
+		void CefDevToolsWnd::OnBeforeContextMenu(CefRefPtr<CefMenuModel> model) {
+
+		}
+
 		//////////////////////////////////////////////////////////////////////////
 		// ClientHandlerOsr::OsrDelegate methods.
 		void CefDevToolsWnd::OnAfterCreated(CefRefPtr<CefBrowser> browser) {

@@ -97,6 +97,12 @@ namespace DuiLib {
 			CEF_REQUIRE_UI_THREAD();
 		}
 
+		void ClientHandlerOsr::OnBeforeContextMenu(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, CefRefPtr<CefContextMenuParams> params, CefRefPtr<CefMenuModel> model) {
+			if (delegate_) {
+				delegate_->OnBeforeContextMenu(model);
+			}
+		}
+
 		bool ClientHandlerOsr::OnBeforePopup(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& target_url, const CefString& target_frame_name, CefLifeSpanHandler::WindowOpenDisposition target_disposition, bool user_gesture, const CefPopupFeatures& popupFeatures, CefWindowInfo& windowInfo, CefRefPtr<CefClient>& client, CefBrowserSettings& settings, bool* no_javascript_access) {
 #if CEFVER == 3626
 			CEF_REQUIRE_UI_THREAD();
