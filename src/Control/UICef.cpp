@@ -821,10 +821,8 @@ namespace DuiLib {
 	}
 
 	void CCefUI::SetUrl(const CDuiString &url) {
-		if (url != m_strUrl) {
-			m_strUrl = url;
-			m_pImpl->SetUrl(url);
-		}
+		m_strUrl = url;
+		m_pImpl->SetUrl(url);
 	}
 
 	DuiLib::CDuiString CCefUI::GetUrl() const {
