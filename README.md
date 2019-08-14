@@ -1,13 +1,12 @@
 # 1. duilib
 关于`duilib`的介绍可以访问：[duilib](https://github.com/duilib/duilib)
 
-该项目对qdtroy版本的[DuiLib_Ultimate](https://github.com/qdtroy/DuiLib_Ultimate)进行了BUG修复、功能增强。
+该项目是在[DuiLib_Ultimate](https://github.com/qdtroy/DuiLib_Ultimate)基础上进行了BUG修复、功能增强而来。
 
 # 2. 如何编译
-duilib使用Nuget包管理器进行依赖库管理：
-依赖[ppx](https://github.com/winsoft666/ppx)库提供基础功能，如String、函数闭合体等。
+依赖[ppxbase](https://github.com/winsoft666/ppx)库提供的基础功能，如String、函数闭合体等。
 
-使用`Visual Studio 2015`打开`src\duilib2.sln`，选择对应的编译选项进行编译即可。
+使用`Visual Studio 2017`打开`src\duilib2.sln`，选择对应的编译选项进行编译即可。
 
 # 3. 属性
 属性文档见：`src\doc\Attributes.xml`
@@ -31,6 +30,7 @@ duilib使用Nuget包管理器进行依赖库管理：
 - 修复：Groupbox的上边框不能位于文字中间的BUG。
 - 新增：新增Windows size的取值max，支持在启动时即最大化。
 - 新增：发送任务（含lamda表达式）到UI线程的功能，见`Utils\Task.h`。
+- 新增：CEF控件，使用CEF离线渲染模式
 
 -------------------------------
 **感谢您的使用，欢迎提交BUG**

@@ -156,6 +156,10 @@ void CefTestWnd::Web2CallJS() {
 	arg1.SetString(u8"测试TEST");
     args.push_back(arg1);
 
+	CLiteVariant arg2;
+	arg2.SetString(u8"测试TEST");
+	args.push_back(arg2);
+
     bool ret = web2_->CallJavascriptFunction(u8"cpp2js_test", args);
 
 }

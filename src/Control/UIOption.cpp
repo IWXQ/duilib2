@@ -59,16 +59,8 @@ namespace DuiLib {
     }
 
     void COptionUI::Selected(bool bSelected, bool bMsg/* = true*/) {
-        if (m_bSelected == bSelected) {
-            // Jeffery: 鼠标点击Option按钮时发送该通知
-            //
-            if (m_bSelected) {
-                if (bMsg)
-                    m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCLIECKED);
-            }
-
+        if (m_bSelected == bSelected)
             return;
-        }
 
         m_bSelected = bSelected;
 

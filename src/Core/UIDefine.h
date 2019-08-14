@@ -106,7 +106,6 @@ namespace DuiLib
 
 #define DUI_MSGTYPE_SELECTCHANGED 		   (_T("selectchanged"))
 #define DUI_MSGTYPE_UNSELECTED	 		   (_T("unselected"))
-#define DUI_MSGTYPE_SELECTCLIECKED         (_T("selectclicked"))     // Jeffery: 鼠标点击Option按钮时发送该通知
 
 #define DUI_MSGTYPE_TREEITEMDBCLICK 		(_T("treeitemdbclick"))
 #define DUI_MSGTYPE_CHECKCLICK				(_T("checkclick"))
