@@ -775,6 +775,10 @@ namespace DuiLib {
 	}
 
 	void CCefUI::DoInit() {
+        if (!m_hCreated) {
+            m_hCreated = true;
+            m_pImpl->CreateBrowser();
+        }
 	}
 
 	bool CCefUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl) {
