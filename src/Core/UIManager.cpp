@@ -1599,17 +1599,15 @@ namespace DuiLib {
 
                     // Create tooltip information
                     CDuiString sToolTip = pHover->GetToolTip();
-
-                    if( sToolTip.IsEmpty() ) 
-                        return true;
-
-                    ShowToolTip(sToolTip.GetData(), pHover->GetPos());
+                    if( !sToolTip.IsEmpty() ) 
+                        ShowToolTip(sToolTip.GetData(), { pHover->GetPos().left, pHover->GetPos().top });
                 }
 
                 return true;
 
             case WM_MOUSELEAVE: {
                     HideToolTip();
+
                     if( m_bMouseTracking ) {
                         POINT pt = { 0 };
                         RECT rcWnd = { 0 };
@@ -2156,7 +2154,7 @@ namespace DuiLib {
         return false;
     }
 
-    void CPaintManagerUI::ShowToolTip(LPCTSTR pszToolTip, RECT rc) {
+    void CPaintManagerUI::ShowToolTip(LPCTSTR pszToolTip, POINT point) {
         ::ZeroMemory(&m_ToolTip, sizeof(TOOLINFO));
         m_ToolTip.cbSize = sizeof(TOOLINFO);
         m_ToolTip.uFlags = TTF_IDISHWND;
@@ -2164,7 +2162,7 @@ namespace DuiLib {
         m_ToolTip.uId = (UINT_PTR)m_hWndPaint;
         m_ToolTip.hinst = m_hInstance;
         m_ToolTip.lpszText = const_cast<LPTSTR>((LPCTSTR)pszToolTip);
-        m_ToolTip.rect = rc;
+        m_ToolTip.rect = { point.x, point.y, 0, 0 };
 
         if (m_hwndTooltip == NULL) {
             m_hwndTooltip = ::CreateWindowEx(0, TOOLTIPS_CLASS, NULL, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, m_hWndPaint, NULL, m_hInstance, NULL);
@@ -2179,7 +2177,7 @@ namespace DuiLib {
     }
 
     void CPaintManagerUI::HideToolTip() {
-        if (m_hwndTooltip != NULL) 
+        if (m_hwndTooltip) 
             ::SendMessage(m_hwndTooltip, TTM_TRACKACTIVATE, FALSE, (LPARAM)&m_ToolTip);
     }
 

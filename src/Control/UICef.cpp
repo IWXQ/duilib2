@@ -364,15 +364,13 @@ namespace DuiLib {
 		}
 
         bool OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) OVERRIDE {
-            if (text.length() == 0) {
-                m_pParent->m_pManager->HideToolTip();
-            }
-            else {
-                RECT rc;
-                rc.left = mouse_pos_.x;
-                rc.top = mouse_pos_.y;
-                rc.right = rc.bottom = 0;
-                m_pParent->m_pManager->ShowToolTip(text.c_str(), rc);
+            if (m_pParent && m_pParent->m_pManager) {
+                if (text.length() == 0) {
+                    m_pParent->m_pManager->HideToolTip();
+                }
+                else {
+                    m_pParent->m_pManager->ShowToolTip(text.c_str(), mouse_pos_);
+                }
             }
             
             return true;
