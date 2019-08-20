@@ -987,7 +987,7 @@ namespace DuiLib {
                             if( static_cast<CRichEditUI *>(m_pFocus)->IsWantTab() ) return false;
                         }
 
-                        if( m_pFocus && m_pFocus->IsVisible() && m_pFocus->IsEnabled() && _tcsstr(m_pFocus->GetClass(), DUI_CTR_WEBKIT) != NULL ) {
+                        if( m_pFocus && m_pFocus->IsVisible() && m_pFocus->IsEnabled() && _tcsstr(m_pFocus->GetClass(), DUI_CTR_CEF) != NULL ) {
                             return false;
                         }
 

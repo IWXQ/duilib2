@@ -273,7 +273,6 @@ protected:                                                                \
 #define  DUI_CTR_BUTTON                          (_T("Button"))
 #define  DUI_CTR_OPTION                          (_T("Option"))
 #define  DUI_CTR_SLIDER                          (_T("Slider"))
-#define  DUI_CTR_WEBKIT                          (_T("Webkit"))
 #define  DUI_CTR_HOTKEY                          (_T("HotKey"))
 
 #define  DUI_CTR_CONTROL                         (_T("Control"))
