@@ -39,6 +39,7 @@ MainWnd::MainWnd() :
     m_pEditS(NULL),
     m_pEditL(NULL),
 	m_pFlash(NULL),
+    m_pDlgFake(NULL),
     m_pHrlTitle(NULL) {
     m_pMenu = NULL;
 	m_pActiveXFlash = NULL;
@@ -379,6 +380,23 @@ void MainWnd::OnClick(TNotifyUI &msg) {
 			L"<invoke name=\"foo1\" returntype=\"xml\"><arguments><string>Hello</string></arguments></invoke>", strResponse);
 
 	}
+    else if (strName.CompareNoCase(TEXT("btnInvisibleCEF")) == 0) {
+        m_pDlgFake = new DlgFake();
+        if (m_pDlgFake->Create(NULL, TEXT("InvisibleCEF"), UI_WNDSTYLE_DIALOG, 0L, 0, 0, 600, 400)) {
+            m_pDlgFake->ShowWindow(false);
+            m_pDlgFake->LoadURL(L"www.gogo123.com");
+        }
+    }
+    else if (strName.CompareNoCase(TEXT("btnShowInvisibleCEF")) == 0) {
+        if (m_pDlgFake) {
+            m_pDlgFake->ShowWindow(true);
+        }
+    }
+    else if (strName.CompareNoCase(TEXT("btnShowInvisibleCEF")) == 0) {
+        if (m_pDlgFake) {
+            m_pDlgFake->Close();
+        }
+    }
 }
 
 CControlUI *MainWnd::CreateControl(LPCTSTR pstrClass) {

@@ -278,7 +278,12 @@ namespace DuiLib {
 		void CefDevToolsWnd::OnSetTitle(const std::string& title) {
 		}
 
-		void CefDevToolsWnd::OnSetFullscreen(bool fullscreen) {
+
+        bool CefDevToolsWnd::OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) {
+            return false;
+        }
+
+        void CefDevToolsWnd::OnSetFullscreen(bool fullscreen) {
 		}
 
 		void CefDevToolsWnd::OnAutoResize(const CefSize& new_size) {

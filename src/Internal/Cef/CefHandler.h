@@ -46,6 +46,8 @@ namespace DuiLib {
 				// Set the window title.
 				virtual void OnSetTitle(const std::string& title) = 0;
 
+                virtual bool OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) = 0;
+
 				// Set fullscreen mode.
 				virtual void OnSetFullscreen(bool fullscreen) = 0;
 
@@ -155,6 +157,7 @@ namespace DuiLib {
 			void OnAddressChange(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame, const CefString& url) OVERRIDE;
 			void OnTitleChange(CefRefPtr<CefBrowser> browser, const CefString& title) OVERRIDE;
 			void OnFullscreenModeChange(CefRefPtr<CefBrowser> browser, bool fullscreen) OVERRIDE;
+            bool OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) OVERRIDE;
 #if CEFVER == 3626
 			bool OnConsoleMessage(CefRefPtr<CefBrowser> browser, cef_log_severity_t level, const CefString& message, const CefString& source, int line) OVERRIDE;
 

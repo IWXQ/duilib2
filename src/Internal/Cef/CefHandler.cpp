@@ -74,7 +74,15 @@ namespace DuiLib {
 			CEF_REQUIRE_UI_THREAD();
 		}
 
-		static std::wstring GetDownloadPath(const std::wstring &file_name) {
+        bool ClientHandlerOsr::OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) {
+            CEF_REQUIRE_UI_THREAD();
+            if (delegate_) {
+                return delegate_->OnTooltip(browser, text);
+            }
+            return false;
+        }
+
+        static std::wstring GetDownloadPath(const std::wstring &file_name) {
 			wchar_t szFolderPath[MAX_PATH];
 			std::wstring path;
 

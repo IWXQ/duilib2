@@ -400,6 +400,8 @@ namespace DuiLib {
 		bool PreMessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lRes);
 		void UsedVirtualWnd(bool bUsed);
 
+        void ShowToolTip(LPCTSTR pszToolTip, RECT rc);
+        void HideToolTip();
 	private:
 		CStdPtrArray* GetFoundControls();
 		static CControlUI* CALLBACK __FindControlFromNameHash(CControlUI* pThis, LPVOID pData);

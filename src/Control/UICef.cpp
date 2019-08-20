@@ -28,6 +28,7 @@ namespace DuiLib {
 			, m_iMemoryBitmapHeight(0)
 			, last_mouse_pos_()
 			, current_mouse_pos_()
+            , mouse_pos_()
 			, mouse_rotation_(false)
 			, mouse_tracking_(false)
 			, last_click_x_(0)
@@ -362,6 +363,21 @@ namespace DuiLib {
 		void OnSetDraggableRegions(const std::vector<CefDraggableRegion>& regions) OVERRIDE {
 		}
 
+        bool OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) OVERRIDE {
+            if (text.length() == 0) {
+                m_pParent->m_pManager->HideToolTip();
+            }
+            else {
+                RECT rc;
+                rc.left = mouse_pos_.x;
+                rc.top = mouse_pos_.y;
+                rc.right = rc.bottom = 0;
+                m_pParent->m_pManager->ShowToolTip(text.c_str(), rc);
+            }
+            
+            return true;
+        }
+
 		void OnJSNotify(const CefRefPtr<CefListValue> &value_list) OVERRIDE {
 			if (value_list->GetSize() < 2)
 				return;
@@ -533,6 +549,10 @@ namespace DuiLib {
 			{
 				int x = GET_X_LPARAM(lParam) - pos.left;
 				int y = GET_Y_LPARAM(lParam) - pos.top;
+
+                mouse_pos_.x = x;
+                mouse_pos_.y = y;
+
 				if (mouse_rotation_) {
 					// Apply rotation effect.
 					current_mouse_pos_.x = x;
@@ -702,6 +722,7 @@ namespace DuiLib {
 		// Mouse state tracking.
 		POINT last_mouse_pos_;
 		POINT current_mouse_pos_;
+        POINT mouse_pos_;
 		bool mouse_rotation_;
 		bool mouse_tracking_;
 		int last_click_x_;

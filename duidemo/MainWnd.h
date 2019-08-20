@@ -4,6 +4,7 @@
 #include "MsgWnd.h"
 #include "ControlEx.h"
 #include "SkinManager.h"
+#include "DlgFake.h"
 
 class MainPageWnd : public CNotifyPump {
 public:
@@ -78,6 +79,8 @@ class MainWnd :
 	CFlashUI* m_pFlash;
 
 	HANDLE m_hTaskStartEvent;
+
+    DlgFake* m_pDlgFake;
   public:
     MainPageWnd m_MainPage;
 };

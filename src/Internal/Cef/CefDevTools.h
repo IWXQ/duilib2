@@ -52,6 +52,7 @@ namespace DuiLib {
 			void OnBrowserClosing(CefRefPtr<CefBrowser> browser) OVERRIDE;
 			void OnSetAddress(const std::string& url) OVERRIDE;
 			void OnSetTitle(const std::string& title) OVERRIDE;
+            bool OnTooltip(CefRefPtr<CefBrowser> browser, CefString& text) OVERRIDE;
 			void OnSetFullscreen(bool fullscreen) OVERRIDE;
 			void OnAutoResize(const CefSize& new_size) OVERRIDE;
 			void OnSetLoadingState(bool isLoading, bool canGoBack, bool canGoForward) OVERRIDE;
