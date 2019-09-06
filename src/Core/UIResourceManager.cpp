@@ -3,7 +3,7 @@
 
 namespace DuiLib {
 
-    CResourceManager* CResourceManager::m_pThis = NULL;
+    CResourceManager *CResourceManager::m_pThis = NULL;
 
     CResourceManager::CResourceManager(void) {
         m_pQuerypInterface = NULL;
@@ -16,7 +16,7 @@ namespace DuiLib {
     BOOL CResourceManager::LoadResource(STRINGorID xml, LPCTSTR type) {
         if( HIWORD(xml.m_lpstr) != NULL ) {
             if( *(xml.m_lpstr) == _T('<') ) {
-                if( !m_xml.Load(xml.m_lpstr) ) 
+                if( !m_xml.Load(xml.m_lpstr) )
                     return NULL;
             } else {
                 if( !m_xml.LoadFromFile(xml.m_lpstr) )
@@ -25,7 +25,7 @@ namespace DuiLib {
         } else {
             HRSRC hResource = ::FindResource(CPaintManagerUI::GetResourceDll(), xml.m_lpstr, type);
 
-            if( hResource == NULL ) 
+            if( hResource == NULL )
                 return NULL;
 
             HGLOBAL hGlobal = ::LoadResource(CPaintManagerUI::GetResourceDll(), hResource);
@@ -79,7 +79,7 @@ namespace DuiLib {
                     }
                 }
 
-                if( pstrId == NULL ||  pstrPath == NULL) 
+                if( pstrId == NULL ||  pstrPath == NULL)
                     continue;
 
                 CDuiString *pstrFind = static_cast<CDuiString *>(m_mImageHashMap.Find(pstrId));
@@ -111,8 +111,7 @@ namespace DuiLib {
                     continue;
 
                 m_mXmlHashMap.Insert(pstrId, (LPVOID)new CDuiString(pstrPath));
-            }
-            else {
+            } else {
                 continue;
             }
         }
@@ -133,24 +132,24 @@ namespace DuiLib {
     void CResourceManager::ResetResourceMap() {
         CDuiString *lpStr;
 
-		
+
         for(std::map<CDuiString, LPVOID>::iterator it = m_mImageHashMap.Begin(); it != m_mImageHashMap.End(); it++ ) {
-			lpStr = static_cast<CDuiString *>(it->second);
-			delete lpStr;
-			lpStr = NULL;
+            lpStr = static_cast<CDuiString *>(it->second);
+            delete lpStr;
+            lpStr = NULL;
         }
 
-		for (std::map<CDuiString, LPVOID>::iterator it = m_mXmlHashMap.Begin(); it != m_mXmlHashMap.End(); it++) {
-			lpStr = static_cast<CDuiString *>(it->second);
-			delete lpStr;
-			lpStr = NULL;
-		}
-      
-		for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
-			lpStr = static_cast<CDuiString *>(it->second);
-			delete lpStr;
-			lpStr = NULL;
-		}
+        for (std::map<CDuiString, LPVOID>::iterator it = m_mXmlHashMap.Begin(); it != m_mXmlHashMap.End(); it++) {
+            lpStr = static_cast<CDuiString *>(it->second);
+            delete lpStr;
+            lpStr = NULL;
+        }
+
+        for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
+            lpStr = static_cast<CDuiString *>(it->second);
+            delete lpStr;
+            lpStr = NULL;
+        }
     }
 
     BOOL CResourceManager::LoadLanguage(LPCTSTR pstrXml) {
@@ -223,28 +222,28 @@ namespace DuiLib {
     }
 
     void CResourceManager::ReloadText() {
-        if(m_pQuerypInterface == NULL) 
-			return;
+        if(m_pQuerypInterface == NULL)
+            return;
 
         LPCTSTR lpstrText = NULL;
-		for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
-			lpstrText = m_pQuerypInterface->QueryControlText(it->first, NULL);
+        for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
+            lpstrText = m_pQuerypInterface->QueryControlText(it->first, NULL);
 
-			if (lpstrText != NULL) {
-				CDuiString *lpStr = static_cast<CDuiString *>(it->second);
-				lpStr->Assign(lpstrText);
-			}
-		}
+            if (lpstrText != NULL) {
+                CDuiString *lpStr = static_cast<CDuiString *>(it->second);
+                lpStr->Assign(lpstrText);
+            }
+        }
     }
 
     void CResourceManager::ResetTextMap() {
         CDuiString *lpStr;
 
-		for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
-			lpStr = static_cast<CDuiString *>(it->second);
-			delete lpStr;
-			it->second = NULL;
-		}
+        for (std::map<CDuiString, LPVOID>::iterator it = m_mTextResourceHashMap.Begin(); it != m_mTextResourceHashMap.End(); it++) {
+            lpStr = static_cast<CDuiString *>(it->second);
+            delete lpStr;
+            it->second = NULL;
+        }
     }
 
 

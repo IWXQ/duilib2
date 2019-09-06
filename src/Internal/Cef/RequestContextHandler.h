@@ -20,24 +20,24 @@
 #include "include/cef_request_context_handler.h"
 
 namespace DuiLib {
-	namespace Internal {
+    namespace Internal {
 
-		class RequestContextHandler : public CefRequestContextHandler {
-		public:
-			RequestContextHandler();
+        class RequestContextHandler : public CefRequestContextHandler {
+          public:
+            RequestContextHandler();
 
-			bool OnBeforePluginLoad(const CefString& mime_type,
-				const CefString& plugin_url,
-				const CefString& top_origin_url,
-				CefRefPtr<CefWebPluginInfo> plugin_info,
-				PluginPolicy* plugin_policy) OVERRIDE;
+            bool OnBeforePluginLoad(const CefString &mime_type,
+                                    const CefString &plugin_url,
+                                    const CefString &top_origin_url,
+                                    CefRefPtr<CefWebPluginInfo> plugin_info,
+                                    PluginPolicy *plugin_policy) OVERRIDE;
 
-		private:
+          private:
 
-			IMPLEMENT_REFCOUNTING(RequestContextHandler);
-			DISALLOW_COPY_AND_ASSIGN(RequestContextHandler);
-		};
-	}
+            IMPLEMENT_REFCOUNTING(RequestContextHandler);
+            DISALLOW_COPY_AND_ASSIGN(RequestContextHandler);
+        };
+    }
 }
 #endif
 #endif // !DUILIB_REQUEST_CONTEXT_HANDLER_H__

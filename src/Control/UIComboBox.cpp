@@ -16,9 +16,9 @@ namespace DuiLib {
 #endif
         bool IsHitItem(POINT ptMouse);
 
-        bool Add(CControlUI* pControl);
-        bool AddAt(CControlUI* pControl, int iIndex);
-        bool Remove(CControlUI* pControl);
+        bool Add(CControlUI *pControl);
+        bool AddAt(CControlUI *pControl, int iIndex);
+        bool Remove(CControlUI *pControl);
         bool RemoveAt(int iIndex);
         void RemoveAll();
 
@@ -31,7 +31,7 @@ namespace DuiLib {
         CVerticalLayoutUI *m_pLayout;
         bool m_bHitItem;
         CListUI *m_pList;
-        std::vector<CControlUI*> m_vControls;
+        std::vector<CControlUI *> m_vControls;
     };
 
     CComboBoxWnd::CComboBoxWnd() {
@@ -47,9 +47,8 @@ namespace DuiLib {
 
     void CComboBoxWnd::Notify(TNotifyUI &msg) {
         if (msg.sType == DUI_MSGTYPE_WINDOWINIT) {
-           
-        } 
-        else if(msg.sType == DUI_MSGTYPE_CLICK) {
+
+        } else if(msg.sType == DUI_MSGTYPE_CLICK) {
             CDuiString sName = msg.pSender->GetName();
             CControlUI *pCtrl = msg.pSender;
 
@@ -66,8 +65,7 @@ namespace DuiLib {
 
             if( m_pOwner->GetManager() != NULL )
                 m_pOwner->GetManager()->SendNotify(msg.pSender, DUI_MSGTYPE_CLICK, 0, 0);
-        }
-        else if (msg.sType == DUI_MSGTYPE_ITEMSELECT) {
+        } else if (msg.sType == DUI_MSGTYPE_ITEMSELECT) {
             if (m_pList) {
                 SetText(m_pList->GetItemAt(msg.wParam)->GetText());
             }
@@ -82,7 +80,7 @@ namespace DuiLib {
             return;
 
         m_pOwner = pOwner;
-     
+
         Create(pOwner->GetManager()->GetPaintWindow(), NULL, WS_POPUP, WS_EX_TOOLWINDOW, 0, 0, 0, 0);
         // HACK: Don't deselect the parent's caption
         HWND hWndParent = m_hWnd;
@@ -127,7 +125,7 @@ namespace DuiLib {
         return false;
     }
 
-    bool CComboBoxWnd::Add(CControlUI* pControl) {
+    bool CComboBoxWnd::Add(CControlUI *pControl) {
         if (m_pList) {
             return m_pList->Add(pControl);
         }
@@ -135,14 +133,14 @@ namespace DuiLib {
         return true;
     }
 
-    bool CComboBoxWnd::AddAt(CControlUI* pControl, int iIndex) {
+    bool CComboBoxWnd::AddAt(CControlUI *pControl, int iIndex) {
         if (m_pList) {
             return m_pList->AddAt(pControl, iIndex);
         }
         return false;
     }
 
-    bool CComboBoxWnd::Remove(CControlUI* pControl) {
+    bool CComboBoxWnd::Remove(CControlUI *pControl) {
         if (m_pList) {
             return m_pList->Remove(pControl);
         }
@@ -198,14 +196,13 @@ namespace DuiLib {
             rc.bottom = rc.top + MIN(cyFixed, szDrop.cy);
 
             ::SetWindowPos(m_hWnd, NULL, ptWnd.x, ptWnd.y, rc.right - rc.left, rc.bottom - rc.top, SWP_SHOWWINDOW);
-        }
-        else {
+        } else {
             ::ShowWindow(m_hWnd, SW_HIDE);
         }
     }
 
     CDuiString CComboBoxWnd::GetText() {
-        if (m_pList) {
+        if (m_pList && m_pList->GetCount() > 0 && m_pList->GetCurSel() >= 0) {
             return m_pList->GetItemAt(m_pList->GetCurSel())->GetText();
         }
         return TEXT("");
@@ -225,7 +222,7 @@ namespace DuiLib {
             // the items back to the righfull owner/manager when the window closes.
             m_pLayout = new CVerticalLayoutUI;
             m_pLayout->SetManager(&m_pm, NULL, true);
-           
+
             m_pList->SetInset(CDuiRect(1, 1, 1, 1));
             m_pList->SetBkColor(0xFFFFFFFF);
             m_pList->SetBorderColor(0xFFC6C7D2);
@@ -234,7 +231,7 @@ namespace DuiLib {
             if (m_pList->GetHeader())
                 m_pList->GetHeader()->SetVisible(false);
             m_pList->ApplyAttributeList(m_pOwner->GetDropBoxAttributeList());
-       
+
             m_pLayout->Add(m_pList);
 
             CShadowUI *pShadow = m_pOwner->GetManager()->GetShadow();
@@ -257,25 +254,22 @@ namespace DuiLib {
                 }
             }
             m_vControls.clear();
-         
+
             return 0;
-        } 
-        else if( uMsg == WM_CLOSE ) {
+        } else if( uMsg == WM_CLOSE ) {
             m_pOwner->SetManager(m_pOwner->GetManager(), m_pOwner->GetParent(), false);
             RECT rcNull = { 0 };
 
-            for( int i = 0; i < m_pOwner->GetCount(); i++ ) 
+            for( int i = 0; i < m_pOwner->GetCount(); i++ )
                 static_cast<CControlUI *>(m_pOwner->GetItemAt(i))->SetPos(rcNull);
 
             m_pOwner->SetFocus();
-        } 
-        else if( uMsg == WM_LBUTTONDOWN ) {
+        } else if( uMsg == WM_LBUTTONDOWN ) {
             POINT pt = { 0 };
             ::GetCursorPos(&pt);
             ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
             m_bHitItem = IsHitItem(pt);
-        } 
-        else if( uMsg == WM_LBUTTONUP ) {
+        } else if( uMsg == WM_LBUTTONUP ) {
             POINT pt = { 0 };
             ::GetCursorPos(&pt);
             ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
@@ -285,22 +279,20 @@ namespace DuiLib {
             }
 
             m_bHitItem = false;
-        } 
-        else if (uMsg == WM_KEYDOWN) {
+        } else if (uMsg == WM_KEYDOWN) {
             switch (wParam) {
-            case VK_ESCAPE:
-            case VK_RETURN:
-                PostMessage(WM_KILLFOCUS);
-                break;
+                case VK_ESCAPE:
+                case VK_RETURN:
+                    PostMessage(WM_KILLFOCUS);
+                    break;
             }
-        }
-        else if( uMsg == WM_KILLFOCUS ) {
+        } else if( uMsg == WM_KILLFOCUS ) {
             if (m_hWnd != (HWND)wParam)
                 ShowWindow(false);
         }
 
         LRESULT lRes = 0;
-        if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) 
+        if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) )
             return lRes;
 
         return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
@@ -357,7 +349,7 @@ namespace DuiLib {
         return LT_COMBO;
     }
 
-    DuiLib::TListInfoUI* CComboBoxUI::GetListInfo() {
+    DuiLib::TListInfoUI *CComboBoxUI::GetListInfo() {
         return NULL;
     }
 
@@ -436,8 +428,7 @@ namespace DuiLib {
 
         if( event.Type == UIEVENT_SETFOCUS ) {
             Invalidate();
-        }
-        else if( event.Type == UIEVENT_KILLFOCUS ) {
+        } else if( event.Type == UIEVENT_KILLFOCUS ) {
             Invalidate();
         }
 
@@ -446,41 +437,34 @@ namespace DuiLib {
                 Activate();
                 m_uButtonState |= UISTATE_PUSHED | UISTATE_CAPTURED;
             }
-        }
-        else if( event.Type == UIEVENT_BUTTONUP ) {
+        } else if( event.Type == UIEVENT_BUTTONUP ) {
             if( (m_uButtonState & UISTATE_CAPTURED) != 0 ) {
                 m_uButtonState &= ~ UISTATE_CAPTURED;
                 Invalidate();
             }
-        }
-        else if( event.Type == UIEVENT_MOUSEMOVE ) {
+        } else if( event.Type == UIEVENT_MOUSEMOVE ) {
             return;
-        }
-        else if( event.Type == UIEVENT_KEYDOWN ) {
+        } else if( event.Type == UIEVENT_KEYDOWN ) {
             switch( event.chKey ) {
                 case VK_F4:
                     Activate();
                     return;
             }
-        }
-        else if( event.Type == UIEVENT_CONTEXTMENU ) {
+        } else if( event.Type == UIEVENT_CONTEXTMENU ) {
             return;
-        }
-        else if( event.Type == UIEVENT_MOUSEENTER ) {
+        } else if( event.Type == UIEVENT_MOUSEENTER ) {
             if( ::PtInRect(&m_rcItem, event.ptMouse ) ) {
                 if( (m_uButtonState & UISTATE_HOT) == 0  )
                     m_uButtonState |= UISTATE_HOT;
 
                 Invalidate();
             }
-        }
-        else if( event.Type == UIEVENT_MOUSELEAVE ) {
+        } else if( event.Type == UIEVENT_MOUSELEAVE ) {
             if( (m_uButtonState & UISTATE_HOT) != 0 ) {
                 m_uButtonState &= ~UISTATE_HOT;
                 Invalidate();
             }
-        }
-        else {
+        } else {
             CControlUI::DoEvent(event);
         }
     }
@@ -493,16 +477,16 @@ namespace DuiLib {
     }
 
     bool CComboBoxUI::Activate() {
-        if( !CControlUI::Activate() ) 
+        if( !CControlUI::Activate() )
             return false;
 
-        if( m_pManager != NULL ) 
+        if( m_pManager != NULL )
             m_pManager->SendNotify(this, DUI_MSGTYPE_PREDROPDOWN);
 
         if (m_pWindow)
             m_pWindow->Show(true);
 
-        if( m_pManager != NULL ) 
+        if( m_pManager != NULL )
             m_pManager->SendNotify(this, DUI_MSGTYPE_DROPDOWN);
 
         Invalidate();
@@ -518,7 +502,7 @@ namespace DuiLib {
     void CComboBoxUI::SetEnabled(bool bEnable) {
         CContainerUI::SetEnabled(bEnable);
 
-        if( !IsEnabled() ) 
+        if( !IsEnabled() )
             m_uButtonState = 0;
     }
 
@@ -704,7 +688,7 @@ namespace DuiLib {
             //// 所有元素大小置为0
             //RECT rcNull = { 0 };
 
-            //for( int i = 0; i < m_items.GetSize(); i++ ) 
+            //for( int i = 0; i < m_items.GetSize(); i++ )
             //    static_cast<CControlUI *>(m_items[i])->SetPos(rcNull);
 
             // 调整位置
@@ -732,8 +716,7 @@ namespace DuiLib {
                 m_uTextStyle &= ~(DT_LEFT | DT_CENTER | DT_SINGLELINE);
                 m_uTextStyle |= DT_RIGHT;
             }
-        }
-        else if( _tcsicmp(pstrName, _T("valign")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("valign")) == 0 ) {
             if( _tcsstr(pstrValue, _T("top")) != NULL ) {
                 m_uTextStyle &= ~(DT_BOTTOM | DT_VCENTER);
                 m_uTextStyle |= (DT_TOP | DT_SINGLELINE);
@@ -748,24 +731,20 @@ namespace DuiLib {
                 m_uTextStyle &= ~(DT_TOP | DT_VCENTER);
                 m_uTextStyle |= (DT_BOTTOM | DT_SINGLELINE);
             }
-        } 
-        else if( _tcsicmp(pstrName, _T("endellipsis")) == 0 ) {
-            if( _tcsicmp(pstrValue, _T("true")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("endellipsis")) == 0 ) {
+            if( _tcsicmp(pstrValue, _T("true")) == 0 )
                 m_uTextStyle |= DT_END_ELLIPSIS;
-            else 
+            else
                 m_uTextStyle &= ~DT_END_ELLIPSIS;
-        }
-        else if( _tcsicmp(pstrName, _T("wordbreak")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("wordbreak")) == 0 ) {
             if( _tcsicmp(pstrValue, _T("true")) == 0 ) {
                 m_uTextStyle &= ~DT_SINGLELINE;
                 m_uTextStyle |= DT_WORDBREAK | DT_EDITCONTROL;
-            } 
-			else {
+            } else {
                 m_uTextStyle &= ~DT_WORDBREAK & ~DT_EDITCONTROL;
                 m_uTextStyle |= DT_SINGLELINE;
             }
-        } 
-        else if( _tcsicmp(pstrName, _T("font")) == 0 )
+        } else if( _tcsicmp(pstrName, _T("font")) == 0 )
             SetFont(_ttoi(pstrValue));
         else if( _tcsicmp(pstrName, _T("textcolor")) == 0 ) {
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -773,15 +752,13 @@ namespace DuiLib {
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetTextColor(clrColor);
-        } 
-        else if( _tcsicmp(pstrName, _T("disabledtextcolor")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("disabledtextcolor")) == 0 ) {
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetDisabledTextColor(clrColor);
-        }
-        else if( _tcsicmp(pstrName, _T("textpadding")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("textpadding")) == 0 ) {
             RECT rcTextPadding = { 0 };
             LPTSTR pstr = NULL;
             rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);
@@ -793,22 +770,21 @@ namespace DuiLib {
             rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10);
             ASSERT(pstr);
             SetTextPadding(rcTextPadding);
-        } 
-        else if( _tcsicmp(pstrName, _T("showhtml")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("showhtml")) == 0 )
             SetShowHtml(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("showshadow")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("showshadow")) == 0 )
             SetShowShadow(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("normalimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("normalimage")) == 0 )
             SetNormalImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("hotimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("hotimage")) == 0 )
             SetHotImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("pushedimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("pushedimage")) == 0 )
             SetPushedImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("focusedimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("focusedimage")) == 0 )
             SetFocusedImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("disabledimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("disabledimage")) == 0 )
             SetDisabledImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("dropboxattribute")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("dropboxattribute")) == 0 )
             SetDropBoxAttributeList(pstrValue);
         else if( _tcsicmp(pstrName, _T("dropboxsize")) == 0) {
             SIZE szDropBoxSize = { 0 };
@@ -818,8 +794,7 @@ namespace DuiLib {
             szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);
             ASSERT(pstr);
             SetDropBoxSize(szDropBoxSize);
-        } 
-        else if (_tcsicmp(pstrName, _T("arrownormalimage")) == 0)
+        } else if (_tcsicmp(pstrName, _T("arrownormalimage")) == 0)
             SetArrowNormalImage(pstrValue);
         else if (_tcsicmp(pstrName, _T("arrowhotimage")) == 0)
             SetArrowHotImage(pstrValue);
@@ -832,8 +807,7 @@ namespace DuiLib {
         else if (_tcsstr(pstrName, TEXT("item")) == pstrName) { // begin with "item"
             if (m_pWindow && m_pWindow->m_pList)
                 m_pWindow->m_pList->SetAttribute(pstrName, pstrValue);
-        }
-        else {
+        } else {
             CContainerUI::SetAttribute(pstrName, pstrValue);
         }
     }
@@ -843,14 +817,14 @@ namespace DuiLib {
     }
 
     void CComboBoxUI::PaintStatusImage(HDC hDC) {
-        if( IsFocused() ) 
+        if( IsFocused() )
             m_uButtonState |= UISTATE_FOCUSED;
         else
             m_uButtonState &= ~ UISTATE_FOCUSED;
 
-        if( !IsEnabled() ) 
+        if( !IsEnabled() )
             m_uButtonState |= UISTATE_DISABLED;
-        else 
+        else
             m_uButtonState &= ~ UISTATE_DISABLED;
 
         bool bDrawSuccessed = false;
@@ -858,18 +832,15 @@ namespace DuiLib {
             if( !m_sDisabledImage.IsEmpty() ) {
                 bDrawSuccessed = DrawImage(hDC, (LPCTSTR)m_sDisabledImage);
             }
-        } 
-        else if( (m_uButtonState & UISTATE_PUSHED) != 0 ) {
+        } else if( (m_uButtonState & UISTATE_PUSHED) != 0 ) {
             if( !m_sPushedImage.IsEmpty() ) {
                 bDrawSuccessed = DrawImage(hDC, (LPCTSTR)m_sPushedImage);
             }
-        } 
-        else if( (m_uButtonState & UISTATE_HOT) != 0 ) {
+        } else if( (m_uButtonState & UISTATE_HOT) != 0 ) {
             if( !m_sHotImage.IsEmpty() ) {
                 bDrawSuccessed = DrawImage(hDC, (LPCTSTR)m_sHotImage);
             }
-        } 
-        else if( (m_uButtonState & UISTATE_FOCUSED) != 0 ) {
+        } else if( (m_uButtonState & UISTATE_FOCUSED) != 0 ) {
             if( !m_sFocusedImage.IsEmpty() ) {
                 bDrawSuccessed = DrawImage(hDC, (LPCTSTR)m_sFocusedImage);
             }
@@ -886,20 +857,17 @@ namespace DuiLib {
                 if (!DrawImage(hDC, (LPCTSTR)m_sArrowDisabledImage)) {}
                 else return;
             }
-        }
-        else if ((m_uButtonState & UISTATE_PUSHED) != 0) {
+        } else if ((m_uButtonState & UISTATE_PUSHED) != 0) {
             if (!m_sArrowPushedImage.IsEmpty()) {
                 if (!DrawImage(hDC, (LPCTSTR)m_sArrowPushedImage)) {}
                 else return;
             }
-        }
-        else if ((m_uButtonState & UISTATE_HOT) != 0) {
+        } else if ((m_uButtonState & UISTATE_HOT) != 0) {
             if (!m_sArrowHotImage.IsEmpty()) {
                 if (!DrawImage(hDC, (LPCTSTR)m_sArrowHotImage)) {}
                 else return;
             }
-        }
-        else if ((m_uButtonState & UISTATE_FOCUSED) != 0) {
+        } else if ((m_uButtonState & UISTATE_FOCUSED) != 0) {
             if (!m_sArrowFocusedImage.IsEmpty()) {
                 if (!DrawImage(hDC, (LPCTSTR)m_sArrowFocusedImage)) {}
                 else return;
@@ -912,10 +880,10 @@ namespace DuiLib {
     }
 
     void CComboBoxUI::PaintText(HDC hDC) {
-        if( m_dwTextColor == 0 ) 
+        if( m_dwTextColor == 0 )
             m_dwTextColor = m_pManager->GetDefaultFontColor();
 
-        if( m_dwDisabledTextColor == 0 ) 
+        if( m_dwDisabledTextColor == 0 )
             m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
 
         RECT rc = m_rcItem;
@@ -926,7 +894,7 @@ namespace DuiLib {
 
         CDuiString sText = GetText();
 
-        if( sText.IsEmpty() ) 
+        if( sText.IsEmpty() )
             return;
 
         int nLinks = 0;
@@ -936,8 +904,7 @@ namespace DuiLib {
                 CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwTextColor, NULL, NULL, nLinks, m_iFont, m_uTextStyle);
             else
                 CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwTextColor, m_iFont, m_uTextStyle);
-        } 
-        else {
+        } else {
             if( m_bShowHtml )
                 CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwDisabledTextColor, NULL, NULL, nLinks, m_iFont, m_uTextStyle);
             else

@@ -12,35 +12,35 @@
 #pragma warning(disable:4100)
 
 #if defined _M_IX86
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
+    #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_IA64
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='ia64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+    #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='ia64' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #elif defined _M_X64
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
+    #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='amd64' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #else
-#pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+    #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifndef max
-#define max(a,b)            (((a) > (b)) ? (a) : (b))
+    #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
 #ifndef min
-#define min(a,b)            (((a) < (b)) ? (a) : (b))
+    #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
 
 
 #define lengthof(x) (sizeof(x)/sizeof(*x))
 
 #ifndef MAX
-#define MAX max
+    #define MAX max
 #endif
 
 #ifndef MIN
-#define MIN min
+    #define MIN min
 #endif
 
 #include <windows.h>
@@ -121,17 +121,17 @@
 #include "Control/UIRing.h"
 #include "Control/UIPlaceHolder.h"
 #ifdef UILIB_WITH_CEF
-#include "Control/UICef.h"
+    #include "Control/UICef.h"
 #endif
 #pragma comment( lib, "comctl32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )
 #pragma comment( lib, "Imm32.lib" )
 
 namespace DuiLib {
-	UILIB_API bool Initialize(HINSTANCE hInstance, bool bInitCef, bool bEnableCefCache, bool bUsingCefProxy);
-	UILIB_API void UnInitialize();
+    UILIB_API bool Initialize(HINSTANCE hInstance, bool bInitCef, bool bEnableCefCache, bool bUsingCefProxy);
+    UILIB_API void UnInitialize();
 #ifdef UILIB_WITH_CEF
-	UILIB_API bool CefProcessTypeCheck(HINSTANCE instance);
+    UILIB_API bool CefProcessTypeCheck(HINSTANCE instance);
 #endif
 }
 

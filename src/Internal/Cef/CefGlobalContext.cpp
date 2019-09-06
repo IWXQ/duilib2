@@ -16,9 +16,8 @@
 
 
 CefGlobalContext::CefGlobalContext() :
-	m_bCefCache(false)
-	, m_bUsingProxyServer(false)
-{
+    m_bCefCache(false)
+    , m_bUsingProxyServer(false) {
 
 }
 
@@ -27,36 +26,36 @@ CefGlobalContext::~CefGlobalContext() {
 }
 
 void CefGlobalContext::SetWithCef(bool b) {
-	m_bWithCef = b;
+    m_bWithCef = b;
 }
 
 
 bool CefGlobalContext::GetWithCef() const {
-	return m_bWithCef;
+    return m_bWithCef;
 }
 
 void CefGlobalContext::SetCefApp(CefRefPtr<CefApp> app) {
-	m_pCefApp = app;
+    m_pCefApp = app;
 }
 
 CefRefPtr<CefApp> CefGlobalContext::GetCefApp() const {
-	return m_pCefApp;
+    return m_pCefApp;
 }
 
 void CefGlobalContext::SetCefCache(bool b) {
-	m_bCefCache = b;
+    m_bCefCache = b;
 }
 
 bool CefGlobalContext::GetCefCache() const {
-	return m_bCefCache;
+    return m_bCefCache;
 }
 
 void CefGlobalContext::SetUsingProxyServer(bool b) {
-	m_bUsingProxyServer = b;
+    m_bUsingProxyServer = b;
 }
 
 bool CefGlobalContext::GetUsingProxyServer() const {
-	return m_bUsingProxyServer;
+    return m_bUsingProxyServer;
 }
 
 #endif

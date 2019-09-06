@@ -210,42 +210,42 @@ namespace DuiLib {
         return TRUE;
     }
 
-  
+
     bool CTreeNodeUI::Remove( CControlUI *pControl ) {
         return RemoveAt((CTreeNodeUI *)pControl);
     }
 
- 
+
     void CTreeNodeUI::SetVisibleTag( bool _IsVisible ) {
         m_bIsVisable = _IsVisible;
     }
 
-   
+
     bool CTreeNodeUI::GetVisibleTag() {
         return m_bIsVisable;
     }
 
-   
+
     void CTreeNodeUI::SetItemText( LPCTSTR pstrValue ) {
         pItemButton->SetText(pstrValue);
     }
 
-  
+
     CDuiString CTreeNodeUI::GetItemText() {
         return pItemButton->GetText();
     }
 
-  
+
     void CTreeNodeUI::CheckBoxSelected( bool _Selected ) {
         pCheckBox->Selected(_Selected);
     }
 
- 
+
     bool CTreeNodeUI::IsCheckBoxSelected() const {
         return pCheckBox->IsSelected();
     }
 
-  
+
     bool CTreeNodeUI::IsHasChild() const {
         return !mTreeNodes.IsEmpty();
     }
@@ -294,12 +294,12 @@ namespace DuiLib {
         return FALSE;
     }
 
-   
+
     void CTreeNodeUI::SetParentNode( CTreeNodeUI *_pParentTreeNode ) {
         pParentTreeNode = _pParentTreeNode;
     }
 
-  
+
     CTreeNodeUI *CTreeNodeUI::GetParentNode() {
         return pParentTreeNode;
     }
@@ -356,7 +356,7 @@ namespace DuiLib {
         } else CListContainerElementUI::SetAttribute(pstrName, pstrValue);
     }
 
-   
+
     CStdPtrArray CTreeNodeUI::GetTreeNodes() {
         return mTreeNodes;
     }

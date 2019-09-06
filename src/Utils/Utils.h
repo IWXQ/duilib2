@@ -77,77 +77,76 @@ namespace DuiLib {
         int m_nAllocated;
     };
 
-	class UILIB_API CDuiString
-	{
-	public:
-		enum { MAX_LOCAL_STRING_LEN = 63 };
+    class UILIB_API CDuiString {
+      public:
+        enum { MAX_LOCAL_STRING_LEN = 63 };
 
-		CDuiString();
-		CDuiString(const TCHAR ch);
-		CDuiString(const CDuiString& src);
-		CDuiString(LPCTSTR lpsz, int nLen = -1);
-		~CDuiString();
-		CDuiString ToString();
+        CDuiString();
+        CDuiString(const TCHAR ch);
+        CDuiString(const CDuiString &src);
+        CDuiString(LPCTSTR lpsz, int nLen = -1);
+        ~CDuiString();
+        CDuiString ToString();
 
-		void Empty();
-		int GetLength() const;
-		bool IsEmpty() const;
-		TCHAR GetAt(int nIndex) const;
-		void Append(LPCTSTR pstr);
-		void Assign(LPCTSTR pstr, int nLength = -1);
-		LPCTSTR GetData() const;
+        void Empty();
+        int GetLength() const;
+        bool IsEmpty() const;
+        TCHAR GetAt(int nIndex) const;
+        void Append(LPCTSTR pstr);
+        void Assign(LPCTSTR pstr, int nLength = -1);
+        LPCTSTR GetData() const;
 
-		void SetAt(int nIndex, TCHAR ch);
-		operator LPCTSTR() const;
+        void SetAt(int nIndex, TCHAR ch);
+        operator LPCTSTR() const;
 
-		TCHAR operator[] (int nIndex) const;
-		const CDuiString& operator=(const CDuiString& src);
-		const CDuiString& operator=(const TCHAR ch);
-		const CDuiString& operator=(LPCTSTR pstr);
+        TCHAR operator[] (int nIndex) const;
+        const CDuiString &operator=(const CDuiString &src);
+        const CDuiString &operator=(const TCHAR ch);
+        const CDuiString &operator=(LPCTSTR pstr);
 #ifdef _UNICODE
-		const CDuiString& CDuiString::operator=(LPCSTR lpStr);
-		const CDuiString& CDuiString::operator+=(LPCSTR lpStr);
+        const CDuiString &CDuiString::operator=(LPCSTR lpStr);
+        const CDuiString &CDuiString::operator+=(LPCSTR lpStr);
 #else
-		const CDuiString& CDuiString::operator=(LPCWSTR lpwStr);
-		const CDuiString& CDuiString::operator+=(LPCWSTR lpwStr);
+        const CDuiString &CDuiString::operator=(LPCWSTR lpwStr);
+        const CDuiString &CDuiString::operator+=(LPCWSTR lpwStr);
 #endif
-		CDuiString operator+(const CDuiString& src) const;
-		CDuiString operator+(LPCTSTR pstr) const;
-		const CDuiString& operator+=(const CDuiString& src);
-		const CDuiString& operator+=(LPCTSTR pstr);
-		const CDuiString& operator+=(const TCHAR ch);
+        CDuiString operator+(const CDuiString &src) const;
+        CDuiString operator+(LPCTSTR pstr) const;
+        const CDuiString &operator+=(const CDuiString &src);
+        const CDuiString &operator+=(LPCTSTR pstr);
+        const CDuiString &operator+=(const TCHAR ch);
 
-		bool operator == (LPCTSTR str) const;
-		bool operator != (LPCTSTR str) const;
-		bool operator <= (LPCTSTR str) const;
-		bool operator <  (LPCTSTR str) const;
-		bool operator >= (LPCTSTR str) const;
-		bool operator >  (LPCTSTR str) const;
+        bool operator == (LPCTSTR str) const;
+        bool operator != (LPCTSTR str) const;
+        bool operator <= (LPCTSTR str) const;
+        bool operator <  (LPCTSTR str) const;
+        bool operator >= (LPCTSTR str) const;
+        bool operator >  (LPCTSTR str) const;
 
-		int Compare(LPCTSTR pstr) const;
-		int CompareNoCase(LPCTSTR pstr) const;
+        int Compare(LPCTSTR pstr) const;
+        int CompareNoCase(LPCTSTR pstr) const;
 
-		void MakeUpper();
-		void MakeLower();
+        void MakeUpper();
+        void MakeLower();
 
-		CDuiString Left(int nLength) const;
-		CDuiString Mid(int iPos, int nLength = -1) const;
-		CDuiString Right(int nLength) const;
+        CDuiString Left(int nLength) const;
+        CDuiString Mid(int iPos, int nLength = -1) const;
+        CDuiString Right(int nLength) const;
 
-		int Find(TCHAR ch, int iPos = 0) const;
-		int Find(LPCTSTR pstr, int iPos = 0) const;
-		int ReverseFind(TCHAR ch) const;
-		int Replace(LPCTSTR pstrFrom, LPCTSTR pstrTo);
+        int Find(TCHAR ch, int iPos = 0) const;
+        int Find(LPCTSTR pstr, int iPos = 0) const;
+        int ReverseFind(TCHAR ch) const;
+        int Replace(LPCTSTR pstrFrom, LPCTSTR pstrTo);
 
-		int __cdecl Format(LPCTSTR pstrFormat, ...);
-		int __cdecl SmallFormat(LPCTSTR pstrFormat, ...);
+        int __cdecl Format(LPCTSTR pstrFormat, ...);
+        int __cdecl SmallFormat(LPCTSTR pstrFormat, ...);
 
-	protected:
-		LPTSTR m_pstr;
-		TCHAR m_szBuffer[MAX_LOCAL_STRING_LEN + 1];
-	};
-  
-    UILIB_API bool StringIsInVector(const std::vector<CDuiString> &v, const CDuiString& str, bool bIgnoreCase);
+      protected:
+        LPTSTR m_pstr;
+        TCHAR m_szBuffer[MAX_LOCAL_STRING_LEN + 1];
+    };
+
+    UILIB_API bool StringIsInVector(const std::vector<CDuiString> &v, const CDuiString &str, bool bIgnoreCase);
 
     class UILIB_API CStdStringPtrMap {
       public:
@@ -197,44 +196,44 @@ namespace DuiLib {
         }
     };
 
-	UILIB_API bool IsDevtoolResourceExist();
+    UILIB_API bool IsDevtoolResourceExist();
 
-	class UILIB_API CLiteVariant {
-	public:
-		enum class DataType {
-			DT_UNKNOWN = 0,
-			DT_INT,
-			DT_DOUBLE,
-			DT_STRING
-		};
-		CLiteVariant();
-		CLiteVariant(const CLiteVariant& other);
-		CLiteVariant(int i);
-		CLiteVariant(double f);
-		CLiteVariant(const std::string &s);
-		~CLiteVariant();
+    class UILIB_API CLiteVariant {
+      public:
+        enum class DataType {
+            DT_UNKNOWN = 0,
+            DT_INT,
+            DT_DOUBLE,
+            DT_STRING
+        };
+        CLiteVariant();
+        CLiteVariant(const CLiteVariant &other);
+        CLiteVariant(int i);
+        CLiteVariant(double f);
+        CLiteVariant(const std::string &s);
+        ~CLiteVariant();
 
-		void SetType(DataType dt);
-		void SetInt(int i);
-		void SetDouble(double f);
-		void SetString(const std::string &s);
+        void SetType(DataType dt);
+        void SetInt(int i);
+        void SetDouble(double f);
+        void SetString(const std::string &s);
 
-		bool IsInt() const;
-		bool IsDouble() const;
-		bool IsString() const;
+        bool IsInt() const;
+        bool IsDouble() const;
+        bool IsString() const;
 
-		DataType GetType() const;
-		int GetInt() const;
-		double GetDouble() const;
-		std::string GetString() const;
+        DataType GetType() const;
+        int GetInt() const;
+        double GetDouble() const;
+        std::string GetString() const;
 
-		const CLiteVariant& operator=(const CLiteVariant& other);
-	private:
-		DataType m_DT;
-		int m_iData;
-		double m_fData;
-		std::string m_strData;
-	};
+        const CLiteVariant &operator=(const CLiteVariant &other);
+      private:
+        DataType m_DT;
+        int m_iData;
+        double m_fData;
+        std::string m_strData;
+    };
 }// namespace DuiLib
 
 #endif // __UTILS_H__

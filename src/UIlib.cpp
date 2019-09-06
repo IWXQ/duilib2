@@ -48,8 +48,8 @@
 
 #include "StdAfx.h"
 #ifdef UILIB_WITH_CEF
-#include "include/cef_app.h"
-#include "Internal/Cef/CefApp.h"
+    #include "include/cef_app.h"
+    #include "Internal/Cef/CefApp.h"
 #endif
 
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
@@ -67,113 +67,113 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD  dwReason, LPVOID /*lpReserved*/) {
 
 namespace DuiLib {
 #ifdef UILIB_WITH_CEF
-	namespace {
-		enum ProcessType {
-			BrowserProcess,
-			RendererProcess,
-			ZygoteProcess,
-			OtherProcess,
-		};
+    namespace {
+        enum ProcessType {
+            BrowserProcess,
+            RendererProcess,
+            ZygoteProcess,
+            OtherProcess,
+        };
 
-		const char kProcessType[] = "type";
-		const char kRendererProcess[] = "renderer";
+        const char kProcessType[] = "type";
+        const char kRendererProcess[] = "renderer";
 
-		static ProcessType GetProcessType(CefRefPtr<CefCommandLine> command_line) {
-			if (!command_line->HasSwitch(kProcessType))
-				return BrowserProcess;
+        static ProcessType GetProcessType(CefRefPtr<CefCommandLine> command_line) {
+            if (!command_line->HasSwitch(kProcessType))
+                return BrowserProcess;
 
-			const std::string& process_type = command_line->GetSwitchValue(kProcessType);
-			if (process_type == kRendererProcess)
-				return RendererProcess;
+            const std::string &process_type = command_line->GetSwitchValue(kProcessType);
+            if (process_type == kRendererProcess)
+                return RendererProcess;
 
-			return OtherProcess;
-		}
-	}
+            return OtherProcess;
+        }
+    }
 #endif
 
     bool Initialize(HINSTANCE hInstance, bool bInitCef, bool bEnableCefCache, bool bUsingCefProxy) {
         ::CoInitialize(NULL);
         CPaintManagerUI::SetInstance(hInstance);
 #ifdef UILIB_WITH_CEF
-		CefGlobalContext::Instance()->SetWithCef(bInitCef);
-		CefGlobalContext::Instance()->SetUsingProxyServer(bUsingCefProxy);
+        CefGlobalContext::Instance()->SetWithCef(bInitCef);
+        CefGlobalContext::Instance()->SetUsingProxyServer(bUsingCefProxy);
 
-		if (!bInitCef)
-			return true;
+        if (!bInitCef)
+            return true;
 
-		CefGlobalContext::Instance()->SetCefCache(bEnableCefCache);
+        CefGlobalContext::Instance()->SetCefCache(bEnableCefCache);
 
 
-		wchar_t szFolderPath[MAX_PATH + 2] = { 0 };
-		std::wstring strCachePath;
-		GetModuleFileNameW(NULL, szFolderPath, MAX_PATH);
-		PathRemoveFileSpecW(szFolderPath);
-		PathAddBackslashW(szFolderPath);
-		strCachePath = szFolderPath;
-		strCachePath += L"PPXCEF_TEMP"; // can't end with "\"
+        wchar_t szFolderPath[MAX_PATH + 2] = { 0 };
+        std::wstring strCachePath;
+        GetModuleFileNameW(NULL, szFolderPath, MAX_PATH);
+        PathRemoveFileSpecW(szFolderPath);
+        PathAddBackslashW(szFolderPath);
+        strCachePath = szFolderPath;
+        strCachePath += L"PPXCEF_TEMP"; // can't end with "\"
 
-		CefSettings settings;
-		settings.command_line_args_disabled = 1; // disable command line
-		settings.multi_threaded_message_loop = true;
-		settings.no_sandbox = true;
+        CefSettings settings;
+        settings.command_line_args_disabled = 1; // disable command line
+        settings.multi_threaded_message_loop = true;
+        settings.no_sandbox = true;
 #ifdef _DEBUG
-		settings.log_severity = LOGSEVERITY_INFO;
+        settings.log_severity = LOGSEVERITY_INFO;
 #else
-		settings.log_severity = LOGSEVERITY_ERROR;
+        settings.log_severity = LOGSEVERITY_ERROR;
 #endif
-		settings.windowless_rendering_enabled = true;
-		settings.persist_session_cookies = bEnableCefCache ? 1 : 0;
-		settings.ignore_certificate_errors = 1;
-		CefString(&settings.locale).FromWString(L"zh-CN");
-		CefString(&settings.accept_language_list).FromWString(L"zh-CN,en-US,en");
-		CefString(&settings.user_data_path).FromWString(strCachePath);
-		if (bEnableCefCache)
-			CefString(&settings.cache_path).FromWString(strCachePath);
+        settings.windowless_rendering_enabled = true;
+        settings.persist_session_cookies = bEnableCefCache ? 1 : 0;
+        settings.ignore_certificate_errors = 1;
+        CefString(&settings.locale).FromWString(L"zh-CN");
+        CefString(&settings.accept_language_list).FromWString(L"zh-CN,en-US,en");
+        CefString(&settings.user_data_path).FromWString(strCachePath);
+        if (bEnableCefCache)
+            CefString(&settings.cache_path).FromWString(strCachePath);
 
-		CefMainArgs main_args(hInstance);
-		if (!CefInitialize(main_args, settings, CefGlobalContext::Instance()->GetCefApp(), nullptr)) {
-			return false;
-		}
+        CefMainArgs main_args(hInstance);
+        if (!CefInitialize(main_args, settings, CefGlobalContext::Instance()->GetCefApp(), nullptr)) {
+            return false;
+        }
 #else
-		if (bInitCef)
-			return false;
+        if (bInitCef)
+            return false;
 #endif
-		return true;
+        return true;
     }
 
     void UnInitialize() {
 #ifdef UILIB_WITH_CEF
-		if (CefGlobalContext::Instance()->GetWithCef()) {
-			CefShutdown();
-		}
+        if (CefGlobalContext::Instance()->GetWithCef()) {
+            CefShutdown();
+        }
 #endif
         CPaintManagerUI::Term();
         ::CoUninitialize();
     }
 
 #ifdef UILIB_WITH_CEF
-	bool CefProcessTypeCheck(HINSTANCE instance) {
-		CefEnableHighDPISupport();
-		CefMainArgs main_args(instance);
+    bool CefProcessTypeCheck(HINSTANCE instance) {
+        CefEnableHighDPISupport();
+        CefMainArgs main_args(instance);
 
-		CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
-		command_line->InitFromString(::GetCommandLineW());
+        CefRefPtr<CefCommandLine> command_line = CefCommandLine::CreateCommandLine();
+        command_line->InitFromString(::GetCommandLineW());
 
-		ProcessType process_type = GetProcessType(command_line);
+        ProcessType process_type = GetProcessType(command_line);
 
-		if (process_type == BrowserProcess)
-			CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppBrowser());
-		else if (process_type == RendererProcess)
-			CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppRenderer());
-		else if (process_type == OtherProcess)
-			CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppOther());
+        if (process_type == BrowserProcess)
+            CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppBrowser());
+        else if (process_type == RendererProcess)
+            CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppRenderer());
+        else if (process_type == OtherProcess)
+            CefGlobalContext::Instance()->SetCefApp(new Internal::ClientAppOther());
 
-		int exit_code = CefExecuteProcess(main_args, CefGlobalContext::Instance()->GetCefApp(), nullptr);
-		if (exit_code >= 0) {
-			return false;
-		}
+        int exit_code = CefExecuteProcess(main_args, CefGlobalContext::Instance()->GetCefApp(), nullptr);
+        if (exit_code >= 0) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 #endif
 }

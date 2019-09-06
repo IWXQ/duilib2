@@ -15,20 +15,20 @@
 #include "RequestContextHandler.h"
 
 namespace DuiLib {
-	namespace Internal {
-		RequestContextHandler::RequestContextHandler() {
-		}
+    namespace Internal {
+        RequestContextHandler::RequestContextHandler() {
+        }
 
-		bool RequestContextHandler::OnBeforePluginLoad(const CefString& mime_type, const CefString& plugin_url, const CefString& top_origin_url, CefRefPtr<CefWebPluginInfo> plugin_info, PluginPolicy* plugin_policy) {
-			// Always allow the PDF plugin to load.
-			if (*plugin_policy != PLUGIN_POLICY_ALLOW && mime_type == "application/pdf") {
-				*plugin_policy = PLUGIN_POLICY_ALLOW;
-				return true;
-			}
+        bool RequestContextHandler::OnBeforePluginLoad(const CefString &mime_type, const CefString &plugin_url, const CefString &top_origin_url, CefRefPtr<CefWebPluginInfo> plugin_info, PluginPolicy *plugin_policy) {
+            // Always allow the PDF plugin to load.
+            if (*plugin_policy != PLUGIN_POLICY_ALLOW && mime_type == "application/pdf") {
+                *plugin_policy = PLUGIN_POLICY_ALLOW;
+                return true;
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-	}
+    }
 }
 #endif

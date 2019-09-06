@@ -10,25 +10,25 @@
 
 
 #ifndef _zip_H
-DECLARE_HANDLE(HZIP);
+    DECLARE_HANDLE(HZIP);
 #endif
 // An HZIP identifies a zip file that has been opened
 
 typedef DWORD ZRESULT;
 // return codes from any of the zip functions. Listed later.
 
-typedef struct
-{ int index;                 // index of this file within the zip
-  TCHAR name[MAX_PATH];      // filename within the zip
-  DWORD attr;                // attributes, as in GetFileAttributes.
-  FILETIME atime,ctime,mtime;// access, create, modify filetimes
-  long comp_size;            // sizes of item, compressed and uncompressed. These
-  long unc_size;             // may be -1 if not yet known (e.g. being streamed in)
+typedef struct {
+    int index;                 // index of this file within the zip
+    TCHAR name[MAX_PATH];      // filename within the zip
+    DWORD attr;                // attributes, as in GetFileAttributes.
+    FILETIME atime, ctime, mtime; // access, create, modify filetimes
+    long comp_size;            // sizes of item, compressed and uncompressed. These
+    long unc_size;             // may be -1 if not yet known (e.g. being streamed in)
 } ZIPENTRY;
 
 
-HZIP OpenZip(const TCHAR *fn, const char *password=NULL);
-HZIP OpenZip(void *z, unsigned int len, const char *password=NULL);
+HZIP OpenZip(const TCHAR *fn, const char *password = NULL);
+HZIP OpenZip(void *z, unsigned int len, const char *password = NULL);
 HZIP OpenZipHandle(HANDLE h, const char *password);
 // OpenZip - opens a zip file and returns a handle with which you can
 // subsequently examine its contents. You can open a zip file from:
@@ -202,11 +202,11 @@ ZRESULT CloseZipU(HZIP hz);
 unsigned int FormatZipMessageU(ZRESULT code, TCHAR *buf, unsigned int len);
 bool IsZipHandleU(HZIP hz);
 #ifdef _zip_H
-#undef CloseZip
-#define CloseZip(hz) (IsZipHandleU(hz)?CloseZipU(hz):CloseZipZ(hz))
+    #undef CloseZip
+    #define CloseZip(hz) (IsZipHandleU(hz)?CloseZipU(hz):CloseZipZ(hz))
 #else
-#define CloseZip CloseZipU
-#define FormatZipMessage FormatZipMessageU
+    #define CloseZip CloseZipU
+    #define FormatZipMessage FormatZipMessageU
 #endif
 
 

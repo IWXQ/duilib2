@@ -111,17 +111,17 @@ namespace DuiLib {
                 break;
 
             case DISPID_TITLECHANGE: {
-                    TitleChange(pDispParams->rgvarg[0].bstrVal);
-                    break;
-                }
+                TitleChange(pDispParams->rgvarg[0].bstrVal);
+                break;
+            }
 
             case DISPID_DOCUMENTCOMPLETE: {
-                    DocumentComplete(
-                        pDispParams->rgvarg[1].pdispVal,
-                        pDispParams->rgvarg[0].pvarVal);
+                DocumentComplete(
+                    pDispParams->rgvarg[1].pdispVal,
+                    pDispParams->rgvarg[0].pvarVal);
 
-                    break;
-                }
+                break;
+            }
 
             default:
                 return DISP_E_MEMBERNOTFOUND;
@@ -194,7 +194,7 @@ namespace DuiLib {
         }
     }
 
-    void CWebBrowserUI::NavigateError( IDispatch *pDisp, VARIANT*&url, VARIANT *&TargetFrameName, VARIANT *&StatusCode, VARIANT_BOOL *&Cancel ) {
+    void CWebBrowserUI::NavigateError( IDispatch *pDisp, VARIANT *&url, VARIANT *&TargetFrameName, VARIANT *&StatusCode, VARIANT_BOOL *&Cancel ) {
         if (m_pWebBrowserEventHandler) {
             m_pWebBrowserEventHandler->NavigateError(this, pDisp, url, TargetFrameName, StatusCode, Cancel);
         }
@@ -620,62 +620,62 @@ namespace DuiLib {
             switch (nCmdID) {
 
                 case OLECMDID_SHOWSCRIPTERROR: {
-                        IHTMLDocument2             *pDoc = NULL;
-                        IHTMLWindow2               *pWindow = NULL;
-                        IHTMLEventObj              *pEventObj = NULL;
-                        BSTR                        rgwszNames[5] = {
-                            SysAllocString(L"errorLine"),
-                            SysAllocString(L"errorCharacter"),
-                            SysAllocString(L"errorCode"),
-                            SysAllocString(L"errorMessage"),
-                            SysAllocString(L"errorUrl")
-                        };
-                        DISPID                      rgDispIDs[5];
-                        VARIANT                     rgvaEventInfo[5];
-                        DISPPARAMS                  params;
-                        BOOL                        fContinueRunningScripts = true;
-                        int                         i;
+                    IHTMLDocument2             *pDoc = NULL;
+                    IHTMLWindow2               *pWindow = NULL;
+                    IHTMLEventObj              *pEventObj = NULL;
+                    BSTR                        rgwszNames[5] = {
+                        SysAllocString(L"errorLine"),
+                        SysAllocString(L"errorCharacter"),
+                        SysAllocString(L"errorCode"),
+                        SysAllocString(L"errorMessage"),
+                        SysAllocString(L"errorUrl")
+                    };
+                    DISPID                      rgDispIDs[5];
+                    VARIANT                     rgvaEventInfo[5];
+                    DISPPARAMS                  params;
+                    BOOL                        fContinueRunningScripts = true;
+                    int                         i;
 
-                        params.cArgs = 0;
-                        params.cNamedArgs = 0;
+                    params.cArgs = 0;
+                    params.cNamedArgs = 0;
 
-                        // Get the document that is currently being viewed.
-                        hr = pvaIn->punkVal->QueryInterface(IID_IHTMLDocument2, (void **) &pDoc);
-                        // Get document.parentWindow.
-                        hr = pDoc->get_parentWindow(&pWindow);
-                        pDoc->Release();
-                        // Get the window.event object.
-                        hr = pWindow->get_event(&pEventObj);
+                    // Get the document that is currently being viewed.
+                    hr = pvaIn->punkVal->QueryInterface(IID_IHTMLDocument2, (void **) &pDoc);
+                    // Get document.parentWindow.
+                    hr = pDoc->get_parentWindow(&pWindow);
+                    pDoc->Release();
+                    // Get the window.event object.
+                    hr = pWindow->get_event(&pEventObj);
 
-                        // Get the error info from the window.event object.
-                        for (i = 0; i < 5; i++) {
-                            // Get the property's dispID.
-                            hr = pEventObj->GetIDsOfNames(IID_NULL, &rgwszNames[i], 1,
-                                                          LOCALE_SYSTEM_DEFAULT, &rgDispIDs[i]);
-                            // Get the value of the property.
-                            hr = pEventObj->Invoke(rgDispIDs[i], IID_NULL,
-                                                   LOCALE_SYSTEM_DEFAULT,
-                                                   DISPATCH_PROPERTYGET, &params, &rgvaEventInfo[i],
-                                                   NULL, NULL);
-                            SysFreeString(rgwszNames[i]);
-                        }
-
-                        // At this point, you would normally alert the user with
-                        // the information about the error, which is now contained
-                        // in rgvaEventInfo[]. Or, you could just exit silently.
-
-                        (*pvaOut).vt = VT_BOOL;
-
-                        if (fContinueRunningScripts) {
-                            // Continue running scripts on the page.
-                            (*pvaOut).boolVal = VARIANT_TRUE;
-                        } else {
-                            // Stop running scripts on the page.
-                            (*pvaOut).boolVal = VARIANT_FALSE;
-                        }
-
-                        break;
+                    // Get the error info from the window.event object.
+                    for (i = 0; i < 5; i++) {
+                        // Get the property's dispID.
+                        hr = pEventObj->GetIDsOfNames(IID_NULL, &rgwszNames[i], 1,
+                                                      LOCALE_SYSTEM_DEFAULT, &rgDispIDs[i]);
+                        // Get the value of the property.
+                        hr = pEventObj->Invoke(rgDispIDs[i], IID_NULL,
+                                               LOCALE_SYSTEM_DEFAULT,
+                                               DISPATCH_PROPERTYGET, &params, &rgvaEventInfo[i],
+                                               NULL, NULL);
+                        SysFreeString(rgwszNames[i]);
                     }
+
+                    // At this point, you would normally alert the user with
+                    // the information about the error, which is now contained
+                    // in rgvaEventInfo[]. Or, you could just exit silently.
+
+                    (*pvaOut).vt = VT_BOOL;
+
+                    if (fContinueRunningScripts) {
+                        // Continue running scripts on the page.
+                        (*pvaOut).boolVal = VARIANT_TRUE;
+                    } else {
+                        // Stop running scripts on the page.
+                        (*pvaOut).boolVal = VARIANT_FALSE;
+                    }
+
+                    break;
+                }
 
                 default:
                     hr = OLECMDERR_E_NOTSUPPORTED;

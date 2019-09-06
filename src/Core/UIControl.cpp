@@ -51,7 +51,7 @@ namespace DuiLib {
 
         RemoveAllCustomAttribute();
 
-        if( m_pManager != NULL ) 
+        if( m_pManager != NULL )
             m_pManager->ReapObjects(this);
     }
 
@@ -321,23 +321,23 @@ namespace DuiLib {
         if( rc.right < rc.left )
             rc.right = rc.left;
 
-        if( rc.bottom < rc.top ) 
+        if( rc.bottom < rc.top )
             rc.bottom = rc.top;
 
         CDuiRect invalidateRc = m_rcItem;
 
-        if( ::IsRectEmpty(&invalidateRc) ) 
+        if( ::IsRectEmpty(&invalidateRc) )
             invalidateRc = rc;
 
         m_rcItem = rc;
 
-        if( m_pManager == NULL ) 
+        if( m_pManager == NULL )
             return;
 
         if( !m_bSetPos ) {
             m_bSetPos = true;
 
-            if( m_OnSizeDelegate ) 
+            if( m_OnSizeDelegate )
                 m_OnSizeDelegate(this);
 
             m_bSetPos = false;
@@ -352,13 +352,13 @@ namespace DuiLib {
             RECT rcParent;
 
             while( (pParent = pParent->GetParent()) ) {
-                if( !pParent->IsVisible() ) 
+                if( !pParent->IsVisible() )
                     return;
 
                 rcTemp = invalidateRc;
                 rcParent = pParent->GetPos();
 
-                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) ) 
+                if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) )
                     return;
             }
 
@@ -431,7 +431,7 @@ namespace DuiLib {
     }
 
     void CControlUI::SetFixedHeight(int cy) {
-        if( cy < 0 ) 
+        if( cy < 0 )
             return;
 
         m_cxyFixed.cy = cy;
@@ -445,10 +445,10 @@ namespace DuiLib {
     }
 
     void CControlUI::SetMinWidth(int cx) {
-        if( m_cxyMin.cx == cx ) 
+        if( m_cxyMin.cx == cx )
             return;
 
-        if( cx < 0 ) 
+        if( cx < 0 )
             return;
 
         m_cxyMin.cx = cx;
@@ -479,10 +479,10 @@ namespace DuiLib {
     }
 
     void CControlUI::SetMinHeight(int cy) {
-        if( m_cxyMin.cy == cy ) 
+        if( m_cxyMin.cy == cy )
             return;
 
-        if( cy < 0 ) 
+        if( cy < 0 )
             return;
 
         m_cxyMin.cy = cy;
@@ -496,10 +496,10 @@ namespace DuiLib {
     }
 
     void CControlUI::SetMaxHeight(int cy) {
-        if( m_cxyMax.cy == cy ) 
+        if( m_cxyMax.cy == cy )
             return;
 
-        if( cy < 0 ) 
+        if( cy < 0 )
             return;
 
         m_cxyMax.cy = cy;
@@ -525,7 +525,7 @@ namespace DuiLib {
     }
 
     CDuiString CControlUI::GetToolTip() const {
-        if (!IsResourceText()) 
+        if (!IsResourceText())
             return m_sToolTip;
 
         return CResourceManager::GetInstance()->GetText(m_sToolTip);
@@ -721,7 +721,7 @@ namespace DuiLib {
     }
 
     DWORD CControlUI::GetAdjustColor(DWORD dwColor) {
-        if( !m_bColorHSL ) 
+        if( !m_bColorHSL )
             return dwColor;
 
         short H, S, L;
@@ -732,7 +732,7 @@ namespace DuiLib {
     void CControlUI::Init() {
         DoInit();
 
-        if( m_OnInitDelegate ) 
+        if( m_OnInitDelegate )
             m_OnInitDelegate(this);
     }
 
@@ -752,27 +752,22 @@ namespace DuiLib {
             } else {
                 ::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_ARROW)));
             }
-        }
-        else if( event.Type == UIEVENT_SETFOCUS ) {
+        } else if( event.Type == UIEVENT_SETFOCUS ) {
             m_bFocused = true;
             Invalidate();
-        }
-        else if( event.Type == UIEVENT_KILLFOCUS ) {
+        } else if( event.Type == UIEVENT_KILLFOCUS ) {
             m_bFocused = false;
             Invalidate();
-        }
-        else if( event.Type == UIEVENT_TIMER ) {
+        } else if( event.Type == UIEVENT_TIMER ) {
             m_pManager->SendNotify(this, DUI_MSGTYPE_TIMER, event.wParam, event.lParam);
-        }
-        else if( event.Type == UIEVENT_CONTEXTMENU ) {
+        } else if( event.Type == UIEVENT_CONTEXTMENU ) {
             if( IsContextMenuUsed() ) {
                 m_pManager->SendNotify(this, DUI_MSGTYPE_MENU, event.wParam, event.lParam);
             }
+        } else {
+            if (m_pParent != NULL)
+                m_pParent->DoEvent(event);
         }
-		else {
-			if (m_pParent != NULL) 
-				m_pParent->DoEvent(event);
-		}
     }
 
 
@@ -800,7 +795,7 @@ namespace DuiLib {
     }
 
     void CControlUI::AddCustomAttribute(LPCTSTR pstrName, LPCTSTR pstrAttr) {
-        if( pstrName == NULL || pstrName[0] == _T('\0') || pstrAttr == NULL || pstrAttr[0] == _T('\0') ) 
+        if( pstrName == NULL || pstrName[0] == _T('\0') || pstrAttr == NULL || pstrAttr[0] == _T('\0') )
             return;
 
         CDuiString *pCostomAttr = new CDuiString(pstrAttr);
@@ -814,24 +809,24 @@ namespace DuiLib {
     }
 
     LPCTSTR CControlUI::GetCustomAttribute(LPCTSTR pstrName) const {
-        if( pstrName == NULL || pstrName[0] == _T('\0') ) 
+        if( pstrName == NULL || pstrName[0] == _T('\0') )
             return NULL;
 
         CDuiString *pCostomAttr = static_cast<CDuiString *>(m_mCustomAttrHash.Find(pstrName));
 
-        if( pCostomAttr ) 
+        if( pCostomAttr )
             return pCostomAttr->GetData();
 
         return NULL;
     }
 
     bool CControlUI::RemoveCustomAttribute(LPCTSTR pstrName) {
-        if( pstrName == NULL || pstrName[0] == _T('\0') ) 
+        if( pstrName == NULL || pstrName[0] == _T('\0') )
             return NULL;
 
         CDuiString *pCostomAttr = static_cast<CDuiString *>(m_mCustomAttrHash.Find(pstrName));
 
-        if( !pCostomAttr ) 
+        if( !pCostomAttr )
             return false;
 
         delete pCostomAttr;
@@ -841,11 +836,11 @@ namespace DuiLib {
     void CControlUI::RemoveAllCustomAttribute() {
         CDuiString *pCostomAttr;
 
-		for (std::map<CDuiString, LPVOID>::iterator it = m_mCustomAttrHash.Begin(); it != m_mCustomAttrHash.End(); it++) {
-			pCostomAttr = static_cast<CDuiString *>(it->second);
-			if(pCostomAttr)
-				delete pCostomAttr;
-		}
+        for (std::map<CDuiString, LPVOID>::iterator it = m_mCustomAttrHash.Begin(); it != m_mCustomAttrHash.End(); it++) {
+            pCostomAttr = static_cast<CDuiString *>(it->second);
+            if(pCostomAttr)
+                delete pCostomAttr;
+        }
 
         m_mCustomAttrHash.RemoveAll();
     }
@@ -876,8 +871,7 @@ namespace DuiLib {
             SetFixedXY(szXY);
             SetFixedWidth(rcPos.right - rcPos.left);
             SetFixedHeight(rcPos.bottom - rcPos.top);
-        } 
-		else if( _tcsicmp(pstrName, _T("float")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("float")) == 0 ) {
             CDuiString nValue = pstrValue;
 
             // 动态计算相对比例
@@ -904,7 +898,7 @@ namespace DuiLib {
             while( *pstrValue != _T('\0') ) {
                 CDuiString sValue;
 
-                while( *pstrValue == _T(',') || *pstrValue == _T(' ') ) 
+                while( *pstrValue == _T(',') || *pstrValue == _T(' ') )
                     pstrValue = ::CharNext(pstrValue);
 
                 while( *pstrValue != _T('\0') && *pstrValue != _T(',') && *pstrValue != _T(' ') ) {
@@ -941,8 +935,7 @@ namespace DuiLib {
             }
 
             SetFloatAlign(uAlign);
-        } 
-		else if( _tcsicmp(pstrName, _T("padding")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("padding")) == 0 ) {
             RECT rcPadding = { 0 };
             LPTSTR pstr = NULL;
             rcPadding.left = _tcstol(pstrValue, &pstr, 10);
@@ -954,8 +947,7 @@ namespace DuiLib {
             rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10);
             ASSERT(pstr);
             SetPadding(rcPadding);
-        } 
-        else if( _tcsicmp(pstrName, _T("gradient")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("gradient")) == 0 )
             SetGradient(pstrValue);
         else if( _tcsicmp(pstrName, _T("bkcolor")) == 0 || _tcsicmp(pstrName, _T("bkcolor1")) == 0 ) {
             while( *pstrValue > _T('\0') && *pstrValue <= _T(' ') ) pstrValue = ::CharNext(pstrValue);
@@ -965,8 +957,7 @@ namespace DuiLib {
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetBkColor(clrColor);
-        } 
-        else if( _tcsicmp(pstrName, _T("bkcolor2")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("bkcolor2")) == 0 ) {
             while( *pstrValue > _T('\0') && *pstrValue <= _T(' ') ) pstrValue = ::CharNext(pstrValue);
 
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -974,8 +965,7 @@ namespace DuiLib {
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetBkColor2(clrColor);
-        } 
-        else if( _tcsicmp(pstrName, _T("bkcolor3")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("bkcolor3")) == 0 ) {
             while( *pstrValue > _T('\0') && *pstrValue <= _T(' ') ) pstrValue = ::CharNext(pstrValue);
 
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -983,8 +973,7 @@ namespace DuiLib {
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetBkColor3(clrColor);
-        }
-        else if( _tcsicmp(pstrName, _T("forecolor")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("forecolor")) == 0 ) {
             while( *pstrValue > _T('\0') && *pstrValue <= _T(' ') ) pstrValue = ::CharNext(pstrValue);
 
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -992,33 +981,28 @@ namespace DuiLib {
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetForeColor(clrColor);
-        } 
-        else if( _tcsicmp(pstrName, _T("bordercolor")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("bordercolor")) == 0 ) {
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetBorderColor(clrColor);
-        } 
-        else if( _tcsicmp(pstrName, _T("focusbordercolor")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("focusbordercolor")) == 0 ) {
             if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 
             LPTSTR pstr = NULL;
             DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
             SetFocusBorderColor(clrColor);
-        } 
-        else if (_tcsicmp(pstrName, _T("colorhsl")) == 0) {
+        } else if (_tcsicmp(pstrName, _T("colorhsl")) == 0) {
             SetColorHSL(_tcsicmp(pstrValue, _T("true")) == 0);
-        }
-        else if( _tcsicmp(pstrName, _T("bordersize")) == 0 ) {
+        } else if( _tcsicmp(pstrName, _T("bordersize")) == 0 ) {
             CDuiString nValue = pstrValue;
 
             if(nValue.Find(',') < 0) {
-				int iValue = _ttoi(pstrValue);
+                int iValue = _ttoi(pstrValue);
                 RECT rcPadding = { iValue, iValue, iValue, iValue };
                 SetBorderSize(rcPadding);
-            } 
-            else {
+            } else {
                 RECT rcPadding = { 0 };
                 LPTSTR pstr = NULL;
                 rcPadding.left = _tcstol(pstrValue, &pstr, 10);
@@ -1031,8 +1015,7 @@ namespace DuiLib {
                 ASSERT(pstr);
                 SetBorderSize(rcPadding);
             }
-        } 
-        else if( _tcsicmp(pstrName, _T("borderstyle")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("borderstyle")) == 0 )
             SetBorderStyle(_ttoi(pstrValue));
         else if( _tcsicmp(pstrName, _T("borderround")) == 0 ) {
             SIZE cxyRound = { 0 };
@@ -1042,48 +1025,47 @@ namespace DuiLib {
             cxyRound.cy = _tcstol(pstr + 1, &pstr, 10);
             ASSERT(pstr);
             SetBorderRound(cxyRound);
-        } 
-        else if( _tcsicmp(pstrName, _T("bkimage")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("bkimage")) == 0 )
             SetBkImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("foreimage")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("foreimage")) == 0 )
             SetForeImage(pstrValue);
-        else if( _tcsicmp(pstrName, _T("width")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("width")) == 0 )
             SetFixedWidth(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("height")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("height")) == 0 )
             SetFixedHeight(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("minwidth")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("minwidth")) == 0 )
             SetMinWidth(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("minheight")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("minheight")) == 0 )
             SetMinHeight(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("maxwidth")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("maxwidth")) == 0 )
             SetMaxWidth(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("maxheight")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("maxheight")) == 0 )
             SetMaxHeight(_ttoi(pstrValue));
-        else if( _tcsicmp(pstrName, _T("name")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("name")) == 0 )
             SetName(pstrValue);
-        else if( _tcsicmp(pstrName, _T("drag")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("drag")) == 0 )
             SetDragEnable(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("drop")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("drop")) == 0 )
             SetDropEnable(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("resourcetext")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("resourcetext")) == 0 )
             SetResourceText(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("text")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("text")) == 0 )
             SetText(pstrValue);
-        else if( _tcsicmp(pstrName, _T("tooltip")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("tooltip")) == 0 )
             SetToolTip(pstrValue);
-        else if( _tcsicmp(pstrName, _T("userdata")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("userdata")) == 0 )
             SetUserData(pstrValue);
-        else if( _tcsicmp(pstrName, _T("enabled")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("enabled")) == 0 )
             SetEnabled(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("mouse")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("mouse")) == 0 )
             SetMouseEnabled(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("keyboard")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("keyboard")) == 0 )
             SetKeyboardEnabled(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("visible")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("visible")) == 0 )
             SetVisible(_tcsicmp(pstrValue, _T("true")) == 0);
-        else if( _tcsicmp(pstrName, _T("shortcut")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("shortcut")) == 0 )
             SetShortcut(pstrValue[0]);
-        else if( _tcsicmp(pstrName, _T("menu")) == 0 ) 
+        else if( _tcsicmp(pstrName, _T("menu")) == 0 )
             SetContextMenuUsed(_tcsicmp(pstrValue, _T("true")) == 0);
         else if( _tcsicmp(pstrName, _T("cursor")) == 0 && pstrValue) {
             if( _tcsicmp(pstrValue, _T("arrow")) == 0 )         SetCursor(DUI_ARROW);
@@ -1100,8 +1082,7 @@ namespace DuiLib {
             else if( _tcsicmp(pstrValue, _T("sizeall")) == 0 )  SetCursor(DUI_SIZEALL);
             else if( _tcsicmp(pstrValue, _T("no")) == 0 )       SetCursor(DUI_NO);
             else if( _tcsicmp(pstrValue, _T("hand")) == 0 )     SetCursor(DUI_HAND);
-        } 
-        else if( _tcsicmp(pstrName, _T("virtualwnd")) == 0 ) 
+        } else if( _tcsicmp(pstrName, _T("virtualwnd")) == 0 )
             SetVirtualWnd(pstrValue);
         else if( _tcsicmp(pstrName, _T("innerstyle")) == 0 ) {
             CDuiString sXmlData = pstrValue;
@@ -1218,10 +1199,10 @@ namespace DuiLib {
         if (pStopControl == this)
             return false;
 
-        if( !::IntersectRect(&m_rcPaint, &rcPaint, &m_rcItem) ) 
+        if( !::IntersectRect(&m_rcPaint, &rcPaint, &m_rcItem) )
             return true;
 
-        if (!DoPaint(hDC, m_rcPaint, pStopControl)) 
+        if (!DoPaint(hDC, m_rcPaint, pStopControl))
             return false;
 
         return true;
@@ -1243,7 +1224,7 @@ namespace DuiLib {
         if( cxyBorderRound.cx > 0 || cxyBorderRound.cy > 0 ) {
             CRenderClip roundClip;
             CRenderClip::GenerateRoundClip(hDC, m_rcPaint,  m_rcItem, cxyBorderRound.cx, cxyBorderRound.cy, roundClip);
-        } 
+        }
 
         PaintBkColor(hDC);
         PaintBkImage(hDC);
@@ -1268,12 +1249,10 @@ namespace DuiLib {
                     rc.top = rc.bottom;
                     rc.bottom = m_rcItem.bottom;
                     CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor2), GetAdjustColor(m_dwBackColor3), bVer, 8);
-                } 
-				else {
+                } else {
                     CRenderEngine::DrawGradient(hDC, m_rcItem, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), bVer, 16);
                 }
-            } 
-			else if( m_dwBackColor >= 0xFF000000 )
+            } else if( m_dwBackColor >= 0xFF000000 )
                 CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwBackColor));
             else
                 CRenderEngine::DrawColor(hDC, m_rcItem, GetAdjustColor(m_dwBackColor));
@@ -1309,37 +1288,37 @@ namespace DuiLib {
     void CControlUI::PaintBorder(HDC hDC) {
         SIZE cxyBorderRound = GetBorderRound();
         CDuiRect rcBorderSize = GetBorderSize();
-		DWORD dwBorderColor = IsFocused() ? m_dwFocusBorderColor:  m_dwBorderColor;
+        DWORD dwBorderColor = IsFocused() ? m_dwFocusBorderColor :  m_dwBorderColor;
 
-		if (dwBorderColor == 0) {
-			return;
-		}
+        if (dwBorderColor == 0) {
+            return;
+        }
 
-		RECT rcBorder;
+        RECT rcBorder;
 
-		if (rcBorderSize.left > 0) {
-			rcBorder = m_rcItem;
-			rcBorder.right = rcBorder.left;
-			CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.left, GetAdjustColor(dwBorderColor), m_nBorderStyle);
-		}
+        if (rcBorderSize.left > 0) {
+            rcBorder = m_rcItem;
+            rcBorder.right = rcBorder.left;
+            CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.left, GetAdjustColor(dwBorderColor), m_nBorderStyle);
+        }
 
-		if (rcBorderSize.top > 0) {
-			rcBorder = m_rcItem;
-			rcBorder.bottom = rcBorder.top;
-			CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.top, GetAdjustColor(dwBorderColor), m_nBorderStyle);
-		}
+        if (rcBorderSize.top > 0) {
+            rcBorder = m_rcItem;
+            rcBorder.bottom = rcBorder.top;
+            CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.top, GetAdjustColor(dwBorderColor), m_nBorderStyle);
+        }
 
-		if (rcBorderSize.right > 0) {
-			rcBorder = m_rcItem;
-			rcBorder.left = rcBorder.right;
-			CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.right, GetAdjustColor(dwBorderColor), m_nBorderStyle);
-		}
+        if (rcBorderSize.right > 0) {
+            rcBorder = m_rcItem;
+            rcBorder.left = rcBorder.right;
+            CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.right, GetAdjustColor(dwBorderColor), m_nBorderStyle);
+        }
 
-		if (rcBorderSize.bottom > 0) {
-			rcBorder = m_rcItem;
-			rcBorder.top = rcBorder.bottom;
-			CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.bottom, GetAdjustColor(dwBorderColor), m_nBorderStyle);
-		}
+        if (rcBorderSize.bottom > 0) {
+            rcBorder = m_rcItem;
+            rcBorder.top = rcBorder.bottom;
+            CRenderEngine::DrawLine(hDC, rcBorder, rcBorderSize.bottom, GetAdjustColor(dwBorderColor), m_nBorderStyle);
+        }
     }
 
     void CControlUI::DoPostPaint(HDC hDC, const RECT &rcPaint) {

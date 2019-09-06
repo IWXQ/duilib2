@@ -6,7 +6,7 @@
 
 namespace DuiLib {
     UILIB_API bool IsInUIThread();
-  
+
     UILIB_API void PostTaskToUIThread(ppx::base::Closure c);
 }
 

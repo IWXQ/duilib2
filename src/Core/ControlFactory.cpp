@@ -3,7 +3,7 @@
 
 namespace DuiLib {
 
-    CControlFactory* CControlFactory::m_pThis = NULL;
+    CControlFactory *CControlFactory::m_pThis = NULL;
 
     CControlFactory::CControlFactory() {
         INNER_REGISTER_DUICONTROL(CControlUI);
@@ -50,7 +50,7 @@ namespace DuiLib {
         INNER_REGISTER_DUICONTROL(CRingUI);
         INNER_REGISTER_DUICONTROL(CPlaceHolderUI);
 #ifdef UILIB_WITH_CEF
-		INNER_REGISTER_DUICONTROL(CCefUI);
+        INNER_REGISTER_DUICONTROL(CCefUI);
 #endif
     }
 

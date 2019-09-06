@@ -11,7 +11,7 @@
 
 namespace DuiLib {
     class UILIB_API ColorConvert {
-    public:
+      public:
         enum { Red = 0, Green, Blue };
         static void RGBtoHSL(BYTE R, BYTE G, BYTE B, float &H, float &S, float &L);
         static void HSLtoRGB(float H, float S, float L, BYTE &R, BYTE &G, BYTE &B);

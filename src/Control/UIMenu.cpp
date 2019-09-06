@@ -155,18 +155,18 @@ namespace DuiLib {
                 break;
 
             case 2: {
-                    HWND hParent = GetParent(m_hWnd);
+                HWND hParent = GetParent(m_hWnd);
 
-                    while (hParent != NULL) {
-                        if (hParent == param.hWnd) {
-                            Close();
-                            break;
-                        }
-
-                        hParent = GetParent(hParent);
+                while (hParent != NULL) {
+                    if (hParent == param.hWnd) {
+                        Close();
+                        break;
                     }
+
+                    hParent = GetParent(hParent);
                 }
-                break;
+            }
+            break;
 
             default:
                 break;
@@ -183,7 +183,7 @@ namespace DuiLib {
     }
 
     void CMenuWnd::DestroyMenu() {
-	
+
     }
 
     MenuItemInfo *CMenuWnd::SetMenuItemInfo(LPCTSTR pstrName, bool bChecked) {
@@ -684,10 +684,10 @@ namespace DuiLib {
                 rc.right -= m_rcInset.right;
                 rc.bottom -= m_rcInset.bottom;
 
-                if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible()) 
+                if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
                     rc.right -= m_pVerticalScrollBar->GetFixedWidth();
 
-                if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible()) 
+                if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible())
                     rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 
                 if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) {
@@ -1111,7 +1111,7 @@ namespace DuiLib {
     }
 
     void CMenuElementUI::SetChecked(bool bCheck/* = true*/) {
-		CDuiString strName = GetName();
+        CDuiString strName = GetName();
         SetItemInfo(strName, &bCheck);
     }
 
@@ -1135,15 +1135,15 @@ namespace DuiLib {
     }
 
     void CMenuElementUI::SetMenuEnabled(bool bEnabled /*= true*/) {
-		CDuiString strName = GetName();
+        CDuiString strName = GetName();
         SetItemInfo(strName, NULL, &bEnabled);
     }
 
     bool CMenuElementUI::GetMenuEnabled() const {
         CDuiString strName = GetName();
 
-		if (strName.GetLength() == 0)
-			return false;
+        if (strName.GetLength() == 0)
+            return false;
 
         CStdStringPtrMap *mCheckInfos = CMenuWnd::GetGlobalContextMenuObserver().GetMenuItemInfo();
 
@@ -1188,39 +1188,39 @@ namespace DuiLib {
             bool bFind = false;
 
             if (mCheckInfos) {
-				for (std::map<CDuiString, LPVOID>::iterator it = mCheckInfos->Begin(); it != mCheckInfos->End(); it++) {
-					MenuItemInfo *itemInfo = (MenuItemInfo *)(it->second);
-					if (itemInfo) {
-						CDuiString strName = GetName();
-						if (lstrcmpi(itemInfo->szName, strName) == 0) {
-							bFind = true;
-							break;
-						}
-					}
-				}
+                for (std::map<CDuiString, LPVOID>::iterator it = mCheckInfos->Begin(); it != mCheckInfos->End(); it++) {
+                    MenuItemInfo *itemInfo = (MenuItemInfo *)(it->second);
+                    if (itemInfo) {
+                        CDuiString strName = GetName();
+                        if (lstrcmpi(itemInfo->szName, strName) == 0) {
+                            bFind = true;
+                            break;
+                        }
+                    }
+                }
             }
 
-            if(!bFind) 
-				SetChecked(_tcsicmp(pstrValue, _T("true")) == 0 ? true : false);
+            if(!bFind)
+                SetChecked(_tcsicmp(pstrValue, _T("true")) == 0 ? true : false);
         } else if (_tcsicmp(pstrName, _T("isenable")) == 0) {
             CStdStringPtrMap *mCheckInfos = CMenuWnd::GetGlobalContextMenuObserver().GetMenuItemInfo();
             bool bFind = false;
 
             if (mCheckInfos) {
-				for (std::map<CDuiString, LPVOID>::iterator it = mCheckInfos->Begin(); it != mCheckInfos->End(); it++) {
-					MenuItemInfo *itemInfo = (MenuItemInfo *)(it->second);
-					if (itemInfo) {
-						CDuiString strName = GetName();
-						if (lstrcmpi(itemInfo->szName, strName) == 0) {
-							bFind = true;
-							break;
-						}
-					}
-				}
+                for (std::map<CDuiString, LPVOID>::iterator it = mCheckInfos->Begin(); it != mCheckInfos->End(); it++) {
+                    MenuItemInfo *itemInfo = (MenuItemInfo *)(it->second);
+                    if (itemInfo) {
+                        CDuiString strName = GetName();
+                        if (lstrcmpi(itemInfo->szName, strName) == 0) {
+                            bFind = true;
+                            break;
+                        }
+                    }
+                }
             }
 
-            if (!bFind) 
-				SetMenuEnabled(_tcsicmp(pstrValue, _T("true")) == 0 ? true : false);
+            if (!bFind)
+                SetMenuEnabled(_tcsicmp(pstrValue, _T("true")) == 0 ? true : false);
         } else if( _tcsicmp(pstrName, _T("linetype")) == 0) {
             if (_tcsicmp(pstrValue, _T("true")) == 0)
                 SetLineType();

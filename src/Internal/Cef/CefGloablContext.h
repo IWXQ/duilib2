@@ -21,28 +21,28 @@
 #include "include/cef_app.h"
 
 class CefGlobalContext : public ppx::base::Singleton<CefGlobalContext> {
-public:
-	void SetCefApp(CefRefPtr<CefApp> app);
-	CefRefPtr<CefApp> GetCefApp() const;
+  public:
+    void SetCefApp(CefRefPtr<CefApp> app);
+    CefRefPtr<CefApp> GetCefApp() const;
 
-	void SetWithCef(bool b);
-	bool GetWithCef() const;
+    void SetWithCef(bool b);
+    bool GetWithCef() const;
 
-	void SetCefCache(bool b);
-	bool GetCefCache() const;
+    void SetCefCache(bool b);
+    bool GetCefCache() const;
 
-	void SetUsingProxyServer(bool b);
-	bool GetUsingProxyServer() const;
-private:
-	bool m_bWithCef;
-	bool m_bCefCache;
-	bool m_bUsingProxyServer;
-	CefRefPtr<CefApp> m_pCefApp;
-private:
-	CefGlobalContext();
-	~CefGlobalContext();
+    void SetUsingProxyServer(bool b);
+    bool GetUsingProxyServer() const;
+  private:
+    bool m_bWithCef;
+    bool m_bCefCache;
+    bool m_bUsingProxyServer;
+    CefRefPtr<CefApp> m_pCefApp;
+  private:
+    CefGlobalContext();
+    ~CefGlobalContext();
 
-	SINGLETON_CLASS_DECLARE(CefGlobalContext);
+    SINGLETON_CLASS_DECLARE(CefGlobalContext);
 };
 
 #endif
