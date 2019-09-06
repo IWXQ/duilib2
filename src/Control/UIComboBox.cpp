@@ -16,6 +16,7 @@ namespace DuiLib {
 #endif
         bool IsHitItem(POINT ptMouse);
 
+        int GetCount() const;
         bool Add(CControlUI *pControl);
         bool AddAt(CControlUI *pControl, int iIndex);
         bool Remove(CControlUI *pControl);
@@ -123,6 +124,12 @@ namespace DuiLib {
         }
 
         return false;
+    }
+
+    int CComboBoxWnd::GetCount() const {
+        if (m_pList)
+            return m_pList->GetCount();
+        return 0;
     }
 
     bool CComboBoxWnd::Add(CControlUI *pControl) {
@@ -360,7 +367,14 @@ namespace DuiLib {
     }
 
     bool CComboBoxUI::SelectItem(int iIndex, bool bTakeFocus /*= false*/) {
-        return true;
+        bool ret = false;
+        if (m_pWindow && m_pWindow->m_pList) {
+            ret = m_pWindow->m_pList->SelectItem(iIndex, bTakeFocus);
+        }
+        if (ret) {
+            SetText(m_pWindow->m_pList->GetItemAt(iIndex)->GetText());
+        }
+        return ret;
     }
 
     bool CComboBoxUI::SelectMultiItem(int iIndex, bool bTakeFocus) {
@@ -373,6 +387,12 @@ namespace DuiLib {
 
     bool CComboBoxUI::SetItemIndex(CControlUI *pControl, int iIndex) {
         return true;
+    }
+
+    int CComboBoxUI::GetCount() const {
+        if (m_pWindow)
+            return m_pWindow->GetCount();
+        return 0;
     }
 
     bool CComboBoxUI::Add(CControlUI *pControl) {

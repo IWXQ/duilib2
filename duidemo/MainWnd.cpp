@@ -39,6 +39,7 @@ MainWnd::MainWnd() :
     m_pEditS(NULL),
     m_pEditL(NULL),
 	m_pFlash(NULL),
+    m_pCombox(NULL),
     m_pDlgFake(NULL),
     m_pHrlTitle(NULL) {
     m_pMenu = NULL;
@@ -82,6 +83,8 @@ void MainWnd::InitWindow() {
 			MessageBoxW(NULL, request.c_str(), L"ActionScriptCallback", MB_OK);
 		});
 	}
+
+    m_pCombox = static_cast<CComboBoxUI*>(m_PaintManager.FindControl((TEXT("cmbFont"))));
 
     if (m_pHrlTitle) {
         DWORD dwBkColor = m_pHrlTitle->GetBkColor();

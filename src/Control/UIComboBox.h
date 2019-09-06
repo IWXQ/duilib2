@@ -52,6 +52,7 @@ namespace DuiLib {
         bool UnSelectItem(int iIndex, bool bOthers = false);
         bool SetItemIndex(CControlUI *pControl, int iIndex);
 
+        int GetCount() const;
         bool Add(CControlUI *pControl);
         bool AddAt(CControlUI *pControl, int iIndex);
         bool Remove(CControlUI *pControl);

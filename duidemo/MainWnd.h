@@ -77,7 +77,7 @@ class MainWnd :
     CEditUI* m_pEditL;
 	CActiveXUI *m_pActiveXFlash;
 	CFlashUI* m_pFlash;
-
+    CComboBoxUI* m_pCombox;
 	HANDLE m_hTaskStartEvent;
 
     DlgFake* m_pDlgFake;
