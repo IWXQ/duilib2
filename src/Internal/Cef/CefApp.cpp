@@ -180,9 +180,9 @@ namespace DuiLib {
                         std::make_pair(std::make_pair(func_name, browser_id), std::make_pair(context, arguments[1]))
                     );
 
-                    LOG(INFO) << "func_name=" << func_name << ",browser_id=" << browser_id;
+                    LOG(INFO) << "RegisterCppNotifyJSFunc func_name=" << func_name << ", browser_id=" << browser_id;
                 } else {
-                    LOG(INFO) << "function " << RegisterCppNotifyJSFunctionName << "parameter error";
+                    LOG(INFO) << "RegisterCppNotifyJSFunc function " << RegisterCppNotifyJSFunctionName << " parameter error";
                 }
             } else {
                 CefRefPtr<CefProcessMessage> message = CefProcessMessage::Create(RENDER_2_BROWSER_JS_CALL_CPP_MSG);

@@ -269,7 +269,9 @@ namespace DuiLib {
 
         void OnPaint(CefRefPtr<CefBrowser> browser, CefRenderHandler::PaintElementType type,
                      const CefRenderHandler::RectList &dirtyRects, const void *buffer, int width, int height) OVERRIDE {
+            bool needSleep = true;
             m_csBuf.Enter();
+
             if (width != m_iMemoryBitmapWidth || height != m_iMemoryBitmapHeight) {
                 BITMAPINFO bi;
                 memset(&bi, 0, sizeof(bi));
@@ -289,20 +291,38 @@ namespace DuiLib {
 
                 m_iMemoryBitmapWidth = width;
                 m_iMemoryBitmapHeight = height;
+
+                needSleep = false;
             }
 
             memcpy(m_pBuffer, buffer, width *height * 4);
             m_csBuf.Leave();
 
-            m_pParent->Invalidate();
+
+            if (dirtyRects.size() == 0 || dirtyRects.size() > 1) {
+                m_pParent->Invalidate();
+                needSleep = false;
+            } else {
+                RECT rc;
+                rc.left = dirtyRects[0].x + m_pParent->GetPos().left;
+                rc.top = dirtyRects[0].y + m_pParent->GetPos().top;
+                rc.right = rc.left + dirtyRects[0].width;
+                rc.bottom = rc.top + dirtyRects[0].height;
+
+                m_pParent->m_pManager->Invalidate(rc);
+            }
+
+            if(needSleep)
+                Sleep(50);
         }
 
-        void DoPaint(HDC hdc) {
+        void DoPaint(HDC hdc, const RECT &rcPaint) {
             ppx::base::CritScope cs(&m_csBuf);
             if (m_pParent) {
                 RECT rect = m_pParent->GetPos();
                 if (m_iMemoryBitmapHeight > 0 && m_iMemoryBitmapWidth > 0) {
-                    BitBlt(hdc, rect.left, rect.top, m_iMemoryBitmapWidth, m_iMemoryBitmapHeight, m_hMemoryDC, 0, 0, SRCCOPY);
+                    BitBlt(hdc, rcPaint.left, rcPaint.top, rcPaint.right - rcPaint.left, rcPaint.bottom - rcPaint.top,
+                           m_hMemoryDC, rcPaint.left - rect.left, rcPaint.top - rect.top, SRCCOPY);
                 }
             }
         }
@@ -787,7 +807,7 @@ namespace DuiLib {
 
     bool CCefUI::DoPaint(HDC hDC, const RECT &rcPaint, CControlUI *pStopControl) {
         bool bRet = CContainerUI::DoPaint(hDC, rcPaint, pStopControl);
-        m_pImpl->DoPaint(hDC);
+        m_pImpl->DoPaint(hDC, rcPaint);
         return bRet;
     }
 
