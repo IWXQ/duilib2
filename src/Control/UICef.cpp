@@ -20,12 +20,17 @@ namespace DuiLib {
       public:
         CCefUIImpl(CCefUI *parent) :
             m_pParent(parent)
-            , m_pBuffer(NULL)
-            , m_hBitmap(NULL)
-            , m_hMemoryDC(NULL)
+            , m_pViewBuffer(NULL)
+            , m_hViewBitmap(NULL)
+            , m_hViewMemoryDC(NULL)
+            , m_pPopupBuffer(NULL)
+            , m_hPopupBitmap(NULL)
+            , m_hPopupMemoryDC(NULL)
             , m_pDevToolsWnd(NULL)
-            , m_iMemoryBitmapWidth(0)
-            , m_iMemoryBitmapHeight(0)
+            , m_iViewMemoryBitmapWidth(0)
+            , m_iViewMemoryBitmapHeight(0)
+            , m_iPopupMemoryBitmapWidth(0)
+            , m_iPopupMemoryBitmapHeight(0)
             , last_mouse_pos_()
             , current_mouse_pos_()
             , mouse_pos_()
@@ -40,7 +45,8 @@ namespace DuiLib {
             , m_iFPS(60)
             , m_bBkTransparent(false)
             , m_dwCefBkColor(0xffffffff) {
-            m_hMemoryDC = CreateCompatibleDC(NULL);
+            m_hViewMemoryDC = CreateCompatibleDC(NULL);
+            m_hPopupMemoryDC = CreateCompatibleDC(NULL);
             ppx::base::Random random;
             m_iRandomID = random.Rand(0xFFFFFFFF);
         }
@@ -59,9 +65,14 @@ namespace DuiLib {
             m_ClientHandler->DetachDelegate();
             CloseBrowser();
 
-            if (m_hMemoryDC) {
-                DeleteDC(m_hMemoryDC);
-                m_hMemoryDC = NULL;
+            if (m_hViewMemoryDC) {
+                DeleteDC(m_hViewMemoryDC);
+                m_hViewMemoryDC = NULL;
+            }
+
+            if (m_hPopupMemoryDC) {
+                DeleteDC(m_hPopupMemoryDC);
+                m_hPopupMemoryDC = NULL;
             }
         }
 
@@ -201,6 +212,7 @@ namespace DuiLib {
 
         bool GetRootScreenRect(CefRefPtr<CefBrowser> browser, CefRect &rect) OVERRIDE {
             CEF_REQUIRE_UI_THREAD();
+
             return false;
         }
 #if CEFVER == 3626
@@ -217,8 +229,8 @@ namespace DuiLib {
 
             float scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
 
-            rect.x = pos.left;
-            rect.y = pos.top;
+            rect.x = 0;
+            rect.y = 0;
             rect.width = Internal::DeviceToLogical(width, scale_factor);
             if (rect.width == 0)
                 rect.width = 1;
@@ -262,67 +274,126 @@ namespace DuiLib {
         }
 
         void OnPopupShow(CefRefPtr<CefBrowser> browser, bool show) OVERRIDE {
+            if (!show) {
+                m_PopupRect.Reset();
+                browser->GetHost()->Invalidate(PET_VIEW);
+            }
         }
 
         void OnPopupSize(CefRefPtr<CefBrowser> browser, const CefRect &rect) OVERRIDE {
+            float scale_factor = m_pParent->m_pManager->GetDPIObj()->GetScale() / 100.f;
+
+            CefRect newRect = Internal::LogicalToDevice(rect, scale_factor);
+            if (newRect.width <= 0 || newRect.height <= 0)
+                return;
+            m_OriginPopupRect = newRect;
+            m_PopupRect = GetPopupRectInWebView(newRect);
+        }
+
+        CefRect GetPopupRectInWebView(const CefRect &original_rect) {
+            CefRect rc(original_rect);
+            // if x or y are negative, move them to 0.
+            if (rc.x < 0)
+                rc.x = 0;
+            if (rc.y < 0)
+                rc.y = 0;
+            // if popup goes outside the view, try to reposition origin
+            if (rc.x + rc.width > m_iViewWidth)
+                rc.x = m_iViewWidth - rc.width;
+            if (rc.y + rc.height > m_iViewHeight)
+                rc.y = m_iViewHeight - rc.height;
+            // if x or y became negative, move them to 0 again.
+            if (rc.x < 0)
+                rc.x = 0;
+            if (rc.y < 0)
+                rc.y = 0;
+            return rc;
         }
 
         void OnPaint(CefRefPtr<CefBrowser> browser, CefRenderHandler::PaintElementType type,
                      const CefRenderHandler::RectList &dirtyRects, const void *buffer, int width, int height) OVERRIDE {
-            bool needSleep = true;
-            m_csBuf.Enter();
+            if (type == CefRenderHandler::PaintElementType::PET_VIEW) {
+                m_csViewBuf.Enter();
 
-            if (width != m_iMemoryBitmapWidth || height != m_iMemoryBitmapHeight) {
-                BITMAPINFO bi;
-                memset(&bi, 0, sizeof(bi));
-                bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
-                bi.bmiHeader.biWidth = int(width);
-                bi.bmiHeader.biHeight = -int(height);
-                bi.bmiHeader.biPlanes = 1;
-                bi.bmiHeader.biBitCount = 32;
-                bi.bmiHeader.biCompression = BI_RGB;
+                m_iViewWidth = width;
+                m_iViewHeight = height;
 
-                HBITMAP hbmp = ::CreateDIBSection(0, &bi, DIB_RGB_COLORS, &m_pBuffer, NULL, 0);
-                ::SelectObject(m_hMemoryDC, hbmp);
-                if (m_hBitmap)
-                    ::DeleteObject(m_hBitmap);
+                if (width != m_iViewMemoryBitmapWidth || height != m_iViewMemoryBitmapHeight) {
+                    BITMAPINFO bi;
+                    memset(&bi, 0, sizeof(bi));
+                    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+                    bi.bmiHeader.biWidth = int(width);
+                    bi.bmiHeader.biHeight = -int(height);
+                    bi.bmiHeader.biPlanes = 1;
+                    bi.bmiHeader.biBitCount = 32;
+                    bi.bmiHeader.biCompression = BI_RGB;
 
-                m_hBitmap = hbmp;
+                    HBITMAP hbmp = ::CreateDIBSection(0, &bi, DIB_RGB_COLORS, &m_pViewBuffer, NULL, 0);
+                    ::SelectObject(m_hViewMemoryDC, hbmp);
+                    if (m_hViewBitmap)
+                        ::DeleteObject(m_hViewBitmap);
 
-                m_iMemoryBitmapWidth = width;
-                m_iMemoryBitmapHeight = height;
+                    m_hViewBitmap = hbmp;
 
-                needSleep = false;
-            }
+                    m_iViewMemoryBitmapWidth = width;
+                    m_iViewMemoryBitmapHeight = height;
+                }
 
-            memcpy(m_pBuffer, buffer, width *height * 4);
-            m_csBuf.Leave();
+                memcpy(m_pViewBuffer, buffer, width * height * 4);
+                m_csViewBuf.Leave();
 
-
-            if (dirtyRects.size() == 0 || dirtyRects.size() > 1) {
                 m_pParent->Invalidate();
-                needSleep = false;
-            } else {
-                RECT rc;
-                rc.left = dirtyRects[0].x + m_pParent->GetPos().left;
-                rc.top = dirtyRects[0].y + m_pParent->GetPos().top;
-                rc.right = rc.left + dirtyRects[0].width;
-                rc.bottom = rc.top + dirtyRects[0].height;
+            } else if (type == CefRenderHandler::PaintElementType::PET_POPUP) {
+                m_csPopupBuf.Enter();
 
-                m_pParent->m_pManager->Invalidate(rc);
+                if (width != m_iPopupMemoryBitmapWidth || height != m_iPopupMemoryBitmapHeight) {
+                    BITMAPINFO bi;
+                    memset(&bi, 0, sizeof(bi));
+                    bi.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+                    bi.bmiHeader.biWidth = int(width);
+                    bi.bmiHeader.biHeight = -int(height);
+                    bi.bmiHeader.biPlanes = 1;
+                    bi.bmiHeader.biBitCount = 32;
+                    bi.bmiHeader.biCompression = BI_RGB;
+
+                    HBITMAP hbmp = ::CreateDIBSection(0, &bi, DIB_RGB_COLORS, &m_pPopupBuffer, NULL, 0);
+                    ::SelectObject(m_hPopupMemoryDC, hbmp);
+                    if (m_hPopupBitmap)
+                        ::DeleteObject(m_hPopupBitmap);
+
+                    m_hPopupBitmap = hbmp;
+
+                    m_iPopupMemoryBitmapWidth = width;
+                    m_iPopupMemoryBitmapHeight = height;
+                }
+                memcpy(m_pPopupBuffer, buffer, width * height * 4);
+                m_csPopupBuf.Leave();
+
+                m_pParent->Invalidate();
+
             }
-
-            if(needSleep)
-                Sleep(50);
         }
 
-        void DoPaint(HDC hdc, const RECT &rcPaint) {
-            ppx::base::CritScope cs(&m_csBuf);
+        void DoPaint(HDC hdc) {
             if (m_pParent) {
-                RECT rect = m_pParent->GetPos();
-                if (m_iMemoryBitmapHeight > 0 && m_iMemoryBitmapWidth > 0) {
-                    BitBlt(hdc, rcPaint.left, rcPaint.top, rcPaint.right - rcPaint.left, rcPaint.bottom - rcPaint.top,
-                           m_hMemoryDC, rcPaint.left - rect.left, rcPaint.top - rect.top, SRCCOPY);
+                RECT controlRC = m_pParent->GetPos();
+                m_csViewBuf.Enter();
+                ASSERT(m_hViewMemoryDC);
+                BitBlt(hdc, controlRC.left, controlRC.top,
+                       controlRC.right - controlRC.left, controlRC.bottom - controlRC.top,
+                       m_hViewMemoryDC, 0, 0, SRCCOPY);
+                m_csViewBuf.Leave();
+
+                if (!m_PopupRect.IsEmpty()) {
+                    m_csPopupBuf.Enter();
+                    BitBlt(hdc, m_PopupRect.x + controlRC.left, m_PopupRect.y + controlRC.top,
+                           m_PopupRect.width, m_PopupRect.height,
+                           m_hPopupMemoryDC, 0, 0, SRCCOPY);
+                    m_csPopupBuf.Leave();
+                }
+
+                if (!m_PopupRect.IsEmpty()) {
+                    m_browser->GetHost()->Invalidate(PET_POPUP);
                 }
             }
         }
@@ -445,6 +516,30 @@ namespace DuiLib {
             return true;
         }
 
+        bool IsOverPopupWidget(int x, int y) const {
+            const CefRect &rc = m_PopupRect;
+            int popup_right = rc.x + rc.width;
+            int popup_bottom = rc.y + rc.height;
+            return (x >= rc.x) && (x < popup_right) &&
+                   (y >= rc.y) && (y < popup_bottom);
+        }
+
+        int GetPopupXOffset() const {
+            return m_OriginPopupRect.x - m_PopupRect.x;
+        }
+
+        int GetPopupYOffset() const {
+            return m_OriginPopupRect.y - m_PopupRect.y;
+        }
+
+        void ApplyPopupOffset(int &x, int &y) const {
+            if (IsOverPopupWidget(x, y)) {
+                x += GetPopupXOffset();
+                y += GetPopupYOffset();
+            }
+        }
+
+
         void OnMouseEvent(UINT message, WPARAM wParam, LPARAM lParam) {
             DCHECK(m_pParent);
             DCHECK(m_pParent->m_pManager);
@@ -510,8 +605,8 @@ namespace DuiLib {
                             CefMouseEvent mouse_event;
                             mouse_event.x = x;
                             mouse_event.y = y;
-                            //last_mouse_down_on_view_ = !IsOverPopupWidget(x, y);
-                            //ApplyPopupOffset(mouse_event.x, mouse_event.y);
+                            last_mouse_down_on_view_ = !IsOverPopupWidget(x, y);
+                            ApplyPopupOffset(mouse_event.x, mouse_event.y);
                             Internal::DeviceToLogical(mouse_event, scale_factor);
                             mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
                             browser_host->SendMouseClickEvent(mouse_event, btnType, false,
@@ -540,11 +635,11 @@ namespace DuiLib {
                             CefMouseEvent mouse_event;
                             mouse_event.x = x;
                             mouse_event.y = y;
-                            //if (last_mouse_down_on_view_ && IsOverPopupWidget(x, y) &&
-                            //	(GetPopupXOffset() || GetPopupYOffset())) {
-                            //	break;
-                            //}
-                            //ApplyPopupOffset(mouse_event.x, mouse_event.y);
+                            if (last_mouse_down_on_view_ && IsOverPopupWidget(x, y) &&
+                                    (GetPopupXOffset() || GetPopupYOffset())) {
+                                break;
+                            }
+                            ApplyPopupOffset(mouse_event.x, mouse_event.y);
                             Internal::DeviceToLogical(mouse_event, scale_factor);
                             mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
                             browser_host->SendMouseClickEvent(mouse_event, btnType, true,
@@ -581,7 +676,7 @@ namespace DuiLib {
                             CefMouseEvent mouse_event;
                             mouse_event.x = x;
                             mouse_event.y = y;
-                            //ApplyPopupOffset(mouse_event.x, mouse_event.y);
+                            ApplyPopupOffset(mouse_event.x, mouse_event.y);
                             Internal::DeviceToLogical(mouse_event, scale_factor);
                             mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
                             browser_host->SendMouseMoveEvent(mouse_event, false);
@@ -632,7 +727,7 @@ namespace DuiLib {
                         CefMouseEvent mouse_event;
                         mouse_event.x = screen_point.x;
                         mouse_event.y = screen_point.y;
-                        //ApplyPopupOffset(mouse_event.x, mouse_event.y);
+                        ApplyPopupOffset(mouse_event.x, mouse_event.y);
                         Internal::DeviceToLogical(mouse_event, scale_factor);
                         mouse_event.modifiers = Internal::GetCefMouseModifiers(wParam);
                         browser_host->SendMouseWheelEvent(mouse_event,
@@ -708,14 +803,69 @@ namespace DuiLib {
         bool GetBkTransparent() const {
             return m_bBkTransparent;
         }
+
+        bool HDCToFile(const char *FilePath, HDC Context, RECT Area, uint16_t BitsPerPixel) {
+            uint32_t Width = Area.right - Area.left;
+            uint32_t Height = Area.bottom - Area.top;
+            BITMAPINFO Info;
+            BITMAPFILEHEADER Header;
+            memset(&Info, 0, sizeof(Info));
+            memset(&Header, 0, sizeof(Header));
+            Info.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+            Info.bmiHeader.biWidth = Width;
+            Info.bmiHeader.biHeight = Height;
+            Info.bmiHeader.biPlanes = 1;
+            Info.bmiHeader.biBitCount = BitsPerPixel;
+            Info.bmiHeader.biCompression = BI_RGB;
+            Info.bmiHeader.biSizeImage = Width * Height * (BitsPerPixel > 24 ? 4 : 3);
+            Header.bfType = 0x4D42;
+            Header.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+            char *Pixels = NULL;
+            HDC MemDC = CreateCompatibleDC(Context);
+            HBITMAP Section = CreateDIBSection(Context, &Info, DIB_RGB_COLORS, (void **)&Pixels, 0, 0);
+            DeleteObject(SelectObject(MemDC, Section));
+            BitBlt(MemDC, 0, 0, Width, Height, Context, Area.left, Area.top, SRCCOPY);
+            DeleteDC(MemDC);
+            std::fstream hFile(FilePath, std::ios::out | std::ios::binary);
+            if (hFile.is_open()) {
+                hFile.write((char *)&Header, sizeof(Header));
+                hFile.write((char *)&Info.bmiHeader, sizeof(Info.bmiHeader));
+                hFile.write(Pixels, (((BitsPerPixel * Width + 31) & ~31) / 8) * Height);
+                hFile.close();
+                DeleteObject(Section);
+                return true;
+            }
+            DeleteObject(Section);
+            return false;
+        }
       public:
         CCefUI *m_pParent;
-        HDC m_hMemoryDC;
-        HBITMAP m_hBitmap;
-        void *m_pBuffer;
-        int m_iMemoryBitmapWidth;
-        int m_iMemoryBitmapHeight;
-        ppx::base::CriticalSection m_csBuf;
+
+        // View
+        HDC m_hViewMemoryDC;
+        HBITMAP m_hViewBitmap;
+        void *m_pViewBuffer;
+        int m_iViewMemoryBitmapWidth;
+        int m_iViewMemoryBitmapHeight;
+        int m_iViewWidth;
+        int m_iViewHeight;
+        RECT m_ViewUpdateRect;
+        ppx::base::CriticalSection m_csPopupBuf;
+
+
+        // Popup
+        HDC m_hPopupMemoryDC;
+        HBITMAP m_hPopupBitmap;
+        void *m_pPopupBuffer;
+        int m_iPopupMemoryBitmapWidth;
+        int m_iPopupMemoryBitmapHeight;
+        CefRect m_OriginPopupRect;
+        CefRect m_PopupRect;
+        RECT m_PopupUpdateRect;
+        ppx::base::CriticalSection m_csViewBuf;
+
+
+
 
         CDuiString m_strInitUrl;
         uint32_t m_iRandomID;
@@ -807,7 +957,7 @@ namespace DuiLib {
 
     bool CCefUI::DoPaint(HDC hDC, const RECT &rcPaint, CControlUI *pStopControl) {
         bool bRet = CContainerUI::DoPaint(hDC, rcPaint, pStopControl);
-        m_pImpl->DoPaint(hDC, rcPaint);
+        m_pImpl->DoPaint(hDC);
         return bRet;
     }
 

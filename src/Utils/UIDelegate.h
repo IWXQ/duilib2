@@ -36,7 +36,9 @@ namespace DuiLib {
       protected:
         virtual bool Invoke(void *param) {
             Fn pFn = (Fn)GetFn();
-            return (*pFn)(param);
+            if(pFn)
+                return (*pFn)(param);
+            return false;
         }
     };
 

@@ -116,8 +116,10 @@ void CefTestWnd::OnWindowInit() {
 	btn_close_ = static_cast<CButtonUI*>(m_PaintManager.FindControl(TEXT("btnClose")));
 
 
-	web1_->SetUrl(TEXT("https://pinyin.sogou.com/"));
-	web2_->SetUrl((ppx::base::GetCurrentProcessDirectoryW() + L"..\\..\\..\\test-resource\\test.html").c_str());
+	//web1_->SetUrl(TEXT("https://pinyin.sogou.com/"));
+	//web2_->SetUrl((ppx::base::GetCurrentProcessDirectoryW() + L"..\\..\\..\\test-resource\\test.html").c_str());
+    web2_->SetUrl(L"https://stb-front-test.steamboxs.com/Game/Shop");
+
 
 	//web1_->SetResourceResponseCallback([](const std::string &url, int status) {
 	//	ppx::base::TraceMsgA("web1: %s [%d]\n", url.c_str(), status);
