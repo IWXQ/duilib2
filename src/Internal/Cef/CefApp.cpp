@@ -35,6 +35,7 @@ namespace DuiLib {
             command_line->AppendSwitch("disable-gpu");
             command_line->AppendSwitch("disable-gpu-compositing");
 
+            command_line->AppendSwitch("enable-begin-frame-scheduling");
 
             //command_line->AppendSwitchWithValue("ppapi-flash-path", "pepperflash/pepflashplayer.dll");
             //command_line->AppendSwitchWithValue("ppapi-flash-version", "18.0.0.209");

@@ -42,7 +42,7 @@ namespace DuiLib {
             , last_click_count_(0)
             , last_click_time_(0)
             , last_mouse_down_on_view_(false)
-            , m_iFPS(60)
+            , m_iFPS(30)
             , m_bBkTransparent(false)
             , m_dwCefBkColor(0xffffffff) {
             m_hViewMemoryDC = CreateCompatibleDC(NULL);
@@ -781,7 +781,10 @@ namespace DuiLib {
         }
 
         void SetFPS(int fps) {
-            m_iFPS = fps;
+            if (m_iFPS != fps) {
+                m_iFPS = fps;
+                m_browser->GetHost()->SetWindowlessFrameRate(fps);
+            }
         }
 
         int GetFPS() const {
@@ -1005,6 +1008,10 @@ namespace DuiLib {
 
     int CCefUI::GetFPS() const {
         return m_pImpl->GetFPS();
+    }
+
+    void CCefUI::SetFPS(int fps) {
+        m_pImpl->SetFPS(fps);
     }
 
     DWORD CCefUI::GetCefBkColor() const {

@@ -50,6 +50,7 @@ namespace DuiLib {
 
         bool GetBkTransparent() const;
         int GetFPS() const;
+        void SetFPS(int fps);
         DWORD GetCefBkColor() const;
 
         void GoBack();
