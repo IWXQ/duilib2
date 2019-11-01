@@ -62,16 +62,36 @@ namespace DuiLib {
             void OnKeyEvent(UINT message, WPARAM wParam, LPARAM lParam);
             void OnFocus(bool setFocus);
             void OnSize();
+          private:
+            CefRect GetPopupRectInWebView(const CefRect &original_rect);
+            bool IsOverPopupWidget(int x, int y) const;
+            int GetPopupXOffset() const;
+            int GetPopupYOffset() const;
+            void ApplyPopupOffset(int &x, int &y) const;
           protected:
             CefRefPtr<CefBrowser> m_pTargetBrowser;
             float m_fScaleFactor;
 
-            HDC m_hMemoryDC;
-            HBITMAP m_hBitmap;
-            void *m_pBuffer;
-            int m_iMemoryBitmapWidth;
-            int m_iMemoryBitmapHeight;
-            ppx::base::CriticalSection m_csBuf;
+            // View
+            HDC m_hViewMemoryDC;
+            HBITMAP m_hViewBitmap;
+            void *m_pViewBuffer;
+            int m_iViewMemoryBitmapWidth;
+            int m_iViewMemoryBitmapHeight;
+            int m_iViewWidth;
+            int m_iViewHeight;
+            ppx::base::CriticalSection m_csPopupBuf;
+
+
+            // Popup
+            HDC m_hPopupMemoryDC;
+            HBITMAP m_hPopupBitmap;
+            void *m_pPopupBuffer;
+            int m_iPopupMemoryBitmapWidth;
+            int m_iPopupMemoryBitmapHeight;
+            CefRect m_OriginPopupRect;
+            CefRect m_PopupRect;
+            ppx::base::CriticalSection m_csViewBuf;
 
             // Mouse state tracking.
             POINT last_mouse_pos_;

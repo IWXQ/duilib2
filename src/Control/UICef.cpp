@@ -849,7 +849,6 @@ namespace DuiLib {
         int m_iViewMemoryBitmapHeight;
         int m_iViewWidth;
         int m_iViewHeight;
-        RECT m_ViewUpdateRect;
         ppx::base::CriticalSection m_csPopupBuf;
 
 
@@ -861,7 +860,6 @@ namespace DuiLib {
         int m_iPopupMemoryBitmapHeight;
         CefRect m_OriginPopupRect;
         CefRect m_PopupRect;
-        RECT m_PopupUpdateRect;
         ppx::base::CriticalSection m_csViewBuf;
 
 
