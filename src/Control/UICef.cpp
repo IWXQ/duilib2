@@ -198,6 +198,12 @@ namespace DuiLib {
         void OnAfterCreated(CefRefPtr<CefBrowser> browser) OVERRIDE {
             m_browser = browser;
             if (m_pParent && m_browser) {
+                if (m_browser->GetHost()) {
+                    if (m_browser->GetHost()->GetWindowlessFrameRate() != m_iFPS) {
+                        m_browser->GetHost()->SetWindowlessFrameRate(m_iFPS);
+                    }
+                }
+
                 if (m_pParent->GetUrl() != m_strInitUrl) {
                     if (m_browser->GetMainFrame()) {
                         m_browser->GetMainFrame()->LoadURL(ppx::base::UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
@@ -207,6 +213,7 @@ namespace DuiLib {
         }
 
         void OnBeforeClose(CefRefPtr<CefBrowser> browser) OVERRIDE {
+            m_pParent = NULL;
             m_browser = nullptr;
         }
 
@@ -370,7 +377,6 @@ namespace DuiLib {
                 m_csPopupBuf.Leave();
 
                 m_pParent->Invalidate();
-
             }
         }
 
@@ -514,6 +520,18 @@ namespace DuiLib {
 
         bool OnBeforePopup(const std::string &target_url) OVERRIDE {
             return true;
+        }
+
+        void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, CefRequestHandler::TerminationStatus status) {
+            CDuiString strMsg;
+            strMsg.Format(TEXT("OnRenderProcessTerminated, status: %d\n"), status);
+            OutputDebugString(strMsg.GetData());
+
+            if (m_pParent->GetUrl().GetLength() > 0 && m_browser) {
+                if (m_browser->GetMainFrame()) {
+                    m_browser->GetMainFrame()->LoadURL(ppx::base::UnicodeToUtf8(m_pParent->GetUrl().GetData()).c_str());
+                }
+            }
         }
 
         bool IsOverPopupWidget(int x, int y) const {
@@ -783,7 +801,8 @@ namespace DuiLib {
         void SetFPS(int fps) {
             if (m_iFPS != fps) {
                 m_iFPS = fps;
-                m_browser->GetHost()->SetWindowlessFrameRate(fps);
+                if(m_browser && m_browser->GetHost())
+                    m_browser->GetHost()->SetWindowlessFrameRate(fps);
             }
         }
 
@@ -864,8 +883,6 @@ namespace DuiLib {
         CefRect m_OriginPopupRect;
         CefRect m_PopupRect;
         ppx::base::CriticalSection m_csViewBuf;
-
-
 
 
         CDuiString m_strInitUrl;

@@ -239,6 +239,8 @@ namespace DuiLib {
 
         void ClientHandlerOsr::OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, TerminationStatus status) {
             CEF_REQUIRE_UI_THREAD();
+            if(delegate_)
+                delegate_->OnRenderProcessTerminated(browser, status);
         }
 
 #if CEFVER == 3626

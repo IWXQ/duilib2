@@ -127,6 +127,8 @@ namespace DuiLib {
                 virtual bool OnBeforePopup(const std::string &target_url) = 0;
 
                 virtual void OnResourceResponse(const std::string url, int rsp_status) {}
+
+                virtual void OnRenderProcessTerminated(CefRefPtr<CefBrowser> browser, TerminationStatus status) {};
               protected:
                 virtual ~OsrDelegate() {}
             };
