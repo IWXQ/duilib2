@@ -112,7 +112,7 @@ void MainWnd::InitWindow() {
     CWebBrowserUI *pBrowser1 = static_cast<CWebBrowserUI *>(m_PaintManager.FindControl(_T("oneclick_browser1")));
     if (pBrowser1) {
         pBrowser1->SetWebBrowserEventHandler(this);
-        pBrowser1->NavigateUrl(_T("https://pinyin.sogou.com/"));
+        pBrowser1->NavigateUrl(_T("http://blog.csdn.net/china_jeffery"));
     }
 
     CWebBrowserUI *pBrowser2 = static_cast<CWebBrowserUI *>(m_PaintManager.FindControl(_T("oneclick_browser2")));
@@ -127,21 +127,9 @@ void MainWnd::InitWindow() {
         pColorPalette->SetSelectColor(0xff0199cb);
     }
 
-    BOOL bRet = m_trayIcon.Create(m_hWnd, UIMSG_TRAYICON,  _T("DuiLib Demo"), IDI_ICON1, 0);
-
-	std::thread s([this]() {
-		m_trayIcon.ShowBalloon(TEXT("TEST1"), TEXT("Duilib Demo"), NIIF_INFO, 10);
-		Sleep(1000);
-		m_trayIcon.RemoveBalloon();
-		m_trayIcon.ShowBalloon(TEXT("TEST2"), TEXT("Duilib Demo"), NIIF_NONE, 10);
-		Sleep(2000);
-		m_trayIcon.RemoveBalloon();
-		m_trayIcon.ShowBalloon(TEXT("TEST3"), TEXT("Duilib Demo"), NIIF_ERROR, 10);
-		Sleep(4000);
-		m_trayIcon.RemoveBalloon();
-		m_trayIcon.ShowBalloon(TEXT("TEST4"), TEXT("Duilib Demo"), NIIF_WARNING, 10);
-	});
-	s.detach();
+    m_hTaskCreatedMsg = CSystemTrayIcon::RegisterTaskbarCreatedMessage(m_hWnd);
+    HICON hIcon = ::LoadIcon(CPaintManagerUI::GetInstance(), MAKEINTRESOURCE(IDI_ICON1));
+    BOOL bRet = m_trayIcon.Create(CPaintManagerUI::GetInstance(), m_hWnd, UIMSG_TRAYICON,  _T("DuiLib Demo"), hIcon, 1);
 }
 
 
@@ -649,6 +637,9 @@ LRESULT MainWnd::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 
         if (m_PaintManager.GetRoot() != NULL)
             m_PaintManager.GetRoot()->NeedUpdate();
+    }
+    else if (uMsg == m_hTaskCreatedMsg) {
+        m_trayIcon.ReCreate();
     }
 
     bHandled = FALSE;

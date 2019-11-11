@@ -80,6 +80,8 @@ class MainWnd :
     CComboBoxUI* m_pCombox;
 	HANDLE m_hTaskStartEvent;
 
+    UINT m_hTaskCreatedMsg;
+
     DlgFake* m_pDlgFake;
   public:
     MainPageWnd m_MainPage;
